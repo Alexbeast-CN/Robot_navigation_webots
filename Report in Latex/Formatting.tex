@@ -1,0 +1,69 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Don't make any changes here
+%  This defines formatting style
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DeclareNameAlias{sortname}{last-first}
+\DeclareFieldFormat{edition}{%
+  \ifinteger{#1}
+    {\ifnumequal{#1}{1}%
+     {}%
+     {\mkbibordedition{#1}~\bibstring{edition}}%
+    }
+    {#1\isdot}}
+
+\DeclareFieldFormat[article,inbook,incollection]{title}{#1\isdot}
+\DeclareFieldFormat[article,inbook,incollection]{citetitle}{#1\isdot}
+
+\newrobustcmd{\MakeTitleCase}[1]{%
+  \ifboolexpr{test {\ifentrytype{article}} or test {\ifentrytype{inbook}} or test {\ifentrytype{incollection}}}
+    {#1}
+    {\MakeSentenceCase{#1}}}
+
+\DeclareFieldFormat{urldate}{\bibsentence\mkbibbrackets{\bibstring{urlseen}\space#1}}
+\DeclareFieldFormat{url}{\bibstring{urlfrom}\addcolon\space\url{#1}}
+
+\renewbibmacro*{journal}{%
+  \iffieldundef{journaltitle}
+    {}
+    {\printtext[journaltitle]{%
+       \printfield[titlecase]{journaltitle}%
+       \setunit{\subtitlepunct}%
+       \printfield[titlecase]{journalsubtitle}}
+       \ifboolexpr{
+         not test {\iffieldundef{url}}
+         or
+         not test {\iffieldundef{urldate}}
+         or
+         not test {\iffieldundef{doi}}
+         or
+         not test {\iffieldundef{eprint}}
+       }
+         {\nopunct\bibstring[\mkbibbrackets]{online}}%
+         {}}}
+
+\renewbibmacro*{journal+issuetitle}{%
+  \usebibmacro{journal}%
+  \setunit*{\addspace}%
+  \iffieldundef{series}
+    {}
+    {\newunit
+     \printfield{series}%
+     \setunit{\addspace}}%
+  \newunit
+  \usebibmacro{volume+number+eid}%
+  \setunit{\addspace}%
+  \usebibmacro{issue+date}%
+  \setunit{\addcolon\space}%
+  \usebibmacro{issue}%
+  \newunit}
+
+\NewBibliographyString{online}
+\DefineBibliographyStrings{english}{%
+  urlseen    = {accessed},
+  online     = {online},
+}
+%\addbibresource{example.bib}
+\renewcommand*{\nameyeardelim}{\addcomma\addspace}
+\renewbibmacro{in:}{%
+  \ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}} % removes "In" preceeding journal title
