@@ -1,0 +1,116 @@
+
+% This template has been edited from the IEEE template available at:
+% https://www.ieee.org/conferences/publishing/templates.html
+%
+% For further help, you may wish to see:#
+% https://www.overleaf.com/learn/latex/tables
+% https://www.overleaf.com/learn/latex/Inserting_Images
+% https://www.overleaf.com/blog/532-creating-and-managing-bibliographies-with-bibtex-on-overleaf
+
+\documentclass[conference]{IEEEtran}
+%\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Report Title: Be Descriptive}
+
+\author{
+    \IEEEauthorblockN{Student Number}
+    \and
+    \IEEEauthorblockN{Student Number}
+}
+
+\maketitle
+
+\begin{abstract}
+It is normal to write the abstract last.  First, try to concisely state the problem/question/challenge under investigation.  Second, state what you found out.  The abstract should help a reader decide if they are interested in reading the whole paper.  
+\end{abstract}
+
+
+\section{Introduction}
+Use the introduction to explain your project (problem/question/challenge) to the reader.  To do this well, you will need to provide some background context.  It can be useful to imagine you are writing for someone who would be able to understand your work, but who is not familiar with it.  You should assume the examiner of this report has \textbf{not} seen your project before.   
+
+For example, you may need to explain how a sensor works, including the advantages and disadvantages, in order for your reader to properly understand the \emph{value} of your investigation.  You want your reader to agree that this is an interesting project, as well as for your reader to understand \emph{why}. 
+
+You are encouraged to use specialist language and concepts covered in the unit to explain the background context of your project.  Where relevant, you are encouraged to reference external sources of information, such as technical datasheets, online articles\cite{picard2001toward}\cite{beck2010towards}, or academic literature.  Try to write your report both to explain it well and to demonstrate what you have learnt.
+
+\subsection{Hypothesis Statement}
+
+Because formulating a hypothesis is central to this assessment, it is recommended you write your hypothesis into a clear subsection (this subsection) as specified in this report template.  Because you have introduced your work well above (providing key background context and specialist knowledge) you can be quite literal here with your hypothesis.  For example: 
+
+Because the VL1680X has been identified as an active sensor with ... limitations, we hypothesise that:
+\begin{quote}
+    by applying ... filtering to the sensor, we predict a measurable improvement of the sensor under ... conditions.  
+\end{quote}
+
+We investigate this hypothesis through a structured experiment on the Romi mobile robot, comparing the performance of the sensor with and without our technique.  
+
+\section{Implementation}
+
+In this section you should describe the specifics for your implementation such that your reader could recreate your work.  If you have used a well understood algorithm or technology you can reference an external source, unless explaining the algorithm/technology provides vital information for the reader regarding your project.  You may wish to present technical information here to support understanding of a specific component (e.g. a graph of a response of a sensor or actuator, or if you have an early feasibility study before your experiment).  If you are going to compare your robotic system against itself then you may need to document your "baseline" solution and your "improved" solution.  
+
+\section{Experiment Methodology}
+
+In this section, document how you structured (designed) your experiment such that someone else could easily recreate your work.  You also want your reader to agree that you carefully considered your experiment so that we could trust your results to be both \emph{insightful} (mean something) and \emph{credible} (not subject to error).  Which subsections (if any) that you use in this section will largely depend on your project and how you choose to present it.  The following are suggestions to aid the clarity of your work.
+
+\subsection{Overview of Method}
+Describe to the reader the general structure and procedure of your experiment. You should provide a specification a bit like a cake recipe.  For example: how long does your experiment last?  how many repeated trials do you use?  how many alternate scenarios are there?
+
+\subsection{Discussion of Variables}
+You should outline the key variables within your experiment. This will help your reader to later believe your results are credible and not confused.
+\begin{itemize}
+    \item \textbf{Controlled Variables}: These are the parts of your experiment (task, hardware, software, environment) which \emph{could} vary, but which you have controlled by careful design of your experiment.  For example, battery life varies, so you will use new batteries.
+    \item \textbf{Independent Variable}: This is the part of your experiment which you are changing so that you hope to observe a measurable alteration in performance.  Note that, we ever only want one independent variable - sometimes we aim for this, but concede other parts will change, and we need to make careful analysis of our system and/or results.
+    \item \textbf{Dependent Variable(s)}: These are the part(s) of your experiment in which you hope to observe a measurable change.  You will design or select appropriate \emph{metrics} to measure and analyse this dependable variable.  For example, we can have one dependent variable of the system, but use metrics of mean, mode and median to analyse it.
+\end{itemize}
+
+\subsection{Discussion of Metric(s)}
+
+ In this section you should discuss the rationale (why) you have selected your metric(s) - e.g. how do these metrics help us to interpret your results?  Your metric(s) will need to be applied consistently throughout your experiment for them to provide a comparison of performance.  
+ 
+ You should discuss the advantages and disadvantages of your metric(s).  Often, we need more than one metric to compensate for the information which is confused or hidden in another metric.  By using more than one metric, we can get closer to the truth of the outcome of your experiment.  
+
+\section{Results}
+
+In this section you should present your results.  In general, it is best to aim for both \emph{quantitative} results (e.g., data) and \emph{qualitative} results (e.g., a written observation or graphic which is representative).  
+
+You should use subsections where they aid in clarity.  For instance, it may be useful to present results for a "baseline" system, then a results for an "improved" system, and then finally results which consider both "baseline" and "improved" systems together.  However, this will depend entirely on your project and how you have designed your experiment.
+
+When presenting results, aim for a presentation which clearly communicates an insight. For example, a large table of all the individual data requires the reader to do a lot of work to find out what is important.  In contrast, a table which appropriately presents the mean and standard deviation has summarised the results for the reader (and would be more useful).  Similarly, aim to combine data onto a chart when possible so that a direct comparison can be made - and when possible, include error bars.  
+
+\begin{figure}[htbp]
+\centerline{\includegraphics{fig1.png}}
+\caption{Example of a figure caption.  This dot may or may not be circular.}
+\label{fig1}
+\end{figure}
+
+Remember to label all axis, caption all graphs, figures and tables, and to reference these elements in the report text (e.g. see figure \ref{fig1}) - never require a reader to have to come to their own conclusion or understanding, explain what they are looking at.  Remember to attempt to give an explanation for any anomalies in your results.  
+
+
+\section{Discussion and Conclusion}
+
+Begin your discussion and conclusion by re-stating your hypothesis.  You can literally copy-and-paste your hypothesis here.  
+
+Because the VL1680X has been identified as an active sensor with ... limitations, we hypothesised that:
+\begin{quote}
+    by applying ... filtering to the sensor, we predict a measurable improvement of the sensor under ... conditions.  
+\end{quote}
+
+Make a discussion of what your results showed - whether this supported or refuted your hypothesis.  It may be that the results were mixed (supporting and refuting) and you should discuss that here. In your discussion, use this as another opportunity to demonstrate/evidence your understanding. Try to avoid stating the obvious - instead, use analysis/evaluation/synthesis to show that you understand \emph{how} and \emph{why} you saw the results you did.  What are the implications of your findings?  
+
+This is also a good opportunity to evaluate your experiment and project as a whole.  You may wish to further discuss the limitations of the study (e.g. the difficulty of controlled/dependent variables, or any problems you faced in your project).  You may wish to make a recommendation for future work - but ensure that this is a clear advancement from the understanding you have gained and not wild speculation.
+
+
+\bibliographystyle{ieeetr} 
+\bibliography{biblio}
+
+
+\end{document}
