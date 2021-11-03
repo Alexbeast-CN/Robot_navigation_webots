@@ -4,7 +4,7 @@ This project uses Webots as a simulator collaborating with Yifan Wang. The proje
 
 ## Project Agenda:
 
-> Please use Markdown Preview Enhanced to view this graph.
+> To view the graph below please add [GitHub + Mermaid extension](https://github.com/BackMarket/github-mermaid-extension) to your browser.
 
 ```mermaid
 gantt
