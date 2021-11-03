@@ -5,3 +5,4 @@
 - [x] [Open Autonomous Domestic Robots](https://hackaday.io/project/9072-open-autonomous-domestic-robots) 
 - [ ] [create_robot](https://github.com/AutonomyLab/create_robot)
 - [ ] [Roomba on ROS](http://wiki.ros.org/Robots/Roomba)
+- [x] [Cmake Tutorial](https://www.youtube.com/playlist?list=PLalVdRk2RC6o5GHu618ARWh0VO0bFlif4) 
