@@ -6,3 +6,4 @@
 > - [Visualization Algorithm](https://github.com/redglassli/PythonRobotics)
 
 ## 1. Dijkstra Algorithm
+![Dijkstra](https://pic002.cnblogs.com/images/2012/426620/2012073019593375.jpg#pic_center)
