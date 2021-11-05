@@ -1,6 +1,8 @@
 # Robot Navigation 
 
-This project uses Webots as a simulator collaborating with Yifan Wang. The project is in progress.
+This project uses Webots as a simulator to test path planning algorithms for an indoor robot.
+
+The project is in progress.
 
 ## Project Agenda:
 
@@ -35,8 +37,8 @@ Ps:
 - Stage 2: Skill-building & API programming stage
 - Stage 3: Documentation stage
 
-## Project Index
+## Quick Access
 
 - [View Source Code](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Controller)
-- [Skill Notes](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Doc/Useful%20Knowlege)
+- [Notes](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Doc/Useful%20Knowlege)
 - [Formal Report](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/RS_Report)
