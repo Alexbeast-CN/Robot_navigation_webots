@@ -4,7 +4,7 @@ This project uses Webots as a simulator collaborating with Yifan Wang. The proje
 
 ## Project Agenda:
 
-> Please use Markdown Preview Enhanced to view this graph.
+> To view the graph below please add [GitHub + Mermaid extension](https://github.com/BackMarket/github-mermaid-extension) to your browser.
 
 ```mermaid
 gantt
@@ -34,3 +34,9 @@ Ps:
 - Stage 1: Decision-making stage
 - Stage 2: Skill-building & API programming stage
 - Stage 3: Documentation stage
+
+## Project Index
+
+- [View Source Code](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Controller)
+- [Skill Notes](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Doc/Useful%20Knowlege)
+- [Formal Report](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/RS_Report)
