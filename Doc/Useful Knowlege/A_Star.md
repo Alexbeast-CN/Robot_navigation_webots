@@ -25,7 +25,9 @@ At this time, select C into S.
 A$\rightarrow$C$\rightarrow$B = 5;
 A$\rightarrow$C$\rightarrow$D = 6;
 A$\rightarrow$C$\rightarrow$E = 7;
-Because 5 is smaller than 6 written above, the way A to B becomes A to B to C. Since 5 is the minimum distance at this stage, adding B to S.
+Because 5 is smaller than 6 written above,
+~~A$\rightarrow$B~~ = A$\rightarrow$C$\rightarrow$B
+Since 5 is the minimum distance at this stage, adding B to S.
 3. S = {A,C};  U = {B,D,E,F}.
 A$\rightarrow$C$\rightarrow$B = 5;
 A$\rightarrow$C$\rightarrow$D = 6;
