@@ -29,4 +29,4 @@ Because 5 is smaller than 6 written above, the way A to B becomes A to B to C. S
 3. S = {A,C};  U = {B,D,E,F}.
 A$\rightarrow$C$\rightarrow$B = 5;
 A$\rightarrow$C$\rightarrow$D = 6;
-A$\rightarrow$C$\rightarrow$E = 7;
+A$\rightarrow$C$\rightarrow$E = 8;
