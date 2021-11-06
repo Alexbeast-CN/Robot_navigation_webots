@@ -19,16 +19,14 @@ A simple example is given in the following figure：(Start with A)
 
 1. S = {A};  U = {B,C,D,E,F}. 
 A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C = 3;
-A$\rightarrow$B = 6; 
+A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 6; 
 At this time, select C into S.
 2. S = {A,C};  U = {B,D,E,F}.
-A$\rightarrow$C$\rightarrow$B = 5;
-A$\rightarrow$C$\rightarrow$D = 6;
-A$\rightarrow$C$\rightarrow$E = 7;
+A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 5;
+A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D = 6;
+A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E = 7;
 Because 5 is smaller than 6 written above,
-~~A$\rightarrow$B~~ = A$\rightarrow$C$\rightarrow$B
+~~A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B~~ = A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B
 Since 5 is the minimum distance at this stage, adding B to S.
 3. S = {A,C};  U = {B,D,E,F}.
-A$\rightarrow$C$\rightarrow$B = 5;
-A$\rightarrow$C$\rightarrow$D = 6;
-A$\rightarrow$C$\rightarrow$E = 8;
+
