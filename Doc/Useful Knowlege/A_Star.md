@@ -17,25 +17,12 @@ A simple example is given in the following figure：(Start with A)
 
 ![Dijkstra](https://pic002.cnblogs.com/images/2012/426620/2012073019593375.jpg#pic_center)
 
->1. S = {A};  U = {B,C,D,E,F}.<br>
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C = 3;<br>
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 6; 
-At this time, select C into S.
->2. S = {A,C};  U = {B,D,E,F}.
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 5;
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D = 6;
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E = 7;
-Because 5 is smaller than 6 written above,so
-~~A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B~~ = A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B
-Since 5 is the minimum distance at this stage, adding B to S.
->3. S = {A,C,B};  U = {D,E,F}.
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D = 10
-Since 10 is greater than 6, so this route should not be used, but A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D  should be used.After the comparison, add the compared D points to the set S.
->4. S = {A,C,B,D};  U = {E,F}.
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E = 8;
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">F = 9;
-Since the value of 8 is greater than 7, the shortest route to point E should be A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E,.
->5. S = {A,C,B,D,E};  U = {F}.
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">F = 12; Because this value is too large, the route to point F will not adopt this method, but the above method.
+> Logic Flow:
+>1. S = {A};  U = {B,C,D,E,F}.<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C = 3;<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 6;<br>At this time, select C into S.
+>2. S = {A,C};  U = {B,D,E,F}.<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 5;<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D = 6;<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E = 7;<br>Because 5 is smaller than 6 written above,so
+~~A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B~~ = A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B<br>Since 5 is the minimum distance at this stage, adding B to S.
+>3. S = {A,C,B};  U = {D,E,F}.<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D = 10<br>Since 10 is greater than 6, so this route should not be used, but A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D  should be used.<br>After the comparison, add the compared D points to the set S.
+>4. S = {A,C,B,D};  U = {E,F}.<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E = 8;<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">F = 9;<br>Since the value of 8 is greater than 7, the shortest route to point E should be A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E,.
+>5. S = {A,C,B,D,E};  U = {F}.<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">F = 12;<br> Because this value is too large, the route to point F will not adopt this method, but the above method.
 
 So far, we have found the shortest path from point A to each of these points.
