@@ -22,7 +22,7 @@ A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C 
 A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 6; 
 At this time, select C into S.
 2. S = {A,C};  U = {B,D,E,F}.
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 5;
+A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 5;
 A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">D = 6;
 A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E = 7;
 Because 5 is smaller than 6 written above,
