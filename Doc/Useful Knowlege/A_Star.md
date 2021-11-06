@@ -17,8 +17,8 @@ A simple example is given in the following figure：(Start with A)
 
 ![Dijkstra](https://pic002.cnblogs.com/images/2012/426620/2012073019593375.jpg#pic_center)
 
->1. S = {A};  U = {B,C,D,E,F}. 
-A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C = 3;
+>1. S = {A};  U = {B,C,D,E,F}.<br>
+A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C = 3;<br>
 A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">B = 6; 
 At this time, select C into S.
 >2. S = {A,C};  U = {B,D,E,F}.
