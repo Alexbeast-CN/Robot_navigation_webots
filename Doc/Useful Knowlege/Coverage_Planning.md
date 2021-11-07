@@ -1,5 +1,10 @@
 # Coverage Planning 
 
+> Book: 
+> - [Planning Algorithm -- Steven M. LaValle](http://lavalle.pl/planning/)
+>   - [Boustrophedon decomposition](http://lavalle.pl/planning/node352.html)
+>   - [Spanning tree covering](http://lavalle.pl/planning/node353.html)
+
 The coverage planning algorithm here is the main to solve problems in 2D areas. There are two methods explained in this book.
 
 ## 1. Boustrophedon decomposition 
