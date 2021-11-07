@@ -14,6 +14,6 @@ The coverage planning algorithm here is the main to solve problems in 2D areas. 
 
 Boustrophedon means the way ox walks which is the parallel-line-covered areas. The pattern is illustrated in the figure below.
 
-![ ](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Doc/Useful%20Knowlege)
+![ ](./pics/sensors-19-04165-g001.jpg)
 
 > ref:[Convex Decomposition for a Coverage Path Planning for Autonomous Vehicles: Interior Extension of Edges](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6806237/)
