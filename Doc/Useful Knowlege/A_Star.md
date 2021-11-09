@@ -30,3 +30,34 @@ So far, we have found the shortest path from point A to each of these points.
 ## 2. A* Algorithm
 This section gives a brief introduction to the algorithm by combining it with visual code.<br>
 This section requires some knowledge of C++，which includes functions for data structures and data processing in STL, such as map, pair and priority queue.
+```c
+if(!mp[s.first][s.second])
+{
+	q.push(mp(-(h[s.first][s.second]+g[s.first][s.second]),s));
+	v[s.first][s.second]=1;	
+} 
+	
+while(!q.empty())
+{
+	pair<int,int> tmp=q.top().second;
+	q.pop();
+	int x=tmp.first,y=tmp.second;
+	if(x==e.first&&y==e.second)
+	{
+		flag=1;
+		break;
+	}
+	for(int i=0;i<=3;i++)
+	{
+		int xx=x+dx[i];
+		int yy=y+dy[i];
+		if(xx>=1&&xx<=n&&yy>=1&&yy<=m&&!v[xx][yy]&&!mp[xx][yy])
+		{
+			v[xx][yy]=1;
+			pre[mp(xx,yy)]=mp(x,y);
+			g[xx][yy]=g[x][y]+1; 
+			q.push(mp(-(h[xx][yy]+g[xx][yy]),mp(xx,yy)));
+		}
+	}
+}
+```
