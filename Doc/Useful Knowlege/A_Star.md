@@ -26,3 +26,7 @@ A simple example is given in the following figure：(Start with A)
 >5. S = {A,C,B,D,E};  U = {F}.<br>A<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">C<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">E<img src="https://render.githubusercontent.com/render/math?math=\rightarrow">F = 12;<br> Because this value is too large, the route to point F will not adopt this method, but the above method.
 
 So far, we have found the shortest path from point A to each of these points.
+
+## 2. A* Algorithm
+This section gives a brief introduction to the algorithm by combining it with visual code.<br>
+This section requires some knowledge of C++，which includes functions for data structures and data processing in STL, such as map, pair and priority queue.
