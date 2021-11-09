@@ -1,0 +1,31 @@
+#VRML_SIM R2021b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation -0.04605263095981828 0.9301739635236452 0.36421909994451285 2.8907040105326067
+  position 0.4321778326278394 1.0183856064444683 -1.0649754370365896
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+  texture "stadium"
+}
+RectangleArena {
+  translation 0 0 0.01
+  floorSize 0.9 0.9
+  floorTileSize 0.2 0.2
+  wallHeight 0.01
+}
+WoodenBox {
+  translation 0 0.05 0.2
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0.1 0.05 0.2
+  name "wooden box2"
+  size 0.1 0.1 0.1
+}
+E-puck {
+  controller "room"
+}
