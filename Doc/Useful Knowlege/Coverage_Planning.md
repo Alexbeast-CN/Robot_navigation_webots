@@ -32,13 +32,17 @@ A solution called [Interior Extension of Edges](https://www.ncbi.nlm.nih.gov/pmc
 
 ![ ](pics/sensors-19-04165-g008.jpg)
 
-After that, the neighbor sub-polygons need to be merged to reduce sub-areas. The principle of this process the merged polygons are convex. In this process, we can get a set of merge options. Among them, The best option is the one with minimum total width.   
+After that, the neighbour sub-polygons need to be merged to reduce sub-areas. The principle of this process the merged polygons are convex. In this process, we can get a set of merge options. Among them, The best option is the one with minimum total width.   
 
 ![ ](pics/sensors-19-04165-g009.jpg)
 
-### 1.3 Method Detail
+### 1.3 Algorithm
 
-> ref: [A phd dissertation of Coverage Planning Problem and Traveling Salesman Problems](https://etd.auburn.edu/bitstream/handle/10415/4599/Optimization%20Approaches%20for%20a%20Dubins%20Vehicle%20in%20Coverage%20Planning%20Problem%20and%20Traveling%20Salesman%20Problems.pdf?sequence=2)
+> ref: [A PhD dissertation of Coverage Planning Problem and Traveling Salesman Problems](https://etd.auburn.edu/bitstream/handle/10415/4599/Optimization%20Approaches%20for%20a%20Dubins%20Vehicle%20in%20Coverage%20Planning%20Problem%20and%20Traveling%20Salesman%20Problems.pdf?sequence=2)
+
+#### 1.3.1 Convex Ploygon
+
+#### 1.3.2 Non-convex Ploygon
 
 ### 1.4 Code
 

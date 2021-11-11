@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.04605263095981828 0.9301739635236452 0.36421909994451285 2.8907040105326067
-  position 0.4321778326278394 1.0183856064444683 -1.0649754370365896
+  orientation -0.07789291036483355 0.8978770073575153 0.4333007894910972 2.8074654418986675
+  position 0.40930544522094836 1.2392804673349787 -1.0338392983324012
 }
 TexturedBackground {
 }
@@ -22,10 +22,41 @@ WoodenBox {
   size 0.1 0.1 0.1
 }
 WoodenBox {
+  translation -0.1 0.05 0.2
+  name "wooden box(1)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -0.1 0.05 0.1
+  name "wooden box(2)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -0.1 0.05 0
+  name "wooden box(3)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
   translation 0.1 0.05 0.2
   name "wooden box2"
   size 0.1 0.1 0.1
 }
+WoodenBox {
+  translation 0.1 0.05 0.1
+  name "wooden box2(1)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0.1 0.05 0
+  name "wooden box2(2)"
+  size 0.1 0.1 0.1
+}
 E-puck {
+  hidden position_0_0 -3.0998606284870784e-08
+  hidden position_0_1 -3.0998695943899394e-08
+  hidden rotation_1 1 0 0 2.9802322387695313e-08
+  hidden rotation_2 1 0 0 2.9802322387695313e-08
+  translation 0.4 -6.15139e-05 -0.39
+  rotation -0.0003977053926652557 -2.3744872668504826e-08 0.999999920915207 6.040332431924271e-06
   controller "room"
 }

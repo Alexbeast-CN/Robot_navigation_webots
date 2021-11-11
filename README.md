@@ -15,23 +15,28 @@ title Project Gantt
 dateFormat YY-MM-DD
 
     section Stage 1
-    Path Plan             :active, des2, 21-11-01, 3w
+    Path Plan             :done, des2, 21-11-01, 3w
     Locomotion            :active, des2, 21-11-01, 3w
     Odometry              :active, des1, 21-11-01, 1w
     Go Home               :active, des2, 21-11-01, 3w
+    Mapping               :active, des1, 21-11-01, 2w
     Visulization          :active, des1, 21-11-01, 1w
 
     section Stage2
-    Cmake                 :des3, after des1, 1w
-    Create Map            :des3, after des1, 3d
-    Change C to C++       :des4, after des3, 10d
+    Cmake                 :active, des6, after des1, 1w
+    Create Map            :done, des3, after des1, 3d
+    Study Mapping         :active, des4, after des3, 10d
 
-    Coverage Path Plan    :des4, after des3, 2w
-    Locomotion            :des5, after des2, 1w
+    Change C to C++       :active, des5, after des6, 10d
+    
+    Study and Code Coverage Path Plan    :active, des5, after des6, 3w
+
+    Study and Code A* Path Plan    :active, des5, after des6, 3w
+    
 
     section Stage3
     Documentaion          :active, 21-11-01,7w
-    Paper                 :after des2, 4w
+    Writing Paper                 :after des2, 4w
 
 ```
 
