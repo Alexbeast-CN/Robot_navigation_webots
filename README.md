@@ -47,6 +47,6 @@ Ps:
 
 ## Quick Access
 
-- [View Source Code](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Controller)
-- [Notes](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Doc/Useful%20Knowlege)
+- [Webots Project](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Robot_Workfile)
+- [Documentation](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Doc/Useful%20Knowlege)
 - [Formal Report](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/RS_Report)
