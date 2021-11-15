@@ -45,7 +45,7 @@ After that, the neighbor sub-polygons need to be merged to reduce sub-areas. The
 
 ![ ](pics/sensors-19-04165-g009.jpg)
 
-#### 1.2.2 Quick Optimal Path Plan Overview
+#### 1.2.2 Quick Optimal Path Plan Overview (QuikOPP)
 
 **Input:** 
 
@@ -66,11 +66,45 @@ After that, the neighbor sub-polygons need to be merged to reduce sub-areas. The
 - Merge regions.
   - Processing the adjacent regions from right to left, checking adjacent areas to determine if it is more cost-effective to merge the areas or leave them separate.
 - Return the optimal result.
-### 1.3 Algorithm
+### 1.3 Algorithm Details of QuikOPP
 
-#### 1.3.1 Convex Ploygon
+#### 1.3.1 Cost Function
 
-#### 1.3.2 Non-convex Ploygon
+
+
+#### 1.3.2 Sweep Direction
+
+Because turns cost more energy than go in a straight line, the optimal path direction tends to be in coordination with the most extended length of the sub-regions edge. Before the area is decomposed, the optimal direction is paralleled to the longest edge of the field. Then decompose the polygon to keep their length of sub-region in the same direction with the initial sweeping direction. The Algorithm for determining the optimal orientation is explained as below:
+
+**Algorithm:** Compute Sweep Direction
+
+**Input:** The edge of the field
+
+**Output:** Sweep direction
+
+**Procedure:**
+
+1. Call ComputeOptimalDirection, passing in the list of n segments.
+2. Return the normal to the optimal direction.
+
+**Algorithm:** Compute Optimal Direction
+
+**Input:** The edge of the field
+
+**Output:** Optimal direction
+
+**Procedure:**
+
+1. Initialize the overall minimum cost to -1 and the optimal direction to 0. 
+2. Iterate from 0° to 180° with a increment.
+   1. Initialize the total cost to 0.
+   2. For each edge direction i from 0 to n.
+      1. Calculate the turning cost for edge i.
+      2. Add the turning cost for edge i to the total cost.
+   3. If the total turning cost is less than the overall minimum or if the minimum cost is still in its initial state of -1, update the minimum cost and set theoptimal direction to the current direction.
+3. Return the optimal direction.
+
+#### 1.3.2 
 
 ### 1.4 Code
 
