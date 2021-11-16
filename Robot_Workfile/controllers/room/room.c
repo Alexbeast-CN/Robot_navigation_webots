@@ -40,6 +40,11 @@ struct Kinematics_s {
 void updateKinematics();
 struct Kinematics_s pose;
 
+// Map
+#define MAP_XLIM 9
+#define MAP_YLIM 9
+float map[MAP_XLIM][MAP_YLIM];
+
 // robot speeds
 #define Max_speed 1.5
 
@@ -149,7 +154,19 @@ void setup() {
     ps[i] = wb_robot_get_device(name);
     wb_distance_sensor_enable(ps[i], TIME_STEP);
   }
-  // You can add your own initialisation code here:
+
+  // Map
+  int x;
+  int y;
+  for(y = 0; y < MAP_YLIM; y++)
+  {
+    for(x = 0; x < MAP_XLIM; x++)
+    {
+      map[x][y] = 0.0;
+      printf("%.2f,", map[x][y]);
+    }
+    printf("\n");
+  }
 }
 
 void loop()

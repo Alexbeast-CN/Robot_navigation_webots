@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.03255400078306029 0.764941623016623 0.6432764183535029 3.0547401023745664
-  position 0.41339492117874516 0.6111804829967442 -0.4429789542531677
+  orientation -0.07007076358034212 0.8019535936709719 0.5932626076953454 2.9424467938123264
+  position 0.24685206177362418 1.5752385111145073 -0.5226857428204799
 }
 TexturedBackground {
 }
@@ -12,13 +12,12 @@ TexturedBackgroundLight {
   texture "stadium"
 }
 RectangleArena {
-  translation 0 0 0.01
   floorSize 0.9 0.9
   floorTileSize 0.2 0.2
   wallHeight 0.01
 }
 WoodenBox {
-  translation 0 0.05 0.2
+  translation 0 0.05 0
   size 0.1 0.1 0.1
 }
 WoodenBox {
@@ -52,10 +51,6 @@ WoodenBox {
   size 0.1 0.1 0.1
 }
 E-puck {
-  hidden position_0_0 -3.0998606284870784e-08
-  hidden position_0_1 -3.0998695943899394e-08
-  hidden rotation_1 1 0 0 2.9802322387695313e-08
-  hidden rotation_2 1 0 0 2.9802322387695313e-08
   translation 0.4 -6.15139e-05 -0.39
   rotation -3.021369999972441e-06 0.9999999999908786 3.018959999972463e-06 1.5708
   controller "room"
