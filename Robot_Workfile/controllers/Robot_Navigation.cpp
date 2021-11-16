@@ -4,11 +4,7 @@
    You can use other C libraries
 **********************************************/
 #include <stdio.h>                   
-#include <webots/led.h>
-#include <webots/motor.h>
-#include <webots/robot.h>
-#include <webots/distance_sensor.h> 
-#include <webots/position_sensor.h>
+#include <webots/Display.hpp>
 
 
 /*********************************************
