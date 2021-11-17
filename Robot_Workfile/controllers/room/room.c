@@ -154,7 +154,7 @@ void setup() {
     ps[i] = wb_robot_get_device(name);
     wb_distance_sensor_enable(ps[i], TIME_STEP);
   }
-
+/*
   // Map
   int x;
   int y;
@@ -167,12 +167,13 @@ void setup() {
     }
     printf("\n");
   }
+*/
 }
 
 void loop()
 {
   moving_forwards();
-  delay_ms(300);
+  delay_ms(3280);
   stop_moving();
   delay_ms(100);
   updateKinematics();
