@@ -1,5 +1,4 @@
-#ifndef _Robot_
-#define _Robot_
+#pragma once
 
 #include <iostream>
 #include <math.h>
@@ -40,10 +39,12 @@ public:
         this->robot = robot;
         leftMotor = robot->getMotor("left wheel motor");
         rightMotor = robot->getMotor("right wheel motor");
-        leftSensor = leftMotor->getPositionSensor();
-        rightSensor = rightMotor->getPositionSensor();
-        leftSensor->enable(TIME_STEP);
-        rightSensor->enable(TIME_STEP);
+        leftMotor->setPosition(INFINITY);
+        rightMotor->setPosition(INFINITY);
+        // leftSensor = leftMotor->getPositionSensor();
+        // rightSensor = rightMotor->getPositionSensor();
+        // leftSensor->enable(TIME_STEP);
+        // rightSensor->enable(TIME_STEP);
 
         char psNames[8][4] = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"};
 
@@ -112,7 +113,7 @@ public:
     }
 
     // Let the robot turn right pi
-    inline void turn_around_left(double speed)
+    inline void turn_around_right(double speed)
     {
         double time;
         time = PI*ROBOT_DIAMETER/2/speed/UNIT_SPEED;
@@ -183,7 +184,7 @@ public:
 private:
     Robot *robot;
     Motor *leftMotor, *rightMotor;
-    PositionSensor *leftSensor, *rightSensor;
+    // PositionSensor *leftSensor, *rightSensor;
     LightSensor *ls[8];
     DistanceSensor *ps[8];
 
@@ -191,5 +192,3 @@ private:
     const double PS_NOISE = 65;
     const double speed = 20;
 };
-
-#endif

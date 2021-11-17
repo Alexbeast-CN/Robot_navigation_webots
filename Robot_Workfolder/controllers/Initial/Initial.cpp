@@ -16,6 +16,7 @@
 
 // Webots Lib
 #include <webots/Robot.hpp>
+#include <webots/Motor.hpp>
 
 // Costumer Lib
 #include "lib/Robot.hpp"
@@ -25,7 +26,7 @@ SweepRobot *SweepBot;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
-using namespace std;
+
 // Function prototypes:
 
 
@@ -35,10 +36,13 @@ int main(int argc, char **argv) {
   // create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
-
   // Set a speed for robot
   double Regular_speed;
-  Regular_speed = 10;
+  Regular_speed = 2;
+  Motor *leftMotor = robot->getMotor("left wheel motor");
+  Motor *rightMotor = robot->getMotor("right wheel motor");
+  leftMotor->setPosition(INFINITY);
+  rightMotor->setPosition(INFINITY);
 
   // Main loop:
   while (robot->step(TIME_STEP) != -1) 
