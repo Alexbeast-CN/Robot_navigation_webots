@@ -19,7 +19,7 @@
 #include <webots/Motor.hpp>
 
 // Costumer Lib
-#include "lib/Robot.hpp"
+#include "lib/SweepRobot.hpp"
 
 // Environment variables
 SweepRobot *SweepBot;
@@ -53,5 +53,6 @@ int main(int argc, char **argv) {
   // Enter here exit cleanup code.
 
   delete robot;
+  delete SweepBot;
   return 0;
 }

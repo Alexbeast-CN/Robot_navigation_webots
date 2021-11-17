@@ -1,14 +1,11 @@
 #pragma once
 
 #include <iostream>
-#include <math.h>
-#include <limits>
 
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
 #include <webots/DistanceSensor.hpp>
-#include <webots/Supervisor.hpp>
 
 #define TIME_STEP 64 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28
