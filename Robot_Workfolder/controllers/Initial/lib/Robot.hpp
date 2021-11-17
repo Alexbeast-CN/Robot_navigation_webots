@@ -18,8 +18,7 @@
 #define WHEEL_RADIUS 0.0205
 #define ROBOT_RADIUS 0.0355
 #define ROBOT_DIAMETER 0.071
-#define AXLE_LENGTH 0.052
-#define CELL_LENGTH 0.1
+
 
 using namespace webots;
 
@@ -41,10 +40,10 @@ public:
         rightMotor = robot->getMotor("right wheel motor");
         leftMotor->setPosition(INFINITY);
         rightMotor->setPosition(INFINITY);
-        // leftSensor = leftMotor->getPositionSensor();
-        // rightSensor = rightMotor->getPositionSensor();
-        // leftSensor->enable(TIME_STEP);
-        // rightSensor->enable(TIME_STEP);
+        leftSensor = leftMotor->getPositionSensor();
+        rightSensor = rightMotor->getPositionSensor();
+        leftSensor->enable(TIME_STEP);
+        rightSensor->enable(TIME_STEP);
 
         char psNames[8][4] = {"ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7"};
 
@@ -158,6 +157,7 @@ public:
         return ps[i]->getValue();
     }
 
+    // delay a few ms
     inline void delay_ms( float ms ) 
     {
         float millis_now;
@@ -184,7 +184,7 @@ public:
 private:
     Robot *robot;
     Motor *leftMotor, *rightMotor;
-    // PositionSensor *leftSensor, *rightSensor;
+    PositionSensor *leftSensor, *rightSensor;
     LightSensor *ls[8];
     DistanceSensor *ps[8];
 

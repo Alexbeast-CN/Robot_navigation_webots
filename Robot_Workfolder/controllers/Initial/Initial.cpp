@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
   SweepBot = new SweepRobot(robot);
   // Set a speed for robot
   double Regular_speed;
-  Regular_speed = 2;
+  Regular_speed = 20;
   Motor *leftMotor = robot->getMotor("left wheel motor");
   Motor *rightMotor = robot->getMotor("right wheel motor");
   leftMotor->setPosition(INFINITY);
