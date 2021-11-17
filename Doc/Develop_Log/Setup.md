@@ -16,6 +16,7 @@ In Vscode, add `"${WEBOTS_HOME}/include/controller/cpp/**"` to `"includePath"` i
 2. Add your Linux PC to your GitHub account.
 3. Setup vscode on Linux.
 4. Git clone with ssh.
+I AM DONE!
 
 # Set up the main function in Cpp
 
