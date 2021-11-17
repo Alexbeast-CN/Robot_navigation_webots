@@ -25,7 +25,7 @@ SweepRobot *SweepBot;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
-
+using namespace std;
 // Function prototypes:
 
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
   // Set a speed for robot
   double Regular_speed;
-  Regular_speed = 20;
+  Regular_speed = 10;
 
   // Main loop:
   while (robot->step(TIME_STEP) != -1) 
