@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\Softwares\\Webots\\include\\**",
-                "${WEBOTS_HOME}/include/controller/**"
+                "/snap/webots/current/usr/share/webots/include/controller/cpp/**"
             ],
             "defines": [
                 "_DEBUG",
