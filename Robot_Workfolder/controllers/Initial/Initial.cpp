@@ -8,11 +8,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <ctime>
-#include <cmath>
-#include <stack>
-#include <queue>
 #include <unordered_map>
+#include <fstream>
+#include <sstream>
+#include <map>
 
 // Webots Lib
 #include <webots/Robot.hpp>
@@ -23,6 +22,7 @@
 
 // Environment variables
 SweepRobot *SweepBot;
+int 
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;

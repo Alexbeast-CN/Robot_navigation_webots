@@ -36,4 +36,4 @@ for i in range(10):
 #     # write the data
 #     writer.writerow(a)
 
-np.savetxt('EasyMap1.csv', a, delimiter = ',')
+np.savetxt('easyMap.csv', a, delimiter = ',')
