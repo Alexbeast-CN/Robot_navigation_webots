@@ -31,6 +31,9 @@ public:
     }
     inline vector<float> Cordinates()
     {  
+        float Current_left = leftposition();
+        float Current_right = rightposition();
+
         l_delta_angle = Current_left - l_last_angle;
         r_delta_angle = Current_right - r_last_angle;
   
@@ -51,6 +54,13 @@ public:
         return {x, y, th};
     }
 private:
-    float Current_left =  leftposition();
-    float Current_right = rightposition();
+    float l_last_angle;
+    float r_last_angle;
+    float l_delta_angle;   
+    float r_delta_angle; 
+    float x;             
+    float y;            
+    float th;
+    float Current_left;
+    float Current_right;
 }
