@@ -22,4 +22,6 @@ I AM DONE!
 
 > Thanks to PriyankaPrakashChand's [GitHub Repository](https://github.com/PriyankaPrakashChand/Micromouse_E-Puck). The Cpp version of the main function for this Webots project is beautifully built. 
 
+The main function enables the basic motion of the sweeping robot. 
 
+API descriptions can be found [here](https://github.com/Alexbeast-CN/Robot_navigation_webots/blob/main/Doc/Develop_Log/Functions.md)

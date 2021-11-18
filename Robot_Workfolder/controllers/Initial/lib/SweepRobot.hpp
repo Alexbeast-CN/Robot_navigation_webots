@@ -1,15 +1,11 @@
-#ifndef _Robot_
-#define _Robot_
+#pragma once
 
 #include <iostream>
-#include <math.h>
-#include <limits>
 
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
 #include <webots/DistanceSensor.hpp>
-#include <webots/Supervisor.hpp>
 
 #define TIME_STEP 64 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28
@@ -19,8 +15,7 @@
 #define WHEEL_RADIUS 0.0205
 #define ROBOT_RADIUS 0.0355
 #define ROBOT_DIAMETER 0.071
-#define AXLE_LENGTH 0.052
-#define CELL_LENGTH 0.1
+
 
 using namespace webots;
 
@@ -40,6 +35,8 @@ public:
         this->robot = robot;
         leftMotor = robot->getMotor("left wheel motor");
         rightMotor = robot->getMotor("right wheel motor");
+        leftMotor->setPosition(INFINITY);
+        rightMotor->setPosition(INFINITY);
         leftSensor = leftMotor->getPositionSensor();
         rightSensor = rightMotor->getPositionSensor();
         leftSensor->enable(TIME_STEP);
@@ -112,7 +109,7 @@ public:
     }
 
     // Let the robot turn right pi
-    inline void turn_around_left(double speed)
+    inline void turn_around_right(double speed)
     {
         double time;
         time = PI*ROBOT_DIAMETER/2/speed/UNIT_SPEED;
@@ -157,6 +154,7 @@ public:
         return ps[i]->getValue();
     }
 
+    // delay a few ms
     inline void delay_ms( float ms ) 
     {
         float millis_now;
@@ -191,5 +189,3 @@ private:
     const double PS_NOISE = 65;
     const double speed = 20;
 };
-
-#endif
