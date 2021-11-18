@@ -51,6 +51,17 @@ public:
         }
     }
 
+    inline float leftposition()
+    {
+        return  leftSensor->getValue();
+    }
+    
+    inline float rightposition()
+    {
+        return  rightSensor->getValue();
+    }
+
+
     // step one time unit
     inline bool step()
     {
