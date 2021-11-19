@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,7 +13,7 @@
 // Webots Lib
 #include <webots/Robot.hpp>
 // Costumer Lib
-#include "lib/SweepRobot.hpp"
+#include "SweepRobot.hpp"
 
 // Environment variables
 using namespace webots;

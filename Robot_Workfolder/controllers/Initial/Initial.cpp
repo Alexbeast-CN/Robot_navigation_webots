@@ -20,18 +20,20 @@
 
 // Costumer Lib
 #include "lib/SweepRobot.hpp"
+#include "lib/Odometry.hpp"
 
 // Environment variables
 SweepRobot *SweepBot;
+Odometry *location;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
 
 // Function prototypes:
 
-
 /************************************* Main ********************************************/
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 
   // create the Robot instance.
   Robot *robot = new Robot();
@@ -43,12 +45,15 @@ int main(int argc, char **argv) {
   Motor *rightMotor = robot->getMotor("right wheel motor");
   leftMotor->setPosition(INFINITY);
   rightMotor->setPosition(INFINITY);
-
   // Main loop:
-  while (robot->step(TIME_STEP) != -1) 
+  while (robot->step(TIME_STEP) != -1)
   {
     SweepBot->forward(Regular_speed);
-  };
+    // std::vector<float> ve = location->Cordinates();
+    // std::cout << ve[0] << std::endl;
+    // std::cout << ve[1] << std::endl;
+    // std::cout << ve[2] << std::endl;
+  }
 
   // Enter here exit cleanup code.
 
