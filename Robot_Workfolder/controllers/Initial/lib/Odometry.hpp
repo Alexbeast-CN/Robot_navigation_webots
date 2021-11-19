@@ -18,7 +18,7 @@
 // Environment variables
 using namespace webots;
 
-SweepRobot *SB;
+// SweepRobot *SB;
 class Odometry
 {
 private:
