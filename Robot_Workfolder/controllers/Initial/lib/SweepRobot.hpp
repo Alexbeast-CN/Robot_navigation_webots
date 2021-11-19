@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
+#include <tuple>
 
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
@@ -49,7 +51,18 @@ public:
             ps[i] = robot->getDistanceSensor(psNames[i]);
             ps[i]->enable(TIME_STEP);
         }
+
+        l_last_angle = 0.00;
+        r_last_angle = 0.00;
+        l_delta_angle = 0;   
+        r_delta_angle = 0; 
+        x = 0;             
+        y = 0;            
+        th = 0; 
     }
+    float x;             
+    float y;            
+    float th;
 
     inline float leftposition()
     {
@@ -61,6 +74,30 @@ public:
         return  rightSensor->getValue();
     }
 
+    inline std::tuple<float,float,float> Cordinates(float a , float b)
+    {  
+        Current_left = a;
+        Current_right = b;
+
+        l_delta_angle = Current_left - l_last_angle;
+        r_delta_angle = Current_right - r_last_angle;
+  
+        l_last_angle = Current_left;
+        r_last_angle = Current_right;
+
+        forward_contribution = ((WHEEL_RADIUS * l_delta_angle)/2) + ((WHEEL_RADIUS * r_delta_angle)/2);
+        theta_contribution = (l_delta_angle-r_delta_angle)*(0.5*(WHEEL_RADIUS)/ROBOT_RADIUS);
+  
+        x  = x + (forward_contribution * cos(th));
+        y  = y + (forward_contribution * sin(th));
+        th = th - theta_contribution;
+
+        if(th > (2*PI))
+        {
+        th = th - (2*PI);
+        }
+        return std::make_tuple(x,y,th);
+    }
 
     // step one time unit
     inline bool step()
@@ -199,4 +236,13 @@ private:
     const double PS_THRESHOLD = 80;
     const double PS_NOISE = 65;
     const double speed = 20;
+
+    float l_last_angle;
+    float r_last_angle;
+    float l_delta_angle;   
+    float r_delta_angle; 
+    float forward_contribution;
+    float theta_contribution;
+    float Current_left;
+    float Current_right;
 };
