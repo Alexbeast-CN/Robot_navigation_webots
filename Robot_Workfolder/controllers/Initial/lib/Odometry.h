@@ -1,13 +1,14 @@
-#pragma once
+#ifndef ODOMETRY_H
+#define ODOMETRY_H
+
 #include <iostream>
-#include <vector>
+#include <tuple>
+#include <math.h>
 
 #define WHEEL_RADIUS 0.0205
 #define ROBOT_RADIUS 0.0355
 #define PI 3.141592653589793116
 
-
-using namespace webots;
 class Odometry
 {
 private:
@@ -19,11 +20,10 @@ private:
     float theta_contribution;
     float Current_left;
     float Current_right;
-public:
     float x;             
     float y;            
     float th;
-
+public:
     // Odometry(/* args */);
     Odometry()
     {
@@ -34,8 +34,10 @@ public:
         x = 0;             
         y = 0;            
         th = 0; 
+        // Current_left = 0;
+        // Current_right = 0;
     }
-    inline float Cordinates(float a , float b)
+    inline std::tuple<float,float,float> Cordinates(float a , float b)
     {  
         Current_left = a;
         Current_right = b;
@@ -57,7 +59,8 @@ public:
         {
         th = th - (2*PI);
         }
-        return x;
+        return std::make_tuple(x,y,th);
     }
-    ~Odometry();
 };
+
+#endif

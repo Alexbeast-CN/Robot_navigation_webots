@@ -21,7 +21,7 @@
 
 // Costumer Lib
 #include "lib/SweepRobot.hpp"
-#include "lib/Odometry.hpp"
+#include "lib/Odometry.h"
 
 // Environment variables
 SweepRobot *SweepBot;
@@ -50,6 +50,9 @@ int main(int argc, char **argv)
   Motor *rightMotor = robot->getMotor("right wheel motor");
   leftMotor->setPosition(INFINITY);
   rightMotor->setPosition(INFINITY);
+
+  // create the Robot Odometry
+  Odometry Odo;
   // Main loop:
   while (robot->step(TIME_STEP) != -1)
   {
@@ -57,7 +60,7 @@ int main(int argc, char **argv)
     left_pos = SweepBot->leftposition();
     right_pos = SweepBot->rightposition();
     // std::cout<<"左轮的读数:"<<left_pos<<"  右轮的读数:"<<right_pos<<std::endl;
-    std::tie(cor_x,cor_y,cor_theta) = SweepBot->Cordinates(left_pos, right_pos);
+    std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates(left_pos, right_pos);
     std::cout<<"x坐标的读数:"<<cor_x<<std::endl;
     std::cout<<"y坐标的读数:"<<cor_y<<std::endl;
     std::cout<<"theta的读数:"<<cor_theta<<std::endl;
