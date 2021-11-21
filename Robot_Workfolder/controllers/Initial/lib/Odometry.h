@@ -59,6 +59,10 @@ public:
         {
         th = th - (2*PI);
         }
+
+        printf("x: %.2f\n",x);
+        printf("y: %.2f\n",y);
+        printf("theta: %.2f\n",th);
         return std::make_tuple(x,y,th);
     }
 };

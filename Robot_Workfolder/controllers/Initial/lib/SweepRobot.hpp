@@ -141,7 +141,7 @@ public:
     inline void turn_around_left(double speed)
     {
         double time;
-        time = PI*ROBOT_DIAMETER/2/speed/UNIT_SPEED;
+        time = PI*ROBOT_DIAMETER/speed/UNIT_SPEED;
         setSpeed(2*speed,0);
         delay_ms(time);
     }
@@ -150,8 +150,8 @@ public:
     inline void turn_around_right(double speed)
     {
         double time;
-        time = PI*ROBOT_DIAMETER/2/speed/UNIT_SPEED;
-        setSpeed(2*speed,0);
+        time = PI*ROBOT_DIAMETER/speed/UNIT_SPEED;
+        setSpeed(0,2*speed);
         delay_ms(time);
     }
 

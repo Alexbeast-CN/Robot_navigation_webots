@@ -22,19 +22,28 @@
 // Costumer Lib
 #include "lib/SweepRobot.hpp"
 #include "lib/Odometry.h"
+#include "lib/Map.h"
+#include "lib/Matrix.h"
 
 // Environment variables
 SweepRobot *SweepBot;
-// Odometry *location;
+Map map;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
-
+using std::cout;
+using std::endl;
 // Function prototypes:
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
 {
+  // Load the map
+  auto mat = map.easyMap();
+  // Display the map
+  //mat.Show();
+
+  Odometry Odo;
   float left_pos;
   float right_pos;
   float cor_x;
@@ -51,8 +60,7 @@ int main(int argc, char **argv)
   leftMotor->setPosition(INFINITY);
   rightMotor->setPosition(INFINITY);
 
-  // create the Robot Odometry
-  Odometry Odo;
+
   // Main loop:
   while (robot->step(TIME_STEP) != -1)
   {
@@ -61,11 +69,25 @@ int main(int argc, char **argv)
     right_pos = SweepBot->rightposition();
     // std::cout<<"左轮的读数:"<<left_pos<<"  右轮的读数:"<<right_pos<<std::endl;
     std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates(left_pos, right_pos);
-    std::cout<<"x坐标的读数:"<<cor_x<<std::endl;
-    std::cout<<"y坐标的读数:"<<cor_y<<std::endl;
-    std::cout<<"theta的读数:"<<cor_theta<<std::endl;
+
     //std::cout<<"y坐标的读数:"<<ve[1]<<std::endl;
     //std::cout<<"转动角度theta的读数:"<<ve[2]<<std::endl;
+
+    // The inital place of the robot on the map
+    int map_x = cor_x*100 + 5;
+    int map_y = cor_y*100 + 5;
+
+    // The coordinate that is 10 cells ahead of the robot
+    int ahead_x = map_x + 10*cos(abs(cor_theta));
+    int ahead_y = map_y + 10*sin(abs(cor_theta));
+
+    // Motion logic
+    if (mat.Point(ahead_x,ahead_y)==1&&cor_theta>=0)
+      SweepBot->turn_around_right(Regular_speed);
+    if (mat.Point(ahead_x,ahead_y)==1&&cor_theta<3)
+      SweepBot->turn_around_left(Regular_speed);
+    
+
   }
 
   // Enter here exit cleanup code.
