@@ -49,7 +49,7 @@ public:
         r_last_angle = Current_right;
 
         forward_contribution = ((WHEEL_RADIUS * l_delta_angle)/2) + ((WHEEL_RADIUS * r_delta_angle)/2);
-        theta_contribution = (l_delta_angle-r_delta_angle)*(0.5*(WHEEL_RADIUS)/ROBOT_RADIUS);
+        theta_contribution = (r_delta_angle-l_delta_angle)*(0.5*(WHEEL_RADIUS)/ROBOT_RADIUS);
   
         x  = x + (forward_contribution * cos(th));
         y  = y + (forward_contribution * sin(th));
@@ -60,8 +60,8 @@ public:
         th = th - (2*PI);
         }
 
-        printf("x: %.2f\n",x);
-        printf("y: %.2f\n",y);
+        printf("x: %.2f",x);
+        printf("\ty: %.2f\n",y);
         printf("theta: %.2f\n",th);
         return std::make_tuple(x,y,th);
     }

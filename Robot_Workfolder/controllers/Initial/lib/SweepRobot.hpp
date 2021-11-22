@@ -140,18 +140,19 @@ public:
     // Let the robot turn left pi
     inline void turn_around_left(double speed)
     {
-        double time;
-        time = PI*ROBOT_DIAMETER/speed/UNIT_SPEED;
-        setSpeed(2*speed,0);
+        int time;
+        time = PI*ROBOT_DIAMETER*5/speed/UNIT_SPEED;
+        setSpeed(0,speed);
         delay_ms(time);
+
     }
 
     // Let the robot turn right pi
     inline void turn_around_right(double speed)
     {
-        double time;
-        time = PI*ROBOT_DIAMETER/speed/UNIT_SPEED;
-        setSpeed(0,2*speed);
+        int time;
+        time = PI*ROBOT_DIAMETER*5/speed/UNIT_SPEED;
+        setSpeed(speed,0);
         delay_ms(time);
     }
 
