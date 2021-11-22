@@ -39,9 +39,9 @@ using std::endl;
 int main(int argc, char **argv)
 {
   // Load the map
-  auto mat = map.easyMap();
+  auto mat = map.easyMapS();
   // Display the map
-  //mat.Show();
+  mat.Show();
 
   Odometry Odo;
   float left_pos;
@@ -55,10 +55,6 @@ int main(int argc, char **argv)
   // Set a speed for robot
   double Regular_speed;
   Regular_speed = 20;
-  Motor *leftMotor = robot->getMotor("left wheel motor");
-  Motor *rightMotor = robot->getMotor("right wheel motor");
-  leftMotor->setPosition(INFINITY);
-  rightMotor->setPosition(INFINITY);
 
 
   // Main loop:
@@ -72,7 +68,7 @@ int main(int argc, char **argv)
 
     //std::cout<<"y坐标的读数:"<<ve[1]<<std::endl;
     //std::cout<<"转动角度theta的读数:"<<ve[2]<<std::endl;
-
+    /*
     // The inital place of the robot on the map
     int map_x = cor_x*100 + 5;
     int map_y = cor_y*100 + 5;
@@ -86,7 +82,7 @@ int main(int argc, char **argv)
       SweepBot->turn_around_right(Regular_speed);
     if (mat.Point(ahead_x,ahead_y)==1&&cor_theta<3)
       SweepBot->turn_around_left(Regular_speed);
-    
+    */
 
   }
 
