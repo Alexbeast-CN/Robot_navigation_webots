@@ -44,17 +44,17 @@ int main(int argc, char **argv)
   //mat.Show();
 
   Odometry Odo;
-  float left_pos;
-  float right_pos;
-  float cor_x;
-  float cor_y;
-  float cor_theta;
+  // float left_pos;
+  // float right_pos;
+  // float cor_x;
+  // float cor_y;
+  // float cor_theta;
   // create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
   // Set a speed for robot
   double Regular_speed;
-  Regular_speed = 50;
+  Regular_speed = 30;
   float t1 = robot->getTime();
   cout<<t1<<endl;
   SweepBot->forward(Regular_speed);
@@ -62,9 +62,10 @@ int main(int argc, char **argv)
   t1 = robot->getTime();
   cout<<t1<<endl;
 
-  SweepBot->turn_around_right(Regular_speed);
+  SweepBot->rotate_right(Regular_speed,180);
   t1 = robot->getTime();
   cout<<t1<<endl;
+  SweepBot->stop();
 
   /*
   // Main loop:

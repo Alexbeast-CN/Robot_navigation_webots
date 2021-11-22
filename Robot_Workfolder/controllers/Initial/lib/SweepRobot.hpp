@@ -17,6 +17,7 @@
 #define WHEEL_RADIUS 0.0205
 #define ROBOT_RADIUS 0.0355
 #define ROBOT_DIAMETER 0.071
+#define CELL 0.5
 
 
 using namespace webots;
@@ -104,64 +105,7 @@ public:
         return true;
     }
 
-    // function to set speed of motors
-    inline void setSpeed(double leftSpeed, double rightSpeed)
-    {
-        leftMotor->setVelocity(leftSpeed * UNIT_SPEED);
-        rightMotor->setVelocity(rightSpeed * UNIT_SPEED);
-    }
-
-    // Move the robot forward with some speed
-    inline void forward(double speed)
-    {
-        setSpeed(speed,speed);
-    }
-
-    // Let the robot rotate left to some degree
-    inline void rotate_left(double degree)
-    {
-        double rotate_speed;
-        rotate_speed = 2;
-        setSpeed(rotate_speed,-rotate_speed);
-        delay_ms(degree);
-    }
-
-
     
-    // Let the robot rotate right to some degree
-    inline void rotate_right(double degree)
-    {
-        double rotate_speed;
-        rotate_speed = 2;
-        setSpeed(-rotate_speed,rotate_speed);
-        delay_ms(degree);
-    }
-
-    // Let the robot turn left pi
-    inline void turn_around_left(double speed)
-    {
-        int time;
-        time = PI*ROBOT_DIAMETER*5/speed/UNIT_SPEED;
-        setSpeed(0,speed);
-        delay_ms(time);
-
-    }
-
-    // Let the robot turn right pi
-    inline void turn_around_right(double speed)
-    {
-        int time;
-        time = PI*ROBOT_DIAMETER*5/speed/UNIT_SPEED;
-        setSpeed(speed,0);
-        delay_ms(time);
-    }
-
-    // sets speed to 0 and steps
-    void stop()
-    {
-        setSpeed(0,0);
-        step();
-    }
 
     // checks if wall exist on the right of bot
     inline bool wallRight()
@@ -194,21 +138,23 @@ public:
     }
 
     // delay a few ms
-    inline void delay_ms( float ms ) 
+
+
+    // sets speed to 0 and steps
+    inline void stop()
     {
-        float millis_now;
-        float millis_future;
-        
-        millis_now = robot->getTime() * 1000.0;
-        millis_future = millis_now + ms;
-        while( millis_now < millis_future ) 
-        {
-            millis_now = robot->getTime() * 1000.0;
-            robot->step( TIME_STEP );
-        } 
-        
-        return;
-    } 
+        setSpeed(0,0);
+        step();
+    }
+
+    void setSpeed(double leftSpeed, double rightSpeed);
+    void forward(double speed);
+    void rotate_left(double time, double degree);
+    void rotate_right(double time, double degree);
+    void turn_around_left(double speed);
+    void turn_around_right(double speed);
+    void delay_ms( float ms );
+
 
     // destructor
     ~SweepRobot()
@@ -228,3 +174,76 @@ private:
     const double PS_NOISE = 65;
     const double speed = 20;
 };
+
+// function to set speed of motors
+    void SweepRobot::setSpeed(double leftSpeed, double rightSpeed)
+    {
+        leftMotor->setVelocity(leftSpeed * UNIT_SPEED);
+        rightMotor->setVelocity(rightSpeed * UNIT_SPEED);
+    }
+
+    // Move the robot forward with some speed
+    void SweepRobot::forward(double speed)
+    {
+        setSpeed(speed,speed);
+    }
+
+    // Let the robot rotate left to some degree
+    void SweepRobot::rotate_left(double time, double degree)
+    {
+        setSpeed(-speed,speed);
+        float real_speed = speed*UNIT_SPEED;
+        float l_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360;
+        delay_ms(l_time);
+    }
+
+
+    
+    // Let the robot rotate right to some degree
+    void SweepRobot::rotate_right(double speed, double degree)
+    {
+        setSpeed(speed,-speed);
+        float real_speed = speed*UNIT_SPEED;
+        float r_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360;
+        delay_ms(r_time);
+    }
+
+    // Let the robot turn left pi
+    void SweepRobot::turn_around_left(double speed)
+    {  
+        float v_rate = (CELL/2-ROBOT_RADIUS)/(CELL/2+ROBOT_RADIUS);
+        float vout = 2*speed*UNIT_SPEED/(v_rate+1);
+        float vin = v_rate*vout;
+        float time = PI*ROBOT_DIAMETER/speed/UNIT_SPEED;
+        setSpeed(vin,vout);
+        delay_ms(time);
+    }
+
+    // Let the robot turn right pi
+    void SweepRobot::turn_around_right(double speed)
+    {
+        float v_rate = (CELL/2-ROBOT_RADIUS)/(CELL/2+ROBOT_RADIUS);
+        float vout = 2*speed*UNIT_SPEED/(v_rate+1);
+        float vin = v_rate*vout;
+        float time = (PI*ROBOT_DIAMETER*10)/(speed*UNIT_SPEED);
+        setSpeed(vout,vin);
+        delay_ms(time);
+    }
+
+    // delay function
+    void SweepRobot::delay_ms( float ms ) 
+    {
+        float millis_now;
+        float millis_future;
+        
+        millis_now = robot->getTime() * 1000.0;
+        millis_future = millis_now + ms;
+        while( millis_now < millis_future ) 
+        {
+            millis_now = robot->getTime() * 1000.0;
+            robot->step( TIME_STEP );
+        } 
+        
+        return;
+    } 
+
