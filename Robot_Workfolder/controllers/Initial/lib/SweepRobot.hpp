@@ -10,13 +10,13 @@
 #include <webots/DistanceSensor.hpp>
 
 #define TIME_STEP 64 // time in [ms] of a simulation step
-#define MAX_SPEED 6.28
-#define MAX_FORWARD 0.25
+#define MAX_SPEED 6.28 
 #define UNIT_SPEED (MAX_SPEED / 100.0)
+#define UNIT_FORWARD (UNIT_SPEED*WHEEL_RADIUS*2)
 #define PI 3.141592653589793116
 #define HALF_PI 1.570796326794896558
 #define WHEEL_RADIUS 0.0205
-#define ROBOT_RADIUS 0.0355
+#define ROBOT_RADIUS 0.0355 
 #define ROBOT_DIAMETER 0.071
 #define CELL 0.1
 
@@ -194,7 +194,7 @@ private:
     {
         setSpeed(-speed,speed);
         float real_speed = speed*UNIT_SPEED;
-        float l_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/MAX_FORWARD;
+        float l_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/UNIT_FORWARD;
         robot->step(l_time);
     }
 
@@ -204,17 +204,18 @@ private:
     {
         setSpeed(speed,-speed);
         float real_speed = speed*UNIT_SPEED;
-        float r_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/MAX_FORWARD;
+        float r_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/UNIT_FORWARD;
         robot->step(r_time);
     }
 
     // Let the robot turn left pi
     void SweepRobot::turn_around_left(double speed)
     {  
-        float v_rate = (CELL/2-ROBOT_RADIUS)/(CELL/2+ROBOT_RADIUS);
-        float vout = 2*speed/(v_rate+1);
-        float vin = v_rate*vout;
-        float time = (PI*CELL)/(MAX_FORWARD*speed)*100000;
+        double real_speed = speed*UNIT_FORWARD;
+        double route = (PI*CELL)/2;
+        double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
+        double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
+        float time = route/real_speed*1000;
         std::cout<<time<<std::endl;
         setSpeed(vin,vout);
         robot->step(time);
@@ -223,10 +224,10 @@ private:
     // Let the robot turn right pi
     void SweepRobot::turn_around_right(double speed)
     {
-        float v_rate = (CELL/2-ROBOT_RADIUS)/(CELL/2+ROBOT_RADIUS);
-        float vout = 2*speed/(v_rate+1);
-        float vin = v_rate*vout;
-        float time = (PI*CELL)/(MAX_FORWARD*speed)*100000;
+        double real_speed = speed*UNIT_FORWARD;
+        double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
+        double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
+        float time = (PI*CELL)/real_speed*1000;
         std::cout<<time<<std::endl;
         setSpeed(vout,vin);
         robot->step(time);

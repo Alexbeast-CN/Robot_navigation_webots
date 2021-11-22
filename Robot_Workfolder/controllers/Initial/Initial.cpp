@@ -42,29 +42,26 @@ int main(int argc, char **argv)
   auto mat = map.easyMapS();
   // Display the map
   //mat.Show();
+  float left_pos;
+  float right_pos;
 
   Odometry Odo;
-  // float left_pos;
-  // float right_pos;
-  // float cor_x;
-  // float cor_y;
-  // float cor_theta;
-  // create the Robot instance.
+  float cor_x;
+  float cor_y;
+  float cor_theta;
+  //create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
   // Set a speed for robot
   double Regular_speed;
-  Regular_speed = 30;
-  float t1 = robot->getTime();
-  cout<<t1<<endl;
+  Regular_speed = 40;
   SweepBot->forward(Regular_speed);
   SweepBot->delay_ms(1000);
-  t1 = robot->getTime();
-  cout<<t1<<endl;
 
   SweepBot->turn_around_right(Regular_speed);
-  t1 = robot->getTime();
-  cout<<t1<<endl;
+  left_pos = SweepBot->leftposition();
+  right_pos = SweepBot->rightposition();
+  std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates(left_pos, right_pos);
   SweepBot->stop();
 
   /*
@@ -75,9 +72,6 @@ int main(int argc, char **argv)
     right_pos = SweepBot->rightposition();
     // std::cout<<"左轮的读数:"<<left_pos<<"  右轮的读数:"<<right_pos<<std::endl;
     std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates(left_pos, right_pos);
-
-    //std::cout<<"y坐标的读数:"<<ve[1]<<std::endl;
-    //std::cout<<"转动角度theta的读数:"<<ve[2]<<std::endl;
     
     // The inital place of the robot on the map
     int map_x = cor_x*10 + 1;
