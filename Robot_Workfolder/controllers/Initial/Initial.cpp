@@ -62,7 +62,7 @@ int main(int argc, char **argv)
   t1 = robot->getTime();
   cout<<t1<<endl;
 
-  SweepBot->rotate_right(Regular_speed,180);
+  SweepBot->turn_around_right(Regular_speed);
   t1 = robot->getTime();
   cout<<t1<<endl;
   SweepBot->stop();

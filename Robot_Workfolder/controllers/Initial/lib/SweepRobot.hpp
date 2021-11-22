@@ -11,13 +11,14 @@
 
 #define TIME_STEP 64 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28
+#define MAX_FORWARD 0.25
 #define UNIT_SPEED (MAX_SPEED / 100.0)
 #define PI 3.141592653589793116
 #define HALF_PI 1.570796326794896558
 #define WHEEL_RADIUS 0.0205
 #define ROBOT_RADIUS 0.0355
 #define ROBOT_DIAMETER 0.071
-#define CELL 0.5
+#define CELL 0.1
 
 
 using namespace webots;
@@ -193,10 +194,9 @@ private:
     {
         setSpeed(-speed,speed);
         float real_speed = speed*UNIT_SPEED;
-        float l_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360;
-        delay_ms(l_time);
+        float l_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/MAX_FORWARD;
+        robot->step(l_time);
     }
-
 
     
     // Let the robot rotate right to some degree
@@ -204,30 +204,32 @@ private:
     {
         setSpeed(speed,-speed);
         float real_speed = speed*UNIT_SPEED;
-        float r_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360;
-        delay_ms(r_time);
+        float r_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/MAX_FORWARD;
+        robot->step(r_time);
     }
 
     // Let the robot turn left pi
     void SweepRobot::turn_around_left(double speed)
     {  
         float v_rate = (CELL/2-ROBOT_RADIUS)/(CELL/2+ROBOT_RADIUS);
-        float vout = 2*speed*UNIT_SPEED/(v_rate+1);
+        float vout = 2*speed/(v_rate+1);
         float vin = v_rate*vout;
-        float time = PI*ROBOT_DIAMETER/speed/UNIT_SPEED;
+        float time = (PI*CELL)/(MAX_FORWARD*speed)*100000;
+        std::cout<<time<<std::endl;
         setSpeed(vin,vout);
-        delay_ms(time);
+        robot->step(time);
     }
 
     // Let the robot turn right pi
     void SweepRobot::turn_around_right(double speed)
     {
         float v_rate = (CELL/2-ROBOT_RADIUS)/(CELL/2+ROBOT_RADIUS);
-        float vout = 2*speed*UNIT_SPEED/(v_rate+1);
+        float vout = 2*speed/(v_rate+1);
         float vin = v_rate*vout;
-        float time = (PI*ROBOT_DIAMETER*10)/(speed*UNIT_SPEED);
+        float time = (PI*CELL)/(MAX_FORWARD*speed)*100000;
+        std::cout<<time<<std::endl;
         setSpeed(vout,vin);
-        delay_ms(time);
+        robot->step(time);
     }
 
     // delay function
