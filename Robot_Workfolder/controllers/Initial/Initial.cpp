@@ -55,12 +55,18 @@ int main(int argc, char **argv)
   float cor_y;
   float cor_theta;
   float t;
-
+  
+  //A星算法测试(函数可以返回整个容器，并且关联关系是没问题的)
   Astar Path;
   std::map<std::pair<int,int>,std::pair<int,int> >Route;
+  std::pair<int,int>aa;
   // 假设起始点和终点已知
   int a[2] = {1,1};
   int b[2] = {1,4};
+  std::pair<int,int>end(1,2);
+  Route = Path.Findpath(a,b,mat);
+  aa = Route[end];
+  cout<<aa.first<<' '<<aa.second<<endl;
 
   //create the Robot instance.
   Robot *robot = new Robot();
@@ -74,10 +80,6 @@ int main(int argc, char **argv)
     t = robot->getTime();
     cout<<"Time is: " << t << endl;
     std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates();
-
-    // A_star算法测试
-    Route = Path.Findpath(a,b,mat);
-    
 
     /*
     static int i=0;
