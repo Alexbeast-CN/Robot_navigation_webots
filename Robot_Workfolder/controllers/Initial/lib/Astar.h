@@ -11,7 +11,7 @@
 #include "Matrix.h"
 #include "Map.h"
 
-#define mp(x,y) std::make_pair(x,y)
+// #define mp(x,y) make_pair(x,y)
 
 class Astar
 {
@@ -27,7 +27,9 @@ private:
 
     
 public:
-    int Findpath(int a[2], int b[2], Matrix mat)
+
+    // 容器函数，似乎返回容器并不是一个很好的方法，见暂时拿这个尝试
+    std::map<std::pair<int,int>,std::pair<int,int> > Findpath(int a[2], int b[2], Matrix mat)
     {   
         // 将形参数组中的值传递给pair变量，其为起点和终点坐标
         s.first = a[0];
@@ -40,7 +42,7 @@ public:
         {
             for(int j=0; j<11; j++)
             {
-                mp[i][j] = mat.p[i][j];
+                mp[i][j] = mat.Point(i,j);
             }
         }
         // 构造启发函数为该节点到终点的曼哈顿距离
@@ -54,7 +56,7 @@ public:
         //优先队列优先的搜索方法
         if(!mp[s.first][s.second])
 	    {
-		    q.push(mp(-(h[s.first][s.second]+g[s.first][s.second]),s));
+		    q.push(std::make_pair(-(h[s.first][s.second]+g[s.first][s.second]),s));
 		    v[s.first][s.second]=1;	
 	    } 
 	
@@ -75,12 +77,15 @@ public:
 			    if(xx>=1 && xx<=11 && yy>=1&& yy<=11 &&!v[xx][yy] && !mp[xx][yy])
 			    {   
 				    v[xx][yy]=1;
-				    pre[mp(xx,yy)]=mp(x,y);
+				    pre[std::make_pair(xx,yy)]=std::make_pair(x,y);
 				    g[xx][yy]=g[x][y]+1; 
-				    q.push(mp(-(h[xx][yy]+g[xx][yy]),mp(xx,yy)));
+				    q.push(std::make_pair(-(h[xx][yy]+g[xx][yy]),std::make_pair(xx,yy)));
 			    }
 		    }
 	    }
+
+        //返回值
+        return pre;
     }
 
     Astar()
@@ -95,14 +100,5 @@ public:
     }
 
     
-};
-
-Astar::Astar(/* args */)
-{
-}
-
-Astar::~Astar()
-{
-}
-
+}；
 #endif
