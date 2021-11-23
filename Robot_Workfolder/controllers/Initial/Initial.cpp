@@ -24,6 +24,7 @@
 #include "lib/Odometry.h"
 #include "lib/Map.h"
 #include "lib/Matrix.h"
+#include "lib/Astar.h"
 
 // Environment variables
 SweepRobot *SweepBot;
