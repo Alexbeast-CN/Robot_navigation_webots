@@ -186,27 +186,17 @@ private:
     // Let the robot turn left pi
     void SweepRobot::turn_around_left(double speed)
     {  
-        double real_speed = speed*UNIT_FORWARD;
-        float path_length = PI*CELL/2;
         double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
         double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
-        float time = path_length/real_speed*1000;
-        std::cout<<time<<std::endl;
         setSpeed(vin,vout);
-        robot->step(time);
     }
 
     // Let the robot turn right pi
     void SweepRobot::turn_around_right(double speed)
     {
-        double real_speed = speed*UNIT_FORWARD;
-        float path_length = PI*CELL/2;
         double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
         double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
-        float time = path_length/real_speed*1000;
-        std::cout<<time<<std::endl;
         setSpeed(vout,vin);
-        robot->step(time);
     }
 
     // delay function

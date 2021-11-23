@@ -18,6 +18,9 @@ public:
     Matrix easyMap();
     Matrix easyMapS();
     Matrix markTrajectory(Matrix& map, int x, int y);
+    Matrix markTrajectoryL(Matrix& map, int x, int y);
+
+
 };
 
 Map::Map(/* args */)
@@ -82,5 +85,15 @@ Matrix Map::markTrajectory(Matrix& map, int x, int y)
     map.p[x][y] = TRAJECTORY;
     return map;
 }
+
+Matrix Map::markTrajectoryL(Matrix& map, int x, int y)
+{
+    for(int i=-4; i<=4; i++)
+        for(int j=-4; j<=4; j++)
+            map.p[x+i][y+j] = TRAJECTORY;
+    return map;
+}   
+
+
 
 #endif
