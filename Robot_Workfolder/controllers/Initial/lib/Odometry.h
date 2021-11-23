@@ -4,10 +4,12 @@
 #include <iostream>
 #include <tuple>
 #include <math.h>
+#include "SweepRobot.hpp"
 
 #define WHEEL_RADIUS 0.0205
 #define ROBOT_RADIUS 0.0355
 #define PI 3.141592653589793116
+SweepRobot *SweepBot;
 
 class Odometry
 {
@@ -23,8 +25,8 @@ private:
     float x;             
     float y;            
     float th;
+
 public:
-    // Odometry(/* args */);
     Odometry()
     {
         l_last_angle = 0.00;
@@ -34,13 +36,13 @@ public:
         x = 0;             
         y = 0;            
         th = 0; 
-        // Current_left = 0;
-        // Current_right = 0;
+        Current_left = 0;
+        Current_right = 0;
     }
-    inline std::tuple<float,float,float> Cordinates(float a , float b)
+    inline std::tuple<float,float,float> Cordinates()
     {  
-        Current_left = a;
-        Current_right = b;
+        Current_left = SweepBot->leftposition();
+        Current_right = SweepBot->rightposition();
 
         l_delta_angle = Current_left - l_last_angle;
         r_delta_angle = Current_right - r_last_angle;
@@ -60,9 +62,9 @@ public:
         th = th - (2*PI);
         }
 
-        printf("x: %.2f",x);
-        printf("\ty: %.2f\n",y);
-        printf("theta: %.2f\n",th);
+        printf("x: %.3f",x);
+        printf("\ty: %.3f\n",y);
+        printf("theta: %.3f\n",th);
         return std::make_tuple(x,y,th);
     }
 };
