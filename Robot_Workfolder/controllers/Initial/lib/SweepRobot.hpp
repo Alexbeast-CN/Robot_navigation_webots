@@ -12,7 +12,7 @@
 #define TIME_STEP 64 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28 
 #define UNIT_SPEED (MAX_SPEED / 100.0)
-#define UNIT_FORWARD (UNIT_SPEED*WHEEL_RADIUS*2)
+#define UNIT_FORWARD (UNIT_SPEED*WHEEL_RADIUS)
 #define PI 3.141592653589793116
 #define HALF_PI 1.570796326794896558
 #define WHEEL_RADIUS 0.0205
@@ -187,10 +187,10 @@ private:
     void SweepRobot::turn_around_left(double speed)
     {  
         double real_speed = speed*UNIT_FORWARD;
-        double route = (PI*CELL)/2;
+        float path_length = PI*CELL/2;
         double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
         double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
-        float time = route/real_speed*1000;
+        float time = path_length/real_speed*1000;
         std::cout<<time<<std::endl;
         setSpeed(vin,vout);
         robot->step(time);
@@ -200,9 +200,10 @@ private:
     void SweepRobot::turn_around_right(double speed)
     {
         double real_speed = speed*UNIT_FORWARD;
+        float path_length = PI*CELL/2;
         double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
         double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
-        float time = (PI*CELL)/real_speed*1000;
+        float time = path_length/real_speed*1000;
         std::cout<<time<<std::endl;
         setSpeed(vout,vin);
         robot->step(time);

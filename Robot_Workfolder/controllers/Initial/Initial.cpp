@@ -64,7 +64,13 @@ int main(int argc, char **argv)
   int x_right;
   int y_left;
   int y_right;
-
+  std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates(left_pos, right_pos);
+  SweepBot->forward(Regular_speed);
+  robot->step(1000);
+  SweepBot->turn_around_right(Regular_speed);
+  std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates(left_pos, right_pos);
+  SweepBot->stop();
+  /*
   // Main loop:
   while (robot->step(TIME_STEP) != -1)
   {
@@ -87,6 +93,7 @@ int main(int argc, char **argv)
     y_left = map_y - 1*cos(abs(cor_theta));
     y_right = map_y + 1*cos(abs(cor_theta));
     cout << "Ahead x is " << ahead_x << ", ahead y is " << ahead_y << endl;
+
 
     // // Motion logic
     if (mat.Point(ahead_x,ahead_y)==1)
@@ -113,6 +120,7 @@ int main(int argc, char **argv)
     
     robot->step(200);
   }
+  */
   // Enter exit cleanup code here.
   delete robot;
   delete SweepBot;
