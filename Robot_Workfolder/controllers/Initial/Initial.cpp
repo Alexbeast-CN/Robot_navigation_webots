@@ -14,6 +14,10 @@
 #include <queue>
 #include <unordered_map>
 #include <tuple>
+#include <map>
+#include <queue>
+#include <cstdio>
+#include <utility>
 
 // Webots Lib
 #include <webots/Robot.hpp>
@@ -52,6 +56,12 @@ int main(int argc, char **argv)
   float cor_theta;
   float t;
 
+  Astar Path;
+  std::map<std::pair<int,int>,std::pair<int,int> >Route;
+  // 假设起始点和终点已知
+  int a[2] = {1,1};
+  int b[2] = {1,4};
+
   //create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
@@ -64,6 +74,12 @@ int main(int argc, char **argv)
     t = robot->getTime();
     cout<<"Time is: " << t << endl;
     std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates();
+
+    // A_star算法测试
+    Route = Path.Findpath(a,b,mat);
+    
+
+    /*
     static int i=0;
     if ( i<10)
     {
@@ -76,6 +92,7 @@ int main(int argc, char **argv)
         SweepBot-> turn_around_right(Regular_speed);
         SweepBot->stop();
       }
+    */
     robot->step(200);
   }
   

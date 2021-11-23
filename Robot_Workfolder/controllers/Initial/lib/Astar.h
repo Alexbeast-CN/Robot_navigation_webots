@@ -46,11 +46,11 @@ public:
             }
         }
         // 构造启发函数为该节点到终点的曼哈顿距离
-        for(int i=1;i<=11;i++)
+        for(int i=1;i<10;i++)
 	    {
-		    for(int j=1;j<=11;j++)
+		    for(int j=1;j<10;j++)
 		    {
-			    h[i][j]= abs(i-e.first)+ abs(j-e.second);
+			    h[i][j] = abs(i-e.first)+abs(j-e.second);
 		    }
 	    }
         //优先队列优先的搜索方法
@@ -74,7 +74,7 @@ public:
 		    {
 			    int xx = x + dx[i];
 			    int yy = y + dy[i];
-			    if(xx>=1 && xx<=11 && yy>=1&& yy<=11 &&!v[xx][yy] && !mp[xx][yy])
+			    if(xx>=1 && xx<10 && yy>=1&& yy<=10 &&!v[xx][yy] && !mp[xx][yy])
 			    {   
 				    v[xx][yy]=1;
 				    pre[std::make_pair(xx,yy)]=std::make_pair(x,y);
@@ -100,5 +100,5 @@ public:
     }
 
     
-}；
+};
 #endif
