@@ -16,8 +16,8 @@
 #define PI 3.141592653589793116
 #define HALF_PI 1.570796326794896558
 #define WHEEL_RADIUS 0.0205
-#define ROBOT_RADIUS 0.0355 
-#define ROBOT_DIAMETER 0.071
+#define ROBOT_RADIUS 0.028
+#define ROBOT_DIAMETER 0.56
 #define CELL 0.1
 
 
@@ -125,8 +125,8 @@ public:
 
     void setSpeed(double leftSpeed, double rightSpeed);
     void forward(double speed);
-    void rotate_left(double time, double degree);
-    void rotate_right(double time, double degree);
+    void rotate_left(double time);
+    void rotate_right(double time);
     void turn_around_left(double speed);
     void turn_around_right(double speed);
     void delay_ms( float ms );
@@ -165,22 +165,16 @@ private:
     }
 
     // Let the robot rotate left to some degree
-    void SweepRobot::rotate_left(double time, double degree)
+    void SweepRobot::rotate_left(double time)
     {
         setSpeed(-speed,speed);
-        float real_speed = speed*UNIT_SPEED;
-        float l_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/UNIT_FORWARD;
-        robot->step(l_time);
     }
 
     
     // Let the robot rotate right to some degree
-    void SweepRobot::rotate_right(double speed, double degree)
+    void SweepRobot::rotate_right(double speed)
     {
         setSpeed(speed,-speed);
-        float real_speed = speed*UNIT_SPEED;
-        float r_time = PI*ROBOT_DIAMETER*100*degree/real_speed/360/UNIT_FORWARD;
-        robot->step(r_time);
     }
 
     // Let the robot turn left pi

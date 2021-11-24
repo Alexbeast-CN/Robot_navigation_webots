@@ -31,6 +31,7 @@
 #include "lib/Astar.h"
 
 // Environment variables
+#define PI4Turn 3.12
 extern SweepRobot *SweepBot;
 Map map;
 
@@ -44,16 +45,15 @@ using std::endl;
 int main(int argc, char **argv)
 {
   // Load the map
-  auto mat = map.easyMapS();
+  Matrix mat = map.easyMapS();
   // Display the map
   //mat.Show();
-  // float left_pos;
-  // float right_pos;
 
   Odometry Odo;
   float cor_x;
   float cor_y;
   float cor_theta;
+  float Initial_theta = 0.0;
   float t;
   
   //A星算法测试(函数可以返回整个容器，并且关联关系是没问题的)
@@ -77,25 +77,26 @@ int main(int argc, char **argv)
   // Main loop:
   while (robot->step(TIME_STEP) != -1)
   {
-    t = robot->getTime();
-    cout<<"Time is: " << t << endl;
+    // Broadcast the robot's pose.
     std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates();
 
-    /*
+    // Motion test
     static int i=0;
-    if ( i<10)
+    if (i<10)
     {
       SweepBot->forward(Regular_speed);
       i++;
     }
+    else if (cor_theta > Initial_theta + PI4Turn)
+      SweepBot->stop();
     else
-      {
-        i=0;
-        SweepBot-> turn_around_right(Regular_speed);
-        SweepBot->stop();
-      }
-    */
-    robot->step(200);
+    {
+      SweepBot-> turn_around_right(Regular_speed);
+    }
+
+    // Broadcast the timestamp
+    t = robot->getTime();
+    cout<<"Time is: " << t << endl;
   }
   
 
