@@ -127,8 +127,8 @@ public:
     void forward(double speed);
     void rotate_left(double time);
     void rotate_right(double time);
-    void turn_around_left(double speed);
-    void turn_around_right(double speed);
+    void turn_left(double speed);
+    void turn_right(double speed);
     void delay_ms( float ms );
 
 
@@ -178,7 +178,7 @@ private:
     }
 
     // Let the robot turn left pi
-    void SweepRobot::turn_around_left(double speed)
+    void SweepRobot::turn_left(double speed)
     {  
         double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
         double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;
@@ -186,7 +186,7 @@ private:
     }
 
     // Let the robot turn right pi
-    void SweepRobot::turn_around_right(double speed)
+    void SweepRobot::turn_right(double speed)
     {
         double vout = (CELL/2+ROBOT_RADIUS)/(CELL/2)*speed;
         double vin = (CELL/2-ROBOT_RADIUS)/(CELL/2)*speed;

@@ -36,13 +36,13 @@ Let the robot rotate left to some degree.
 
 Let the robot rotate right to some degree.
 
-**void turn_around_left(double speed)**
+**void turn_left(double speed)**
 
 Let the robot turn left pi. The parameter it needs is turning speed.
 
 The main reason to set this function is to let the robot turn around before hitting an obstacle.
 
-**void turn_around_right(double speed)**
+**void turn_right(double speed)**
 
 Let the robot turn right pi. The parameter it needs is turning speed.
 
