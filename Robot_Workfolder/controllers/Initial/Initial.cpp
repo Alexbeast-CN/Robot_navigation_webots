@@ -15,11 +15,11 @@
 // Environment variables
 #define PI4Turn 3.1
 SweepRobot *SweepBot;
-Map map;
+Map easymap;
 double Regular_speed = 40;
 
 // Load the map
-Matrix mat = map.easyMapS();
+Matrix mat = easymap.easyMapS();
 int map_x;
 int map_y;
 float map_theta;
@@ -84,11 +84,12 @@ int main(int argc, char **argv)
     int behind_x = round(map_x - cos(map_theta));
     int behind_y = round(map_y - sin(map_theta));
 
-    // controller crashed here
-    // mat = map.markTrajectoryS(mat,behind_x,behind_y);
-
     cout << "x is: " << map_x << " y is: " << map_y << endl;
     cout << "theta is: " << map_theta << endl;
+    // controller crashed here
+    if (mat.Point(behind_y,behind_x)==0)
+      mat += easymap.markTrajectoryS(behind_y,behind_x);
+    mat.Show();
 
     // BPP logic
     if (state == BPP)
@@ -139,11 +140,11 @@ int easyBPP()
   int right_y = round(map_y + cos(map_theta));
 
   // Motion logic
-  if (mat.Point(font_x,font_y)>=1)
+  if (mat.Point(font_y,font_x)>=1)
   {
-    if (mat.Point(right_x,right_y)>=1)
+    if (mat.Point(right_y,right_x)>=1)
     {
-      if (mat.Point(left_x,left_y)>=1)
+      if (mat.Point(left_y,left_x)>=1)
         return Astar;
       else
       {
@@ -151,9 +152,9 @@ int easyBPP()
         return TURNL;
       }
     }
-    else if (mat.Point(left_x,left_y)>=1)
+    else if (mat.Point(left_y,left_x)>=1)
     {
-      if (mat.Point(right_x,right_y)>=1)
+      if (mat.Point(right_y,right_x)>=1)
         return Astar;
       else
       {

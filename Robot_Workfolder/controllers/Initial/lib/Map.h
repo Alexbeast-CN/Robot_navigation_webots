@@ -2,11 +2,14 @@
 #define _MAP_H
 
 #include "Matrix.h"
-
+#include <vector>
 
 #define BLANK  0
 #define WALL 1
 #define TRAJECTORY 2
+
+using namespace std;
+
 class Map
 {
 private:
@@ -17,14 +20,15 @@ public:
     ~Map();
     Matrix easyMap();
     Matrix easyMapS();
-    Matrix markTrajectory(Matrix &map, int x, int y);
-    Matrix markTrajectoryS(Matrix &map, int x, int y);
+    Matrix markTrajectory(int x, int y);
+    Matrix markTrajectoryS(int x, int y);
 
 
 };
 
 Map::Map(/* args */)
 {
+    cout<<"A map has been created!" << endl;
 }
 
 Map::~Map()
@@ -80,14 +84,16 @@ Matrix Map::easyMapS()
     return easyMap;
 }
 
-Matrix Map::markTrajectoryS(Matrix &map, int x, int y)
+Matrix Map::markTrajectoryS(int x, int y)
 {
+    Matrix map(11,11);
     map.p[x][y] = TRAJECTORY;
     return map;
 }
 
-Matrix Map::markTrajectory(Matrix &map, int x, int y)
+Matrix Map::markTrajectory(int x, int y)
 {
+    Matrix map(92,92);
     for(int i=-4; i<=4; i++)
         for(int j=-4; j<=4; j++)
             map.p[x+i][y+j] = TRAJECTORY;

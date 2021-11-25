@@ -19,8 +19,8 @@ public:
 	virtual ~Matrix();//析构函数应当是虚函数，除非此类不用做基类
 	Matrix& operator=(const Matrix&);//矩阵的复制
 	Matrix& operator=(double *);//将数组的值传给矩阵
-	// Matrix& operator+=(const Matrix&);//矩阵的+=操作
-	// Matrix& operator-=(const Matrix&);//-=
+	Matrix& operator+=(const Matrix&);//矩阵的+=操作
+	Matrix& operator-=(const Matrix&);//-=
 	// Matrix& operator*=(const Matrix&);//*=
 	// Matrix operator*(const Matrix & m)const;
 	void Show() const;//矩阵显示
@@ -80,6 +80,7 @@ Matrix::~Matrix() {
 		delete[] p;
 }
 
+
 // achive matrix copy
 Matrix& Matrix::operator=(const Matrix& m)
 {
@@ -106,6 +107,7 @@ Matrix& Matrix::operator=(const Matrix& m)
 	return *this;
 }
 
+
 // Pass the value of the array to the matrix 
 // (requires that the size of the matrix has been declared)
 Matrix& Matrix::operator=(double *a){
@@ -116,7 +118,7 @@ Matrix& Matrix::operator=(double *a){
 	}
 	return *this;
 }
-/*
+
 // achieve += for matrix
 Matrix& Matrix::operator+=(const Matrix& m)
 {
@@ -139,7 +141,7 @@ Matrix& Matrix::operator-=(const Matrix& m)
 	return *this;
 }
 
-
+/*
 // achieve*=
 Matrix& Matrix::operator*=(const Matrix& m)
 {
