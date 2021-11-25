@@ -17,8 +17,8 @@ public:
 	Matrix(int, int);
 	Matrix(int, int, double);//预配分空间
 	virtual ~Matrix();//析构函数应当是虚函数，除非此类不用做基类
-	// Matrix& operator=(const Matrix&);//矩阵的复制
-	// Matrix& operator=(double *);//将数组的值传给矩阵
+	Matrix& operator=(const Matrix&);//矩阵的复制
+	Matrix& operator=(double *);//将数组的值传给矩阵
 	// Matrix& operator+=(const Matrix&);//矩阵的+=操作
 	// Matrix& operator-=(const Matrix&);//-=
 	// Matrix& operator*=(const Matrix&);//*=
@@ -79,7 +79,7 @@ Matrix::~Matrix() {
 		}
 		delete[] p;
 }
-/*
+
 // achive matrix copy
 Matrix& Matrix::operator=(const Matrix& m)
 {
@@ -116,7 +116,7 @@ Matrix& Matrix::operator=(double *a){
 	}
 	return *this;
 }
-
+/*
 // achieve += for matrix
 Matrix& Matrix::operator+=(const Matrix& m)
 {
@@ -139,6 +139,7 @@ Matrix& Matrix::operator-=(const Matrix& m)
 	return *this;
 }
 
+
 // achieve*=
 Matrix& Matrix::operator*=(const Matrix& m)
 {
@@ -153,6 +154,7 @@ Matrix& Matrix::operator*=(const Matrix& m)
 	*this = temp;
 	return *this;
 }
+
 
 // achieve matrix dot product
 Matrix Matrix::operator*(const Matrix & m)const{

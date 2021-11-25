@@ -17,8 +17,8 @@ public:
     ~Map();
     Matrix easyMap();
     Matrix easyMapS();
-    Matrix markTrajectory(Matrix& map, int x, int y);
-    Matrix markTrajectoryL(Matrix& map, int x, int y);
+    Matrix markTrajectory(Matrix &map, int x, int y);
+    Matrix markTrajectoryS(Matrix &map, int x, int y);
 
 
 };
@@ -68,7 +68,7 @@ Matrix Map::easyMapS()
     }
 
     for (int i=1; i<=3; i++)
-        for (int j=0; j<=3; j++)
+        for (int j=1; j<=3; j++)
         {
             easyMap.p[3+i][2+j] = WALL;
         }
@@ -80,13 +80,13 @@ Matrix Map::easyMapS()
     return easyMap;
 }
 
-Matrix Map::markTrajectory(Matrix& map, int x, int y)
+Matrix Map::markTrajectoryS(Matrix &map, int x, int y)
 {
     map.p[x][y] = TRAJECTORY;
     return map;
 }
 
-Matrix Map::markTrajectoryL(Matrix& map, int x, int y)
+Matrix Map::markTrajectory(Matrix &map, int x, int y)
 {
     for(int i=-4; i<=4; i++)
         for(int j=-4; j<=4; j++)

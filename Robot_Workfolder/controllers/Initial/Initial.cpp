@@ -2,7 +2,8 @@
 // Date:          17th Nov 2021
 // Description:   A project to build autonomous navigation robot
 // Author:        Daoming Chen & Yifan Wang
-// Modifications:
+// Modifications: 
+
 
 // Costumer Lib
 #include "lib/SweepRobot.hpp"
@@ -12,15 +13,13 @@
 #include "lib/Astar.h"
 
 // Environment variables
-#define PI4Turn 3.14
+#define PI4Turn 3.1
 SweepRobot *SweepBot;
 Map map;
 double Regular_speed = 40;
 
 // Load the map
 Matrix mat = map.easyMapS();
-// Display the map
-//mat.Show();
 int map_x;
 int map_y;
 float map_theta;
@@ -38,10 +37,15 @@ int state;
 #define BPP   1
 #define TURNL 2
 #define TURNR 3
+#define Astar 4
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
 {
+  // Display the map
+  //mat.Show();
+
+  // Initial state
   state = BPP;
 
   Odometry Odo;
@@ -51,6 +55,7 @@ int main(int argc, char **argv)
   float Initial_theta = 0.0;
   // float t;
   
+  /*
   //A星算法测试(函数可以返回整个容器，并且关联关系是没问题的)
   Astar Path;
   std::map<std::pair<int,int>,std::pair<int,int> >Route;
@@ -62,25 +67,33 @@ int main(int argc, char **argv)
   Route = Path.Findpath(a,b,mat);
   aa = Route[end];
   cout<<aa.first<<' '<<aa.second<<endl;
-
+*/
   //create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
   // Set a speed for robot
 
-  // Main loop:
+  /************************************* Loop ********************************************/
   while (robot->step(TIME_STEP) != -1)
   {
     // Broadcast the robot's pose.
     std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates();
-    map_x = cor_x;
-    map_y = cor_y;
+    map_x = round(cor_x + 1);
+    map_y = round(cor_y + 1);
     map_theta = cor_theta;
-    
+    int behind_x = round(map_x - cos(map_theta));
+    int behind_y = round(map_y - sin(map_theta));
+
+    // controller crashed here
+    // mat = map.markTrajectoryS(mat,behind_x,behind_y);
+
+    cout << "x is: " << map_x << " y is: " << map_y << endl;
+    cout << "theta is: " << map_theta << endl;
+
     // BPP logic
     if (state == BPP)
       state = easyBPP();
-    if (state == TURNL)
+    else if (state == TURNL)
       {
         if (map_theta > Initial_theta - PI4Turn)
           SweepBot->turn_left(Regular_speed);
@@ -90,7 +103,7 @@ int main(int argc, char **argv)
           Initial_theta = map_theta;
         }
       }
-    if (state == TURNR)
+    else if (state == TURNR)
       {
         if (map_theta < Initial_theta + PI4Turn)
           SweepBot->turn_right(Regular_speed);
@@ -100,6 +113,8 @@ int main(int argc, char **argv)
           Initial_theta = map_theta;
         }
       }
+    else if (state == Astar)
+      SweepBot->stop();
 
   }
   
@@ -113,35 +128,44 @@ int main(int argc, char **argv)
 
 int easyBPP()
 {
-  // The coordinate of 2 cells ahead
-  int font_x = map_x + 2*cos(map_theta);
-  int font_y = map_y + 2*sin(map_theta);
+  // The coordinate of 1 cells ahead
+  int font_x = round(map_x + cos(map_theta));
+  int font_y = round(map_y + sin(map_theta));
   // The coordinate of 1 cell left
-  int left_x = map_x + sin(map_theta);
-  int left_y = map_y - cos(map_theta);
+  int left_x = round(map_x + sin(map_theta));
+  int left_y = round(map_y - cos(map_theta));
   // The coordinate of 1 cell right
-  int right_x = map_x - sin(map_theta);
-  int right_y = map_y + cos(map_theta);
+  int right_x = round(map_x - sin(map_theta));
+  int right_y = round(map_y + cos(map_theta));
 
   // Motion logic
-  if (mat.Point(font_x,font_y)==1)
+  if (mat.Point(font_x,font_y)>=1)
   {
-    if (mat.Point(right_x,right_y)==1)
+    if (mat.Point(right_x,right_y)>=1)
     {
-      if (mat.Point(left_x,left_y)==1)
-        SweepBot->stop();
+      if (mat.Point(left_x,left_y)>=1)
+        return Astar;
       else
+      {
+        //cout<<"Wall turn left!" << endl;
         return TURNL;
+      }
     }
-    else if (mat.Point(left_x,left_y)==1)
+    else if (mat.Point(left_x,left_y)>=1)
     {
-      if (mat.Point(right_x,right_y)==1)
-        SweepBot->stop();
+      if (mat.Point(right_x,right_y)>=1)
+        return Astar;
       else
+      {
+        //cout<<"Wall turn right!" << endl;
         return TURNR;
+      }
     }
     else 
-        return TURNR;
+    {
+      //cout<<"Wall in the front!" << endl;
+      return TURNR;
+    }
   }
   else
     SweepBot->forward(Regular_speed);

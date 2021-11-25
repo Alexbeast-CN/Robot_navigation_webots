@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-// #include <tuple>
 
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
@@ -16,8 +15,8 @@
 #define PI 3.141592653589793116
 #define HALF_PI 1.570796326794896558
 #define WHEEL_RADIUS 0.0205
-#define ROBOT_RADIUS 0.028
-#define ROBOT_DIAMETER 0.56
+#define ROBOT_RADIUS 0.0281
+#define ROBOT_DIAMETER 0.562
 #define CELL 0.1
 
 

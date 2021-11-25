@@ -42,18 +42,18 @@ public:
         forward_contribution = ((WHEEL_RADIUS * l_delta_angle)/2) + ((WHEEL_RADIUS * r_delta_angle)/2);
         theta_contribution = (r_delta_angle-l_delta_angle)*(0.5*(WHEEL_RADIUS/ROBOT_RADIUS));
   
+        th = th - theta_contribution;
         x  = x + (forward_contribution * 10 * cos(th));
         y  = y + (forward_contribution * 10 * sin(th));
-        th = th - theta_contribution;
 
         if(th > (2*PI))
         {
         th = th - (2*PI);
         }
 
-        printf("x: %.3f",x);
-        printf("\ty: %.3f\n",y);
-        printf("theta: %.3f\n",th);
+        // printf("x: %.3f",x);
+        // printf("\ty: %.3f\n",y);
+        // printf("theta: %.3f\n",th);
         return std::make_tuple(x,y,th);
     }
 
