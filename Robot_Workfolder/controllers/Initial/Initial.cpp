@@ -13,7 +13,7 @@
 #include "lib/Astar.h"
 
 // Environment variables
-#define PI4Turn 3.1
+#define PI4Turn 3.25
 SweepRobot *SweepBot;
 Map easymap;
 double Regular_speed = 40;
@@ -23,6 +23,7 @@ Matrix mat = easymap.easyMapS();
 int map_x;
 int map_y;
 float map_theta;
+float Initial_theta = 0.0;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -52,7 +53,6 @@ int main(int argc, char **argv)
   float cor_x;
   float cor_y;
   float cor_theta;
-  float Initial_theta = 0.0;
   // float t;
   
   /*
@@ -86,7 +86,8 @@ int main(int argc, char **argv)
 
     cout << "x is: " << map_x << " y is: " << map_y << endl;
     cout << "theta is: " << map_theta << endl;
-    // controller crashed here
+
+    // Show the map with tarjectory
     if (mat.Point(behind_y,behind_x)==0)
       mat += easymap.markTrajectoryS(behind_y,behind_x);
     mat.Show();
@@ -101,7 +102,7 @@ int main(int argc, char **argv)
         else
         {
           state = BPP;
-          Initial_theta = map_theta;
+          Initial_theta = Initial_theta - PI4Turn;
         }
       }
     else if (state == TURNR)
@@ -111,7 +112,7 @@ int main(int argc, char **argv)
         else
         {
           state = BPP;
-          Initial_theta = map_theta;
+          Initial_theta = Initial_theta + PI4Turn;
         }
       }
     else if (state == Astar)
@@ -169,7 +170,15 @@ int easyBPP()
     }
   }
   else
-    SweepBot->forward(Regular_speed);
+  {
+    float turn_velocity;
+    float e_thata;
+
+    e_thata = map_theta - Initial_theta;
+    turn_velocity = 50*e_thata;
+    cout << "Turning Speed is: " << turn_velocity << endl;
+    SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
+  }
 
   return BPP;
 }

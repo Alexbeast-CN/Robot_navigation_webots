@@ -8,7 +8,7 @@
 #include <webots/PositionSensor.hpp>
 #include <webots/DistanceSensor.hpp>
 
-#define TIME_STEP 64 // time in [ms] of a simulation step
+#define TIME_STEP 30 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28 
 #define UNIT_SPEED (MAX_SPEED / 100.0)
 #define UNIT_FORWARD (UNIT_SPEED*WHEEL_RADIUS)
@@ -80,41 +80,6 @@ public:
         return true;
     }
 
-    
-
-    // checks if wall exist on the right of bot
-    inline bool wallRight()
-    {
-        return readDistanceSensor(2) > PS_THRESHOLD;
-    }
-
-    // checks if wall exist on the left of bot
-    inline bool wallLeft()
-    {
-        return readDistanceSensor(5) > PS_THRESHOLD;
-    }
-
-    // checks if wall exist on the ahead of bot
-    inline bool wallAhead()
-    {
-        return readDistanceSensor(0) > PS_THRESHOLD || readDistanceSensor(7) > PS_THRESHOLD;
-    }
-
-    // if bot as open space in front left or right
-    inline bool openSpace()
-    {
-        return !(wallAhead() || wallRight() || wallLeft());
-    }
-
-    // read distance sensor
-    inline double readDistanceSensor(int i)
-    {
-        return ps[i]->getValue();
-    }
-
-    // delay a few ms
-
-
     // sets speed to 0 and steps
     inline void stop()
     {
@@ -129,7 +94,6 @@ public:
     void turn_left(double speed);
     void turn_right(double speed);
     void delay_ms( float ms );
-
 
     // destructor
     ~SweepRobot()
