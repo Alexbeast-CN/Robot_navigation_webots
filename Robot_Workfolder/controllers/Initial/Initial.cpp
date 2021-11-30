@@ -16,6 +16,8 @@
 #define PI4Turn 3.25
 SweepRobot *SweepBot;
 Map easymap;
+Node *robot_node;
+Supervisor *supervisor;
 double Regular_speed = 40;
 
 // Load the map
@@ -24,6 +26,9 @@ int map_x;
 int map_y;
 float map_theta;
 float Initial_theta = 0.0;
+float cor_x;
+float cor_y;
+float cor_theta;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -50,9 +55,6 @@ int main(int argc, char **argv)
   state = BPP;
 
   Odometry Odo;
-  float cor_x;
-  float cor_y;
-  float cor_theta;
   // float t;
   
   /*
@@ -71,25 +73,44 @@ int main(int argc, char **argv)
   //create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
-  // Set a speed for robot
+  // Setup supervisor
+  Supervisor *supervisor = (Supervisor *)robot;
+  robot_node = supervisor->getFromDef("SWEEP");
+
+  // do this once only
+  if (robot_node == NULL) {
+    std::cerr << "No DEF Sweep node found in the current world file" << std::endl;
+    exit(1);
+  }
+  Field *trans_field = robot_node->getField("translation");
+  Field *rotate_field = robot_node->getField("rotation");
+
 
   /************************************* Loop ********************************************/
   while (robot->step(TIME_STEP) != -1)
   {
     // Broadcast the robot's pose.
-    std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates();
+    // std::tie(cor_x,cor_y,cor_theta) = Odo.Cordinates();
+    const double *trans_values = trans_field->getSFVec3f();
+    const double *rotate_values = rotate_field->getSFRotation();
+
+    cor_x = (trans_values[0] + 0.4)*10;
+    cor_y = -(trans_values[2] - 0.4)*10;
+    cor_theta = rotate_values[3];
+
     map_x = round(cor_x + 1);
     map_y = round(cor_y + 1);
-    map_theta = cor_theta;
-    int behind_x = round(map_x - cos(map_theta));
-    int behind_y = round(map_y - sin(map_theta));
+    map_theta = -cor_theta;
+    int behind_x = round(map_x - sin(map_theta));
+    int behind_y = round(map_y - cos(map_theta));
 
     cout << "x is: " << map_x << " y is: " << map_y << endl;
-    cout << "theta is: " << map_theta << endl;
+    printf( "theta is: %.3f\n", map_theta);
 
+    // cout << "behind x is: " << behind_x << " behind y is: " << behind_y << endl;
     // Show the map with tarjectory
-    if (mat.Point(behind_y,behind_x)==0)
-      mat += easymap.markTrajectoryS(behind_y,behind_x);
+    if (mat.Point(behind_x,behind_y)==0)
+      mat += easymap.markTrajectoryS(behind_x,behind_y);
     mat.Show();
 
     // BPP logic
@@ -97,22 +118,22 @@ int main(int argc, char **argv)
       state = easyBPP();
     else if (state == TURNL)
       {
-        if (map_theta > Initial_theta - PI4Turn)
+        if (map_theta < Initial_theta + PI4Turn)
           SweepBot->turn_left(Regular_speed);
         else
         {
           state = BPP;
-          Initial_theta = Initial_theta - PI4Turn;
+          Initial_theta = Initial_theta + PI4Turn;
         }
       }
     else if (state == TURNR)
       {
-        if (map_theta < Initial_theta + PI4Turn)
+        if (map_theta > Initial_theta - PI4Turn)
           SweepBot->turn_right(Regular_speed);
         else
         {
           state = BPP;
-          Initial_theta = Initial_theta + PI4Turn;
+          Initial_theta = Initial_theta - PI4Turn;
         }
       }
     else if (state == Astar)
@@ -125,42 +146,44 @@ int main(int argc, char **argv)
   // Enter exit cleanup code here.
   delete robot;
   delete SweepBot;
+  delete supervisor;
+
   return 0;
 }
 
 int easyBPP()
 {
   // The coordinate of 1 cells ahead
-  int font_x = round(map_x + cos(map_theta));
-  int font_y = round(map_y + sin(map_theta));
+  int font_x = round(map_x + sin(map_theta));
+  int font_y = round(map_y + cos(map_theta));
   // The coordinate of 1 cell left
-  int left_x = round(map_x + sin(map_theta));
-  int left_y = round(map_y - cos(map_theta));
+  int left_x = round(map_x + cos(map_theta));
+  int left_y = round(map_y - sin(map_theta));
   // The coordinate of 1 cell right
-  int right_x = round(map_x - sin(map_theta));
-  int right_y = round(map_y + cos(map_theta));
+  int right_x = round(map_x - cos(map_theta));
+  int right_y = round(map_y + sin(map_theta));
 
   // Motion logic
-  if (mat.Point(font_y,font_x)>=1)
+  if (mat.Point(font_x,font_y)>=1)
   {
-    if (mat.Point(right_y,right_x)>=1)
+    if (mat.Point(right_x,right_y)>=1)
     {
-      if (mat.Point(left_y,left_x)>=1)
+      if (mat.Point(left_x,left_y)>=1)
         return Astar;
       else
       {
         //cout<<"Wall turn left!" << endl;
-        return TURNL;
+        return TURNR;
       }
     }
-    else if (mat.Point(left_y,left_x)>=1)
+    else if (mat.Point(left_x,left_y)>=1)
     {
-      if (mat.Point(right_y,right_x)>=1)
+      if (mat.Point(right_x,right_y)>=1)
         return Astar;
       else
       {
         //cout<<"Wall turn right!" << endl;
-        return TURNR;
+        return TURNL;
       }
     }
     else 
@@ -171,13 +194,15 @@ int easyBPP()
   }
   else
   {
-    float turn_velocity;
-    float e_thata;
+    // float turn_velocity;
+    // float e_thata;
 
-    e_thata = map_theta - Initial_theta;
-    turn_velocity = 50*e_thata;
-    cout << "Turning Speed is: " << turn_velocity << endl;
-    SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
+    // e_thata = map_theta - Initial_theta;
+    // turn_velocity = 20*e_thata;
+    // cout << "Turning Speed is: " << turn_velocity << endl;
+    // SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
+
+    SweepBot->forward(Regular_speed);
   }
 
   return BPP;

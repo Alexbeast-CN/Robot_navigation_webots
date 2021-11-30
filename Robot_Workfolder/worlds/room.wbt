@@ -50,7 +50,7 @@ WoodenBox {
   name "wooden box2(2)"
   size 0.1 0.1 0.1
 }
-E-puck {
+DEF SWEEP E-puck {
   hidden position_0_0 -3.099906642489714e-08
   hidden position_0_1 -3.0999116852025236e-08
   hidden rotation_1 1 0 0 2.9802322387695313e-08
@@ -58,4 +58,5 @@ E-puck {
   translation -0.4 -6.39633e-05 0.4
   rotation -5.290368237634393e-06 0.9999999999828437 2.5148999910190556e-06 0
   controller "Initial"
+  supervisor TRUE
 }

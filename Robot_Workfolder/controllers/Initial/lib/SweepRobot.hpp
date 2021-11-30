@@ -7,8 +7,10 @@
 #include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
 #include <webots/DistanceSensor.hpp>
+#include <webots/Supervisor.hpp>
 
-#define TIME_STEP 30 // time in [ms] of a simulation step
+
+#define TIME_STEP 32 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28 
 #define UNIT_SPEED (MAX_SPEED / 100.0)
 #define UNIT_FORWARD (UNIT_SPEED*WHEEL_RADIUS)
