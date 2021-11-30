@@ -10,15 +10,15 @@
 #include <webots/Supervisor.hpp>
 
 
-#define TIME_STEP 32 // time in [ms] of a simulation step
+#define TIME_STEP 10 // time in [ms] of a simulation step
 #define MAX_SPEED 6.28 
 #define UNIT_SPEED (MAX_SPEED / 100.0)
 #define UNIT_FORWARD (UNIT_SPEED*WHEEL_RADIUS)
 #define PI 3.141592653589793116
 #define HALF_PI 1.570796326794896558
 #define WHEEL_RADIUS 0.0205
-#define ROBOT_RADIUS 0.0281
-#define ROBOT_DIAMETER 0.562
+#define ROBOT_RADIUS 0.0295
+#define ROBOT_DIAMETER 0.059
 #define CELL 0.1
 
 

@@ -13,22 +13,23 @@
 #include "lib/Astar.h"
 
 // Environment variables
-#define PI4Turn 3.25
+#define PI4Turn 3.14
 SweepRobot *SweepBot;
 Map easymap;
 Node *robot_node;
 Supervisor *supervisor;
-double Regular_speed = 40;
+double Regular_speed = 20;
 
 // Load the map
 Matrix mat = easymap.easyMapS();
 int map_x;
 int map_y;
-float map_theta;
+double map_theta;
 float Initial_theta = 0.0;
 float cor_x;
 float cor_y;
-float cor_theta;
+float z;
+int turn_count = 0;
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -85,7 +86,6 @@ int main(int argc, char **argv)
   Field *trans_field = robot_node->getField("translation");
   Field *rotate_field = robot_node->getField("rotation");
 
-
   /************************************* Loop ********************************************/
   while (robot->step(TIME_STEP) != -1)
   {
@@ -94,13 +94,15 @@ int main(int argc, char **argv)
     const double *trans_values = trans_field->getSFVec3f();
     const double *rotate_values = rotate_field->getSFRotation();
 
+    //printf("The rotation values are:%.2f, %.2f, %.2f, %.2f\n",rotate_values[0],rotate_values[1],rotate_values[2],rotate_values[3]);
+
     cor_x = (trans_values[0] + 0.4)*10;
     cor_y = -(trans_values[2] - 0.4)*10;
-    cor_theta = rotate_values[3];
+    map_theta = rotate_values[3];
+    z = rotate_values[2];
 
     map_x = round(cor_x + 1);
     map_y = round(cor_y + 1);
-    map_theta = -cor_theta;
     int behind_x = round(map_x - sin(map_theta));
     int behind_y = round(map_y - cos(map_theta));
 
@@ -118,22 +120,26 @@ int main(int argc, char **argv)
       state = easyBPP();
     else if (state == TURNL)
       {
-        if (map_theta < Initial_theta + PI4Turn)
+        if (map_theta > Initial_theta - PI4Turn + 0.05)
           SweepBot->turn_left(Regular_speed);
         else
         {
+          turn_count++;
           state = BPP;
-          Initial_theta = Initial_theta + PI4Turn;
+          Initial_theta = Initial_theta - PI4Turn;
+
+
         }
       }
     else if (state == TURNR)
       {
-        if (map_theta > Initial_theta - PI4Turn)
+        if (map_theta < Initial_theta + PI4Turn - 0.05)
           SweepBot->turn_right(Regular_speed);
         else
         {
+          turn_count++;
           state = BPP;
-          Initial_theta = Initial_theta - PI4Turn;
+          Initial_theta = Initial_theta + PI4Turn;
         }
       }
     else if (state == Astar)
@@ -151,8 +157,13 @@ int main(int argc, char **argv)
   return 0;
 }
 
+
+/*********************************** Functions ***************************************/
+
 int easyBPP()
 {
+  int E = 30;
+
   // The coordinate of 1 cells ahead
   int font_x = round(map_x + sin(map_theta));
   int font_y = round(map_y + cos(map_theta));
@@ -169,7 +180,10 @@ int easyBPP()
     if (mat.Point(right_x,right_y)>=1)
     {
       if (mat.Point(left_x,left_y)>=1)
+      {
+        mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
+      }
       else
       {
         //cout<<"Wall turn left!" << endl;
@@ -179,7 +193,10 @@ int easyBPP()
     else if (mat.Point(left_x,left_y)>=1)
     {
       if (mat.Point(right_x,right_y)>=1)
+      {
+        mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
+      }
       else
       {
         //cout<<"Wall turn right!" << endl;
@@ -189,20 +206,56 @@ int easyBPP()
     else 
     {
       //cout<<"Wall in the front!" << endl;
-      return TURNR;
+      return TURNL;
     }
   }
   else
   {
-    // float turn_velocity;
-    // float e_thata;
+    // Synchronize turnning state      
+    if (!(turn_count/2))
+    {
+      if (z<0)
+      {
+        map_theta = -map_theta;
+      }
+    }
+    else
+    {
+      if (z>0)
+      {
+        map_theta = -map_theta;
+      }
+    }
 
-    // e_thata = map_theta - Initial_theta;
-    // turn_velocity = 20*e_thata;
-    // cout << "Turning Speed is: " << turn_velocity << endl;
-    // SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
 
-    SweepBot->forward(Regular_speed);
+    float turn_velocity;
+    float e_thata;
+
+    // Let robot follow a straight line after unperfect turnning.
+    if (Initial_theta  < 3.141 && Initial_theta > 3.139)
+    {
+      if (map_theta<0)
+      {
+        e_thata = Initial_theta + map_theta;
+        turn_velocity = E*e_thata; 
+
+        SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+      }
+      else
+      {
+        e_thata = Initial_theta - map_theta;
+        turn_velocity = E*e_thata; 
+        SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+      }
+      cout << "When thate is 3.14 turning Speed is: " << turn_velocity << endl;
+    }
+    else
+    {
+      e_thata = Initial_theta -map_theta;
+      turn_velocity = E*e_thata;
+      SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+      cout << "When theta is 0 turning Speed is: " << turn_velocity << endl;
+    }
   }
 
   return BPP;
