@@ -22,6 +22,7 @@ double Regular_speed = 20;
 
 // Load the map
 Matrix mat = easymap.easyMapS();
+Matrix mat2 = easymap.easyMapSS();//build a static mpa for A*
 int map_x;
 int map_y;
 double map_theta;
@@ -30,6 +31,15 @@ float cor_x;
 float cor_y;
 float z;
 int turn_count = 0;
+
+// Astar variables
+int Astar_Path(int a, int b);
+int Astar_Home(int a, int b);
+void Order_Path(std::pair<int,int>x,int num,std::vector<std::pair<int,int>>&vec);
+Astar Path;
+std::map<std::pair<int,int>,std::pair<int,int> >Route;
+
+
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -57,23 +67,11 @@ int main(int argc, char **argv)
 
   Odometry Odo;
   // float t;
-  
-  /*
-  //A星算法测试(函数可以返回整个容器，并且关联关系是没问题的)
-  Astar Path;
-  std::map<std::pair<int,int>,std::pair<int,int> >Route;
-  std::pair<int,int>aa;
-  // 假设起始点和终点已知
-  int a[2] = {1,1};
-  int b[2] = {1,4};
-  std::pair<int,int>end(1,2);
-  Route = Path.Findpath(a,b,mat);
-  aa = Route[end];
-  cout<<aa.first<<' '<<aa.second<<endl;
-*/
+
   //create the Robot instance.
   Robot *robot = new Robot();
   SweepBot = new SweepRobot(robot);
+
   // Setup supervisor
   Supervisor *supervisor = (Supervisor *)robot;
   robot_node = supervisor->getFromDef("SWEEP");
@@ -143,7 +141,14 @@ int main(int argc, char **argv)
         }
       }
     else if (state == Astar)
+    {
+      state = Astar_Path(map_x, map_y);
       SweepBot->stop();
+    }
+    else if (state == 10)
+    {
+      cout<<"到位了"<<endl;
+    }
 
   }
   
@@ -259,4 +264,174 @@ int easyBPP()
   }
 
   return BPP;
+}
+
+int Astar_Path(int a, int b)
+{ 
+  int length;
+  std::pair<int, int>start(a,b);
+  std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
+  int number_route;
+  
+  cout<<"进来的点x和y:"<<a<<b<<endl;
+  
+  for (int i=1; i<10; i++)
+  {
+    for (int j=1; j<10; j++)
+    {
+      // cout<<"hi"<<endl;
+      if(mat.Point(i,j) == 0)
+      {
+        std::pair<int,int>end(i,j);
+        length = abs(i - start.first) + abs(j - start.second);
+        Closet_Point.push(std::make_pair(-length,end));
+      }
+    }
+  }
+
+  //找到的新终点的坐标pair
+  std::pair<int,int>Find_Point = Closet_Point.top().second;
+  cout<<"找到的距离最近的点为"<<Find_Point.first<<""<<Find_Point.second<<endl;
+
+  /*
+  // 新的a*
+  Route = Path.Findpath(start, Find_Point, mat);
+  // 计算总步数用来返回值
+  number_route = Path.Number_in_Path(Find_Point);
+  cout<<"别吓我"<<number_route<<endl;
+  std::vector<std::pair<int,int>>Route_Inorder{Find_Point}; //生成一个ector储存排序后的Astar路径
+  Order_Path(Find_Point,number_route,Route_Inorder);
+  cout<<"别搞我"<<Route_Inorder[8].first<<Route_Inorder[8].second<<endl;
+
+  //小车运动
+  for(int i=0; i<number_route;i++)
+  {
+    float Astar_x,Astar_y,Astar_theta;
+    std::tie(Astar_x,Astar_y,Astar_theta) = Odo.Cordinates();
+    // cout << "x is: " << Astar_x << " y is: " << Astar_y << endl;
+    cout << "theta is: " << Astar_theta << endl;
+    if(Route_Inorder[number_route-i-1].second - Route_Inorder[number_route-i].second == 1)
+    {
+      if(Astar_theta == 0)
+      {
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);
+      }
+      else
+      {
+        SweepBot->rotate_left(Regular_speed);
+        SweepBot->delay_ms(1680);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);
+      }
+    }
+    else if(Route_Inorder[number_route-i-1].first - Route_Inorder[number_route-i].first == 1)
+    {
+      if(Astar_theta == 0)
+      {
+        cout<<"向右转90度"<<endl;
+        //向右转90度
+        SweepBot->rotate_right(Regular_speed);
+        SweepBot->delay_ms(770);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);  
+      }
+      else
+      {
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);
+      }
+    }
+      cout<<"完成了一次了"<<endl;
+  }
+  SweepBot->stop();
+  SweepBot->delay_ms(1000);
+  // 找到点后清空优先队列
+  while(!Closet_Point.empty())
+  {
+    Closet_Point.pop();
+  }
+  // 清空容器map
+  Route.erase(Route.begin(), Route.end());
+  
+  // 清空容器vector
+  Route_Inorder.clear();
+  */
+  state = 10;
+  
+
+  return state;
+}
+
+int Astar_Home(int a, int b)
+{
+  int number_route;
+  std::pair<int,int>start(a,b);
+  std::pair<int,int>home(1,1);
+  // 新的a*
+  Route = Path.Findpath(start, home, mat2);
+  // 计算总步数用来返回值
+  number_route = Path.Number_in_Path(home);
+  cout<<"别吓我"<<number_route<<endl;
+  std::vector<std::pair<int,int>>Route_Inorder{home}; //生成一个ector储存排序后的Astar路径
+  Order_Path(home,number_route,Route_Inorder);
+  cout<<"别搞我"<<Route_Inorder[3].first<<Route_Inorder[3].second<<endl;
+
+  //小车回家运动
+  for(int i=0; i<number_route;i++)
+  {
+    float Astar_x,Astar_y,Astar_theta;
+
+    // cout << "x is: " << Astar_x << " y is: " << Astar_y << endl;
+    cout << "theta is: " << Astar_theta << endl;
+    if(Route_Inorder[number_route-i-1].second - Route_Inorder[number_route-i].second == -1)
+    {
+      if(Astar_theta<0.05 && Astar_theta>-0.05)
+      {
+        SweepBot->rotate_left(Regular_speed);
+        SweepBot->delay_ms(3460);
+        SweepBot->stop();
+        SweepBot->delay_ms(500);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);
+      }
+      else
+      {
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);
+      }
+    }
+    else if(Route_Inorder[number_route-i-1].first - Route_Inorder[number_route-i].first == -1)
+    {
+      static int i = 1;
+      if(i==1)
+      {
+        cout<<"向右 hh 转90度"<<endl;
+        SweepBot->rotate_right(Regular_speed);
+        SweepBot->delay_ms(770);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900); 
+        i = 2; 
+      }
+      else
+      {
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1900);
+      }
+    }
+      cout<<"完成了一次了"<<endl;
+  }
+  SweepBot->stop();
+  state = 100;
+  return state;
+}
+
+void Order_Path(std::pair<int,int>x,int num,std::vector<std::pair<int,int>>&vec)
+{
+  std::pair<int,int>Point_behind = x;
+  for(int i=1;i<=num;i++)
+  {
+    Point_behind = Route[Point_behind];
+    vec.push_back(Point_behind);
+  }
 }
