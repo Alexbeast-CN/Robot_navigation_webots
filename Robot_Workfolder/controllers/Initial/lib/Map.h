@@ -24,7 +24,6 @@ public:
     Matrix markTrajectory(int x, int y);
     Matrix markTrajectoryS(int x, int y);
 
-
 };
 
 Map::Map(/* args */)

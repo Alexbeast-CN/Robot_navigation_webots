@@ -19,21 +19,17 @@ private:
     int mp[11][11], h[11][11], g[11][11], v[11][11];
     int dx[4] = {-1, 0, 1, 0};
     int dy[4] = {0, 1, 0, -1};
-    std::pair<int, int> s, e; //起始点和终点坐标
-    // 优先队列比较启发函数，并储存父节点
+    std::pair<int, int> s, e; 
+    //起始点和终点坐标
     std::priority_queue<std::pair<int, std::pair<int, int>>> q;
     // 生成记录前期位置的容器
     std::map<std::pair<int, int>, std::pair<int, int>> pre;
+    
 public:
     // 容器函数，似乎返回容器并不是一个很好的方法，见暂时拿这个尝试
     std::map<std::pair<int, int>, std::pair<int, int>> Findpath(std::pair<int,int>a,std::pair<int,int>b, Matrix mat)
     { 
-        pre.erase(pre.begin(),pre.end());
-        while(!q.empty())
-        {
-            q.pop();
-        }
-
+        pre.clear();
         for (int i = 0; i < 11; i++)
         {
             for (int j = 0; j < 11; j++)
@@ -59,6 +55,7 @@ public:
                 mp[i][j] = mat.Point(i, j);
             }
         }
+
         // 构造启发函数为该节点到终点的曼哈顿距离
         for (int i = 1; i < 10; i++)
         {
@@ -67,6 +64,7 @@ public:
                 h[i][j] = abs(i - e.first) + abs(j - e.second);
             }
         }
+  
         //优先队列优先的搜索方法
         if (!mp[s.first][s.second])
         {
@@ -100,12 +98,8 @@ public:
         //返回值
         return pre;
     }
-    
-    // 返回总共要走的路数
-    int Number_in_Path(std::pair<int,int>x)
-    {
-        return g[x.first][x.second];
-    }
 
 };
+
+
 #endif

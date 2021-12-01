@@ -33,11 +33,8 @@ float z;
 int turn_count = 0;
 
 // Astar variables
-int Astar_Path(int a, int b);
-int Astar_Home(int a, int b);
-void Order_Path(std::pair<int,int>x,int num,std::vector<std::pair<int,int>>&vec);
+void Astar_Path(int a, int b,std::vector<std::pair<int,int>>&vec);
 Astar Path;
-std::map<std::pair<int,int>,std::pair<int,int> >Route;
 
 
 
@@ -55,6 +52,7 @@ int state;
 #define TURNL 2
 #define TURNR 3
 #define Astar 4
+#define FaceTo0 5
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
@@ -83,8 +81,20 @@ int main(int argc, char **argv)
   }
   Field *trans_field = robot_node->getField("translation");
   Field *rotate_field = robot_node->getField("rotation");
+  
+  // 测试a*
+  
+  mat += easymap.markTrajectoryS(4,1);
+  mat += easymap.markTrajectoryS(4,2);
+  mat += easymap.markTrajectoryS(5,1);
+  mat += easymap.markTrajectoryS(5,2);
+  mat += easymap.markTrajectoryS(5,3);
+  mat += easymap.markTrajectoryS(6,1);
+  mat += easymap.markTrajectoryS(6,2);
+  int h = 1;
 
   /************************************* Loop ********************************************/
+  
   while (robot->step(TIME_STEP) != -1)
   {
     // Broadcast the robot's pose.
@@ -125,8 +135,6 @@ int main(int argc, char **argv)
           turn_count++;
           state = BPP;
           Initial_theta = Initial_theta - PI4Turn;
-
-
         }
       }
     else if (state == TURNR)
@@ -142,17 +150,117 @@ int main(int argc, char **argv)
       }
     else if (state == Astar)
     {
-      state = Astar_Path(map_x, map_y);
+      std::vector<std::pair<int,int>>Get_Route_Inorder;
+      cout<<"都没你的天"<<endl;
+      Astar_Path(map_x, map_y,Get_Route_Inorder);
+      // 返回的路径坐标容器的大小
+      int Route_size = Get_Route_Inorder.size()-1;
+      for(int i=0; i<=Route_size; i++)
+      {
+        cout<<Get_Route_Inorder[i].first<<Get_Route_Inorder[i].second<<endl;
+      }
+      //cout<<"大小为"<<Route_size<<endl;
+      int nn = 0;
+      int mm = 0;
+      // E-punk movemnet function
+      for(int i=0; i<Route_size;i++)
+      { 
+        cout << "theta is: " <<map_theta<< endl;
+        if(Get_Route_Inorder[Route_size-i-1].second - Get_Route_Inorder[Route_size-i].second == -1)
+        {   
+          if(map_theta < 0.04 && map_theta > 0.03 && nn == 0)
+          {
+            //掉头
+            SweepBot->rotate_left(Regular_speed);
+            SweepBot->delay_ms(3540);
+            SweepBot->stop();
+            SweepBot->delay_ms(500);
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(1900);
+            nn = 1;
+          }
+          else
+          {
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(3900);
+          }
+        }
+        else if(Get_Route_Inorder[Route_size-i-1].first - Get_Route_Inorder[Route_size-i].first == -1)
+        {
+          if(map_theta < 0.04 && map_theta > 0.03 && nn == 1)
+          {
+            cout<<"向右转90度"<<endl;
+            //向右转90度
+            SweepBot->rotate_right(Regular_speed);
+            SweepBot->delay_ms(1720);
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(3700);  
+            nn = 0;
+          }
+          else
+          {
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(3700);
+          }
+        }
+        else if(Get_Route_Inorder[Route_size-i-1].second - Get_Route_Inorder[Route_size-i].second == 1)
+        {
+          if(map_theta > 0.04 && mm == 0)
+          {
+            SweepBot->rotate_right(Regular_speed);
+            SweepBot->delay_ms(1720);
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(3700);
+            mm = 1;
+          }
+          else
+          {
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(3700);
+          }
+
+        }
+        cout<<"完成了一次了"<<endl;
+      }
+      Get_Route_Inorder.clear();
       SweepBot->stop();
+      SweepBot->delay_ms(500);
+      if(h == 1)
+      {
+        state = FaceTo0;
+      }
+      if(h == 2)
+      {
+        mat += easymap.markTrajectoryS(5,4);
+        state = FaceTo0;
+      }
+      h++;
     }
-    else if (state == 10)
+
+    else if (state == FaceTo0)
     {
-      cout<<"到位了"<<endl;
+      mat += easymap.markTrajectoryS(map_x,map_y);
+      if (mat.Point(map_x,map_y-1)==0)
+      {
+        cout<<"小车面向0转向！"<<endl;
+        SweepBot->rotate_left(Regular_speed);
+        SweepBot->delay_ms(1720);
+        mat += easymap.markTrajectoryS(7,3);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(4000);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(4000);
+        SweepBot->rotate_right(Regular_speed);
+        SweepBot->delay_ms(1720);
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(4000); 
+        SweepBot->stop();
+        SweepBot->delay_ms(1000);
+      }
+      cout<<"state5 finished"<<endl;
+      state = Astar;
     }
-
   }
-  
-
   
   // Enter exit cleanup code here.
   delete robot;
@@ -266,15 +374,21 @@ int easyBPP()
   return BPP;
 }
 
-int Astar_Path(int a, int b)
+void Astar_Path(int a, int b,std::vector<std::pair<int,int>>&vec)
 { 
+  std::map<std::pair<int,int>,std::pair<int,int> >Route;
   int length;
   std::pair<int, int>start(a,b);
   std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
-  int number_route;
-  
+  int number_route = 0;
+  while(!Closet_Point.empty())
+  {
+    Closet_Point.pop();
+  }
+  // 清空容器map
+  Route.erase(Route.begin(), Route.end());
+
   cout<<"进来的点x和y:"<<a<<b<<endl;
-  
   for (int i=1; i<10; i++)
   {
     for (int j=1; j<10; j++)
@@ -289,147 +403,33 @@ int Astar_Path(int a, int b)
     }
   }
 
-  //找到的新终点的坐标pair
-  std::pair<int,int>Find_Point = Closet_Point.top().second;
-  cout<<"找到的距离最近的点为"<<Find_Point.first<<""<<Find_Point.second<<endl;
-
-  /*
+  std::pair<int,int>Find_Point;
+  if(!Closet_Point.empty())
+  {
+    Find_Point.first = Closet_Point.top().second.first;
+    Find_Point.second = Closet_Point.top().second.second;
+  }
+  else
+  {
+    Find_Point.first = 1;
+    Find_Point.second = 1;
+  }
+  cout<<"找到的目标点为"<<Find_Point.first<<""<<Find_Point.second<<endl;
   // 新的a*
-  Route = Path.Findpath(start, Find_Point, mat);
-  // 计算总步数用来返回值
-  number_route = Path.Number_in_Path(Find_Point);
-  cout<<"别吓我"<<number_route<<endl;
-  std::vector<std::pair<int,int>>Route_Inorder{Find_Point}; //生成一个ector储存排序后的Astar路径
-  Order_Path(Find_Point,number_route,Route_Inorder);
-  cout<<"别搞我"<<Route_Inorder[8].first<<Route_Inorder[8].second<<endl;
-
-  //小车运动
-  for(int i=0; i<number_route;i++)
+  Route = Path.Findpath(start, Find_Point, easymap.easyMapSS());
+  // 计算总步数
+  std::pair<int,int>point_behind(Find_Point);
+  while(point_behind != start)
   {
-    float Astar_x,Astar_y,Astar_theta;
-    std::tie(Astar_x,Astar_y,Astar_theta) = Odo.Cordinates();
-    // cout << "x is: " << Astar_x << " y is: " << Astar_y << endl;
-    cout << "theta is: " << Astar_theta << endl;
-    if(Route_Inorder[number_route-i-1].second - Route_Inorder[number_route-i].second == 1)
-    {
-      if(Astar_theta == 0)
-      {
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);
-      }
-      else
-      {
-        SweepBot->rotate_left(Regular_speed);
-        SweepBot->delay_ms(1680);
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);
-      }
-    }
-    else if(Route_Inorder[number_route-i-1].first - Route_Inorder[number_route-i].first == 1)
-    {
-      if(Astar_theta == 0)
-      {
-        cout<<"向右转90度"<<endl;
-        //向右转90度
-        SweepBot->rotate_right(Regular_speed);
-        SweepBot->delay_ms(770);
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);  
-      }
-      else
-      {
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);
-      }
-    }
-      cout<<"完成了一次了"<<endl;
+    point_behind = Route[point_behind];
+    number_route++;
   }
-  SweepBot->stop();
-  SweepBot->delay_ms(1000);
-  // 找到点后清空优先队列
-  while(!Closet_Point.empty())
-  {
-    Closet_Point.pop();
-  }
-  // 清空容器map
-  Route.erase(Route.begin(), Route.end());
-  
-  // 清空容器vector
-  Route_Inorder.clear();
-  */
-  state = 10;
-  
+  cout<<"总部数"<<number_route<<endl;
 
-  return state;
-}
-
-int Astar_Home(int a, int b)
-{
-  int number_route;
-  std::pair<int,int>start(a,b);
-  std::pair<int,int>home(1,1);
-  // 新的a*
-  Route = Path.Findpath(start, home, mat2);
-  // 计算总步数用来返回值
-  number_route = Path.Number_in_Path(home);
-  cout<<"别吓我"<<number_route<<endl;
-  std::vector<std::pair<int,int>>Route_Inorder{home}; //生成一个ector储存排序后的Astar路径
-  Order_Path(home,number_route,Route_Inorder);
-  cout<<"别搞我"<<Route_Inorder[3].first<<Route_Inorder[3].second<<endl;
-
-  //小车回家运动
-  for(int i=0; i<number_route;i++)
-  {
-    float Astar_x,Astar_y,Astar_theta;
-
-    // cout << "x is: " << Astar_x << " y is: " << Astar_y << endl;
-    cout << "theta is: " << Astar_theta << endl;
-    if(Route_Inorder[number_route-i-1].second - Route_Inorder[number_route-i].second == -1)
-    {
-      if(Astar_theta<0.05 && Astar_theta>-0.05)
-      {
-        SweepBot->rotate_left(Regular_speed);
-        SweepBot->delay_ms(3460);
-        SweepBot->stop();
-        SweepBot->delay_ms(500);
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);
-      }
-      else
-      {
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);
-      }
-    }
-    else if(Route_Inorder[number_route-i-1].first - Route_Inorder[number_route-i].first == -1)
-    {
-      static int i = 1;
-      if(i==1)
-      {
-        cout<<"向右 hh 转90度"<<endl;
-        SweepBot->rotate_right(Regular_speed);
-        SweepBot->delay_ms(770);
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900); 
-        i = 2; 
-      }
-      else
-      {
-        SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1900);
-      }
-    }
-      cout<<"完成了一次了"<<endl;
-  }
-  SweepBot->stop();
-  state = 100;
-  return state;
-}
-
-void Order_Path(std::pair<int,int>x,int num,std::vector<std::pair<int,int>>&vec)
-{
-  std::pair<int,int>Point_behind = x;
-  for(int i=1;i<=num;i++)
+  vec.push_back(Find_Point);
+  // cout<<"别搞我"<<Route_Inorder[8].first<<Route_Inorder[8].second<<endl;
+  std::pair<int,int>Point_behind(Find_Point);
+  for(int i=1;i<=number_route;i++)
   {
     Point_behind = Route[Point_behind];
     vec.push_back(Point_behind);
