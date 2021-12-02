@@ -21,9 +21,10 @@ public:
     Matrix easyMap();
     Matrix easyMapS();
     Matrix easyMapSS();
+    Matrix hardMap();
     Matrix markTrajectory(int x, int y);
     Matrix markTrajectoryS(int x, int y);
-
+    Matrix markTrajectoryH(int x, int y);
 };
 
 Map::Map(/* args */)
@@ -35,6 +36,7 @@ Map::~Map()
 {
 }
 
+// 92x92 version of easyMap
 Matrix Map::easyMap()
 {
     Matrix easyMap(92,92);
@@ -60,6 +62,7 @@ Matrix Map::easyMap()
     return easyMap;
 }
 
+// 11x11 version of easyMap
 Matrix Map::easyMapS()
 {
     Matrix easyMap(11,11);
@@ -107,6 +110,45 @@ Matrix Map::easyMapS()
     }
         return easyMap;
     }
+
+Matrix Map::hardMap()
+{
+    Matrix hardMap(29,29);
+    for (int i=0; i<29; i++)
+    {
+        hardMap.p[i][0] = WALL;
+        hardMap.p[i][29] = WALL;
+        hardMap.p[0][i] = WALL;
+        hardMap.p[29][i] = WALL;
+    }
+
+    for (int i=0; i<9; i++)
+    {
+        hardMap.p[9][1+i] = WALL;
+        hardMap.p[1+i][11] = WALL;
+        hardMap.p[9][11+i] = WALL;
+        hardMap.p[12+i][4] = WALL;
+        hardMap.p[16][5+i] = WALL;
+        hardMap.p[12+i][16] = WALL;
+        hardMap.p[16][18+i] = WALL;
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        hardMap.p[5][16+i] = WALL;
+        hardMap.p[20+i][23] = WALL;
+    }
+    for (int i = 0; i < 11; i++)
+    {
+        hardMap.p[3+i][24] = WALL;
+        hardMap.p[23][8+i] = WALL;
+        
+    }
+    
+    return hardMap;
+}
+
+
+// markTrajectory for 11x11 easyMap
 Matrix Map::markTrajectoryS(int x, int y)
 {
     Matrix map(11,11);
@@ -114,6 +156,7 @@ Matrix Map::markTrajectoryS(int x, int y)
     return map;
 }
 
+// markTrajectory for 92x92 easyMap
 Matrix Map::markTrajectory(int x, int y)
 {
     Matrix map(92,92);
@@ -123,6 +166,12 @@ Matrix Map::markTrajectory(int x, int y)
     return map;
 }   
 
-
+// markTrajectory for 29x29 hardMap
+Matrix Map::markTrajectoryH(int x, int y)
+{
+    Matrix map(29,29);
+    map.p[x][y] = TRAJECTORY;
+    return map;
+} 
 
 #endif

@@ -36,7 +36,13 @@ int turn_count = 0;
 void Astar_Path(int a, int b,std::vector<std::pair<int,int>>&vec);
 Astar Path;
 
-
+// State define
+int state;
+#define BPP     0
+#define TURNL   1
+#define TURNR   2
+#define As      3
+#define FaceTo0 4
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -45,14 +51,6 @@ using std::endl;
 
 // Function prototypes:
 int easyBPP();
-
-// State define
-int state;
-#define BPP   1
-#define TURNL 2
-#define TURNR 3
-#define Astar 4
-#define FaceTo0 5
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
@@ -74,11 +72,13 @@ int main(int argc, char **argv)
   Supervisor *supervisor = (Supervisor *)robot;
   robot_node = supervisor->getFromDef("SWEEP");
 
-  // do this once only
+  // Detect if supervisor is on this webots system
   if (robot_node == NULL) {
     std::cerr << "No DEF Sweep node found in the current world file" << std::endl;
     exit(1);
   }
+
+  // Get translation and rotation data from supervior node
   Field *trans_field = robot_node->getField("translation");
   Field *rotate_field = robot_node->getField("rotation");
   
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
           Initial_theta = Initial_theta + PI4Turn;
         }
       }
-    else if (state == Astar)
+    else if (state == As)
     {
       std::vector<std::pair<int,int>>Get_Route_Inorder;
       cout<<"都没你的天"<<endl;
@@ -258,7 +258,7 @@ int main(int argc, char **argv)
         SweepBot->delay_ms(1000);
       }
       cout<<"state5 finished"<<endl;
-      state = Astar;
+      state = As;
     }
   }
   
@@ -295,7 +295,7 @@ int easyBPP()
       if (mat.Point(left_x,left_y)>=1)
       {
         mat += easymap.markTrajectoryS(map_x,map_y);
-        return Astar;
+        return As;
       }
       else
       {
@@ -308,7 +308,7 @@ int easyBPP()
       if (mat.Point(right_x,right_y)>=1)
       {
         mat += easymap.markTrajectoryS(map_x,map_y);
-        return Astar;
+        return As;
       }
       else
       {
