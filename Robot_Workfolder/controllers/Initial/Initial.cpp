@@ -37,19 +37,9 @@ int turn_count = 0;
 // Astar variables
 std::pair<int,int>End_Detect(int a, int b);
 Astar Path;
-<<<<<<< HEAD
+
 std::map<std::pair<int,int>,std::pair<int,int> >Route;
 std::map<std::pair<int,int>,std::pair<int,int> >INV_Route;//inverse the order of the route
-=======
-
-// State define
-int state;
-#define BPP     0
-#define TURNL   1
-#define TURNR   2
-#define As      3
-#define FaceTo0 4
->>>>>>> d7a6a03b19fc5c8dba0941ebad7184ceb8524394
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -59,7 +49,6 @@ using std::endl;
 // Function prototypes:
 int easyBPP();
 
-<<<<<<< HEAD
 // State define
 int state;
 #define BPP   1
@@ -67,10 +56,7 @@ int state;
 #define TURNR 3
 #define Astar 4
 #define Move 5
-#define FaceTo0 6
 
-=======
->>>>>>> d7a6a03b19fc5c8dba0941ebad7184ceb8524394
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
 {
@@ -262,12 +248,6 @@ int main(int argc, char **argv)
         SweepBot->delay_ms(1000);
         state = Astar;
       }
-<<<<<<< HEAD
-
-=======
-      cout<<"state5 finished"<<endl;
-      state = As;
->>>>>>> d7a6a03b19fc5c8dba0941ebad7184ceb8524394
     }
   }
   
