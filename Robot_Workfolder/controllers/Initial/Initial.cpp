@@ -121,7 +121,7 @@ int main(int argc, char **argv)
     int behind_x = round(map_x - sin(map_theta));
     int behind_y = round(map_y - cos(map_theta));
 
-    cout << "x is: " << map_xx << " y is: " << map_yy << endl;
+    cout << "x is: " << map_x << " y is: " << map_y << endl;
     printf( "theta is: %.3f\n", map_theta);
 
     // cout << "behind x is: " << behind_x << " behind y is: " << behind_y << endl;
@@ -179,8 +179,8 @@ int main(int argc, char **argv)
     else if (state == Move)
     {
       std::pair<int,int>Present_Cor;
-      Present_Cor.first = map_xx;
-      Present_Cor.second = map_yy;
+      Present_Cor.first = map_x;
+      Present_Cor.second = map_y;
       cout<<"X"<<Present_Cor.first<<"Y"<<Present_Cor.second<<endl;
       cout<<"下一个点为"<<INV_Route[Present_Cor].first<<INV_Route[Present_Cor].second<<endl;
       // movement 
@@ -190,9 +190,16 @@ int main(int argc, char **argv)
         {
           if(map_theta<0.04 && map_theta>-0.03)
           {
+            static int i = 1;
             // 掉头180度
             SweepBot->rotate_left(Regular_speed);
             SweepBot->delay_ms(3540);
+            if(i == 1)
+            {
+              SweepBot->forward(Regular_speed);
+              SweepBot->delay_ms(2000);
+              i = 2;
+            }
             state = Move;
           }
           else if(map_theta<1.6 && map_theta>1.5)
@@ -204,13 +211,19 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            // SweepBot->delay_ms(3700);
+            SweepBot->delay_ms(3900);
             state = Move;
           }
         }
         else if(INV_Route[Present_Cor].first-Present_Cor.first == -1)
         {
-          if(map_theta>1.6 || map_theta<1.5)
+          if(map_theta>-3.15 && map_theta<-3)
+          {
+            SweepBot->rotate_right(Regular_speed);
+            SweepBot->delay_ms(1720);
+            state = Move;
+          }
+          else if(map_theta<3.14 && map_theta>3.12)
           {
             SweepBot->rotate_right(Regular_speed);
             SweepBot->delay_ms(1720);
@@ -219,7 +232,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            // SweepBot->delay_ms(3700);
+            SweepBot->delay_ms(3900);
             state = Move;
           }
         }
@@ -234,7 +247,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            // SweepBot->delay_ms(3700);
+            SweepBot->delay_ms(3900);
             state = Move;
           }
         }
