@@ -37,8 +37,19 @@ int turn_count = 0;
 // Astar variables
 std::pair<int,int>End_Detect(int a, int b);
 Astar Path;
+<<<<<<< HEAD
 std::map<std::pair<int,int>,std::pair<int,int> >Route;
 std::map<std::pair<int,int>,std::pair<int,int> >INV_Route;//inverse the order of the route
+=======
+
+// State define
+int state;
+#define BPP     0
+#define TURNL   1
+#define TURNR   2
+#define As      3
+#define FaceTo0 4
+>>>>>>> d7a6a03b19fc5c8dba0941ebad7184ceb8524394
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -48,6 +59,7 @@ using std::endl;
 // Function prototypes:
 int easyBPP();
 
+<<<<<<< HEAD
 // State define
 int state;
 #define BPP   1
@@ -57,6 +69,8 @@ int state;
 #define Move 5
 #define FaceTo0 6
 
+=======
+>>>>>>> d7a6a03b19fc5c8dba0941ebad7184ceb8524394
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
 {
@@ -77,11 +91,13 @@ int main(int argc, char **argv)
   Supervisor *supervisor = (Supervisor *)robot;
   robot_node = supervisor->getFromDef("SWEEP");
 
-  // do this once only
+  // Detect if supervisor is on this webots system
   if (robot_node == NULL) {
     std::cerr << "No DEF Sweep node found in the current world file" << std::endl;
     exit(1);
   }
+
+  // Get translation and rotation data from supervior node
   Field *trans_field = robot_node->getField("translation");
   Field *rotate_field = robot_node->getField("rotation");
   
@@ -152,7 +168,7 @@ int main(int argc, char **argv)
           Initial_theta = Initial_theta + PI4Turn;
         }
       }
-    else if (state == Astar)
+    else if (state == As)
     {
       cout<<"我进来了"<<endl;
       Route.clear();
@@ -246,7 +262,12 @@ int main(int argc, char **argv)
         SweepBot->delay_ms(1000);
         state = Astar;
       }
+<<<<<<< HEAD
 
+=======
+      cout<<"state5 finished"<<endl;
+      state = As;
+>>>>>>> d7a6a03b19fc5c8dba0941ebad7184ceb8524394
     }
   }
   
@@ -283,7 +304,7 @@ int easyBPP()
       if (mat.Point(left_x,left_y)>=1)
       {
         mat += easymap.markTrajectoryS(map_x,map_y);
-        return Astar;
+        return As;
       }
       else
       {
@@ -296,7 +317,7 @@ int easyBPP()
       if (mat.Point(right_x,right_y)>=1)
       {
         mat += easymap.markTrajectoryS(map_x,map_y);
-        return Astar;
+        return As;
       }
       else
       {

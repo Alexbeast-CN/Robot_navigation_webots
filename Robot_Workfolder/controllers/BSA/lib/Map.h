@@ -87,30 +87,6 @@ Matrix Map::easyMapS()
     return easyMap;
 }
 
-    Matrix Map::easyMapSS()
-{
-    Matrix easyMap(11,11);
-    for (int i=0; i<11; i++)
-    {
-        easyMap.p[i][0] = WALL;
-        easyMap.p[i][10] = WALL;
-        easyMap.p[0][i] = WALL;
-        easyMap.p[10][i] = WALL;
-    }
-
-    for (int i=1; i<=3; i++)
-        for (int j=1; j<=3; j++)
-        {
-            easyMap.p[3+i][2+j] = WALL;
-        }
-
-    for (int j=1; j<=2; j++)
-    {
-        easyMap.p[5][2+j] = BLANK;
-    }
-        return easyMap;
-    }
-
 Matrix Map::hardMap()
 {
     Matrix hardMap(29,29);
