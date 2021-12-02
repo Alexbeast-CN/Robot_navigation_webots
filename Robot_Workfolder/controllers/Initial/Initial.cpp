@@ -56,6 +56,7 @@ int state;
 #define TURNR 3
 #define Astar 4
 #define Move 5
+#define GAGA 6 //做一个跳板state 看它是否又会被卡住不动
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
@@ -120,7 +121,7 @@ int main(int argc, char **argv)
     int behind_x = round(map_x - sin(map_theta));
     int behind_y = round(map_y - cos(map_theta));
 
-    cout << "x is: " << map_x << " y is: " << map_y << endl;
+    cout << "x is: " << map_xx << " y is: " << map_yy << endl;
     printf( "theta is: %.3f\n", map_theta);
 
     // cout << "behind x is: " << behind_x << " behind y is: " << behind_y << endl;
@@ -154,7 +155,7 @@ int main(int argc, char **argv)
           Initial_theta = Initial_theta + PI4Turn;
         }
       }
-    else if (state == As)
+    else if (state == Astar)
     {
       cout<<"我进来了"<<endl;
       Route.clear();
@@ -178,8 +179,8 @@ int main(int argc, char **argv)
     else if (state == Move)
     {
       std::pair<int,int>Present_Cor;
-      Present_Cor.first = map_x;
-      Present_Cor.second = map_y;
+      Present_Cor.first = map_xx;
+      Present_Cor.second = map_yy;
       cout<<"X"<<Present_Cor.first<<"Y"<<Present_Cor.second<<endl;
       cout<<"下一个点为"<<INV_Route[Present_Cor].first<<INV_Route[Present_Cor].second<<endl;
       // movement 
@@ -192,8 +193,6 @@ int main(int argc, char **argv)
             // 掉头180度
             SweepBot->rotate_left(Regular_speed);
             SweepBot->delay_ms(3540);
-            SweepBot->forward(Regular_speed);
-            SweepBot->delay_ms(1900);
             state = Move;
           }
           else if(map_theta<1.6 && map_theta>1.5)
@@ -205,7 +204,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            SweepBot->delay_ms(3700);
+            // SweepBot->delay_ms(3700);
             state = Move;
           }
         }
@@ -220,7 +219,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            SweepBot->delay_ms(3700);
+            // SweepBot->delay_ms(3700);
             state = Move;
           }
         }
@@ -235,7 +234,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            SweepBot->delay_ms(3700);
+            // SweepBot->delay_ms(3700);
             state = Move;
           }
         }
@@ -246,10 +245,17 @@ int main(int argc, char **argv)
         mat += easymap.markTrajectoryS(map_x,map_y);
         SweepBot->stop();
         SweepBot->delay_ms(1000);
-        state = Astar;
+        state = GAGA;
       }
     }
+
+    else if(state == GAGA)
+    {
+      cout<<"进入GAGA"<<endl;
+      state = Astar;
+    }
   }
+
   
   // Enter exit cleanup code here.
   delete robot;
@@ -284,7 +290,7 @@ int easyBPP()
       if (mat.Point(left_x,left_y)>=1)
       {
         mat += easymap.markTrajectoryS(map_x,map_y);
-        return As;
+        return Astar;
       }
       else
       {
@@ -297,7 +303,7 @@ int easyBPP()
       if (mat.Point(right_x,right_y)>=1)
       {
         mat += easymap.markTrajectoryS(map_x,map_y);
-        return As;
+        return Astar;
       }
       else
       {
