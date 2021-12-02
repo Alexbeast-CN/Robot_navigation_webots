@@ -244,12 +244,39 @@ int main(int argc, char **argv)
             SweepBot->delay_ms(1720);
             state = Move;
           }
+          else if(map_theta<-1.5 && map_theta>-1.6)
+          {
+            SweepBot->rotate_left(Regular_speed);
+            SweepBot->delay_ms(1720);
+            state = Move;
+          }
           else
           {
             SweepBot->forward(Regular_speed);
             SweepBot->delay_ms(3900);
             state = Move;
           }
+        }
+        else if(INV_Route[Present_Cor].first-Present_Cor.first == 1)
+        {
+          if(map_theta>-3.15 && map_theta<-3)
+          {
+            SweepBot->rotate_left(Regular_speed);
+            SweepBot->delay_ms(1720);
+            state = Move;
+          }
+          else if(map_theta<3.14 && map_theta>3.12)
+          {
+            SweepBot->rotate_left(Regular_speed);
+            SweepBot->delay_ms(1720);
+            state = Move;
+          }
+          else
+          {
+            SweepBot->forward(Regular_speed);
+            SweepBot->delay_ms(3900);
+            state = Move;
+          } 
         }
       }
       else
