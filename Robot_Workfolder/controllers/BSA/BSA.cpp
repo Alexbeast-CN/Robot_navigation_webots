@@ -12,12 +12,6 @@
 #include "lib/Matrix.h"
 #include "lib/Astar.h"
 
-// STL
-#include <iomanip>
-
-// Type Define
-typedef std::pair<int,int> Coordinate;
-
 // Environment variables
 #define PI4Turn 3.14
 SweepRobot *SweepBot;
@@ -25,10 +19,6 @@ Map easymap;
 Node *robot_node;
 Supervisor *supervisor;
 double Regular_speed = 20;
-// Astar variables
-Astar Path;
-std::map<Coordinate,Coordinate> Route;
-std::map<Coordinate,Coordinate> INV_Route;//inverse the order of the route
 
 // Load the map
 Matrix mat = easymap.easyMapS();
@@ -44,6 +34,13 @@ float cor_y;
 float z;
 int turn_count = 0;
 
+// Astar variables
+std::pair<int,int>End_Detect(int a, int b);
+Astar Path;
+
+std::map<std::pair<int,int>,std::pair<int,int> >Route;
+std::map<std::pair<int,int>,std::pair<int,int> >INV_Route;//inverse the order of the route
+
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
 using std::cout;
@@ -51,8 +48,6 @@ using std::endl;
 
 // Function prototypes:
 int easyBPP();
-Coordinate End_Detect(int a, int b);
-
 
 // State define
 int state;
@@ -72,11 +67,8 @@ int main(int argc, char **argv)
   // Initial state
   state = BPP;
 
-  // Odometry Odo;
+  Odometry Odo;
   // float t;
-
-  // create a link to store the robot's position in sequence
-  std::vector<Coordinate> CCP_Path{Coordinate(1,1)};
 
   //create the Robot instance.
   Robot *robot = new Robot();
@@ -115,54 +107,30 @@ int main(int argc, char **argv)
     const double *trans_values = trans_field->getSFVec3f();
     const double *rotate_values = rotate_field->getSFRotation();
 
-    // Get the robot's position from supervisor
+    //printf("The rotation values are:%.2f, %.2f, %.2f, %.2f\n",rotate_values[0],rotate_values[1],rotate_values[2],rotate_values[3]);
+
     cor_x = (trans_values[0] + 0.4)*10;
     cor_y = -(trans_values[2] - 0.4)*10;
+    map_theta = rotate_values[3];
     z = rotate_values[2];
+
     map_x = round(cor_x + 1);
     map_xx = round(cor_x + 0.7);
     map_y = round(cor_y + 1);
     map_yy = round(cor_y + 0.5);
-    map_theta = rotate_values[3];
+    int behind_x = round(map_x - sin(map_theta));
+    int behind_y = round(map_y - cos(map_theta));
 
-    static int previous_x = 0;
-    static int previous_y = 0;
-    static int count = 0;
-    int it = 0;
-
-    // Broadcast the robot's position
     cout << "x is: " << map_x << " y is: " << map_y << endl;
     printf( "theta is: %.3f\n", map_theta);
 
-    int mark_x = 0;
-    int mark_y = 0;
-    // When the robot position is changed, update the map
-    if (previous_x != map_x || previous_y != map_y)
-    {
-      count++;
-      previous_x = map_x;
-      previous_y = map_y;
-      // store the robot's position in sequence
-      CCP_Path.push_back(Coordinate(map_x,map_y));
-      it = CCP_Path.size();
-      if (it > 2)
-      {
-        mark_x = CCP_Path[it-2].first;
-        mark_y = CCP_Path[it-2].second;
-        // Show the map with tarjectory
-        if (mat.Point(mark_x,mark_y) == 0)
-        {
-          mat += easymap.markTrajectoryS(mark_x,mark_y);
-        }
-      }
-    }
-    cout << "count is: " << count << endl;
-    cout << "step_count is: " << it << endl;
-    cout << "mark_x is: " << mark_x << " mark_y is: " << mark_y << endl;
-    // Show the map
+    // cout << "behind x is: " << behind_x << " behind y is: " << behind_y << endl;
+    // Show the map with tarjectory
+    if (mat.Point(behind_x,behind_y)==0)
+      mat += easymap.markTrajectoryS(behind_x,behind_y);
     mat.Show();
 
-    // State machine
+    // BPP logic
     if (state == BPP)
       state = easyBPP();
     else if (state == TURNL)
@@ -192,9 +160,9 @@ int main(int argc, char **argv)
       cout<<"我进来了"<<endl;
       Route.clear();
       INV_Route.clear();
-      Coordinate Get_Start_value(map_x,map_y);
-      Coordinate Get_End_value;
-      Coordinate Point_behind;
+      std::pair<int,int>Get_Start_value(map_x,map_y);
+      std::pair<int,int>Get_End_value;
+      std::pair<int,int>Point_behind;
       Get_End_value = End_Detect(map_x, map_y);
       cout<<"找到的目标点为"<<Get_End_value.first<<""<<Get_End_value.second<<endl;
       Route = Path.Findpath(Get_Start_value,Get_End_value,easymap.easyMapSS());
@@ -210,7 +178,7 @@ int main(int argc, char **argv)
 
     else if (state == Move)
     {
-      Coordinate Present_Cor;
+      std::pair<int,int>Present_Cor;
       Present_Cor.first = map_x;
       Present_Cor.second = map_y;
       cout<<"X"<<Present_Cor.first<<"Y"<<Present_Cor.second<<endl;
@@ -340,7 +308,6 @@ int main(int argc, char **argv)
 
 /*********************************** Functions ***************************************/
 
-// CCP motion logic
 int easyBPP()
 {
   int E = 30;
@@ -442,7 +409,7 @@ int easyBPP()
   return BPP;
 }
 
-Coordinate End_Detect(int a, int b)
+std::pair<int,int>End_Detect(int a, int b)
 { 
   int length;
   std::pair<int, int>start(a,b);
@@ -460,14 +427,14 @@ Coordinate End_Detect(int a, int b)
       // cout<<"hi"<<endl;
       if(mat.Point(i,j) == 0)
       {
-        Coordinate end(i,j);
+        std::pair<int,int>end(i,j);
         length = abs(i - start.first) + abs(j - start.second);
         Closet_Point.push(std::make_pair(-length,end));
       }
     }
   }
 
-  Coordinate Find_Point;
+  std::pair<int,int>Find_Point;
   if(!Closet_Point.empty())
   {
     Find_Point.first = Closet_Point.top().second.first;

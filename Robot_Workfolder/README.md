@@ -10,6 +10,11 @@ The 0-1 matrix version of the map:
 
 ![ ](../Doc/pics/Esay_Map.png)
 
+The map of hard level:
+
+![ ](../Doc/pics/Hard_Map.png)
+
+
 ## Quick Access
 
 - [Controller source code](https://github.com/Alexbeast-CN/Robot_navigation_webots/tree/main/Robot_Workfile/controllers)
