@@ -168,13 +168,16 @@ int main(int argc, char **argv)
       }
     else if (state == TURNR)
       {
-        if (map_theta < Initial_theta + PI4Turn - 0.05)
-          SweepBot->turn_right(Regular_speed);
-        else
+        if(Initial_theta == PI4Turn)
         {
-          turn_count++;
-          state = BPP;
-          Initial_theta = Initial_theta + PI4Turn;
+          if (map_theta < Initial_theta + PI4Turn - 0.05)
+            SweepBot->turn_right(Regular_speed);
+          else
+          {
+            turn_count++;
+            state = BPP;
+            Initial_theta = Initial_theta + PI4Turn;
+          }
         }
       }
     else if (state == Astar)
@@ -222,10 +225,7 @@ int main(int argc, char **argv)
       {
         INV_Route[Route[Point_behind]] = Point_behind;
         Point_behind = Route[Point_behind];
-      }
-
-      // cout<<"你好"<<endl;
-      // mat += easymap.markTrajectoryS(End_value.first,End_value.second);    
+      }  
 
       while(!Closet_Point.empty())
       {
@@ -234,7 +234,6 @@ int main(int argc, char **argv)
 
       state = Move;
     }
-
     else if (state == Move)
     {
       Coordinate Present_Cor;
@@ -346,7 +345,23 @@ int main(int argc, char **argv)
         cout<<"到达目标点"<<endl;
         Route.clear();
         INV_Route.clear();
-        state = Astar;
+        if(map_theta<1.6 && map_theta>1.5)
+        {
+          if(mat.Point(map_x,map_y-1)==0)
+          {
+            SweepBot->rotate_left(Regular_speed);
+            SweepBot->delay_ms(1720);
+            Initial_theta = PI4Turn;
+            turn_count = 1;
+            state = BPP;
+          }
+        }
+        else if(map_theta<3.14 && map_theta>3)
+        {
+          Initial_theta = PI4Turn;
+          turn_count = 1;
+          state = BPP;
+        }
       } 
       // state = Astar;
     }
@@ -388,9 +403,9 @@ int easyBPP()
       {
         SweepBot->forward(Regular_speed);
         SweepBot->delay_ms(1000);
-        // mat += easymap.markTrajectoryS(9,8);
-        // mat += easymap.markTrajectoryS(9,9);
-        mat += easymap.markTrajectoryS(map_x,map_y);
+        mat += easymap.markTrajectoryS(9,8);
+        mat += easymap.markTrajectoryS(9,9);
+        // mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }
       else
@@ -404,8 +419,9 @@ int easyBPP()
       if (mat.Point(right_x,right_y)>=1)
       {
         SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1000);
-        mat += easymap.markTrajectoryS(map_x,map_y);
+        SweepBot->delay_ms(500);
+        mat += easymap.markTrajectoryS(9,8);
+        mat += easymap.markTrajectoryS(9,9);
         return Astar;
       }
       else
