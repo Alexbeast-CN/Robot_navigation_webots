@@ -35,8 +35,6 @@ Matrix mat = easymap.easyMapS();
 Matrix mat2 = easymap.easyMapSS();//build a static mpa for A*
 int map_x;
 int map_y;
-int map_xx;
-int map_yy;
 double map_theta;
 float Initial_theta = 0.0;
 float cor_x;
@@ -98,14 +96,14 @@ int main(int argc, char **argv)
   
   // 测试a*
   
-  mat += easymap.markTrajectoryS(4,1);
-  mat += easymap.markTrajectoryS(4,2);
-  mat += easymap.markTrajectoryS(5,1);
-  mat += easymap.markTrajectoryS(5,2);
-  mat += easymap.markTrajectoryS(5,3);
-  mat += easymap.markTrajectoryS(6,1);
-  mat += easymap.markTrajectoryS(6,2);
-  mat += easymap.markTrajectoryS(7,3);
+  // mat += easymap.markTrajectoryS(4,1);
+  // mat += easymap.markTrajectoryS(4,2);
+  // mat += easymap.markTrajectoryS(5,1);
+  // mat += easymap.markTrajectoryS(5,2);
+  // mat += easymap.markTrajectoryS(5,3);
+  // mat += easymap.markTrajectoryS(6,1);
+  // mat += easymap.markTrajectoryS(6,2);
+  // mat += easymap.markTrajectoryS(7,3);
   /************************************* Loop ********************************************/
   
   while (robot->step(TIME_STEP) != -1)
@@ -119,10 +117,8 @@ int main(int argc, char **argv)
     cor_x = (trans_values[0] + 0.4)*10;
     cor_y = -(trans_values[2] - 0.4)*10;
     z = rotate_values[2];
-    map_x = round(cor_x + 1);
-    map_xx = round(cor_x + 0.7);
-    map_y = round(cor_y + 1);
-    map_yy = round(cor_y + 0.5);
+    map_x = cor_x + 1.15;
+    map_y = cor_y + 1.15;
     map_theta = rotate_values[3];
 
     static int previous_x = 0;
@@ -150,14 +146,15 @@ int main(int argc, char **argv)
         mark_x = CCP_Path[it-2].first;
         mark_y = CCP_Path[it-2].second;
         // Show the map with tarjectory
-        if (mat.Point(mark_x,mark_y) == 0)
+        if (mat.Point(mark_x,mark_y) < 1)
         {
           mat += easymap.markTrajectoryS(mark_x,mark_y);
         }
       }
     }
-    cout << "count is: " << count << endl;
-    cout << "step_count is: " << it << endl;
+
+    cout << "cor_x is: " << cor_x << " cor_y is: " << cor_y << endl;
+    cout << "map_x is: " << map_x << " map_y is: " << map_y << endl;
     cout << "mark_x is: " << mark_x << " mark_y is: " << mark_y << endl;
     // Show the map
     mat.Show();
@@ -346,17 +343,17 @@ int easyBPP()
   int E = 30;
 
   // The coordinate of 1 cells ahead
-  int font_x = round(map_x + sin(map_theta));
-  int font_y = round(map_y + cos(map_theta));
+  int front_x = round(cor_x + 0.9 + sin(map_theta));
+  int front_y = round(cor_y + 0.9 + cos(map_theta));
   // The coordinate of 1 cell left
-  int left_x = round(map_x + cos(map_theta));
-  int left_y = round(map_y - sin(map_theta));
+  int left_x = round(cor_x + 0.9 + cos(map_theta));
+  int left_y = round(cor_y + 0.9 - sin(map_theta));
   // The coordinate of 1 cell right
-  int right_x = round(map_x - cos(map_theta));
-  int right_y = round(map_y + sin(map_theta));
+  int right_x = round(cor_x + 0.9 - cos(map_theta));
+  int right_y = round(cor_y + 0.9 + sin(map_theta));
 
   // Motion logic
-  if (mat.Point(font_x,font_y)>=1)
+  if (mat.Point(front_x,front_y)>=1)
   {
     if (mat.Point(right_x,right_y)>=1)
     {
@@ -383,6 +380,11 @@ int easyBPP()
         //cout<<"Wall turn right!" << endl;
         return TURNL;
       }
+    }
+    else if (mat.Point(map_x,map_y)>=1)
+    {
+      //cout<<"Step on trajectory" << endl;
+      return Astar;
     }
     else 
     {
