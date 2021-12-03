@@ -29,6 +29,7 @@ double Regular_speed = 20;
 Astar Path;
 std::map<Coordinate,Coordinate> Route;
 std::map<Coordinate,Coordinate> INV_Route;//inverse the order of the route
+std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
 
 // Load the map
 Matrix mat = easymap.easyMapS();
@@ -49,7 +50,6 @@ using std::endl;
 
 // Function prototypes:
 int easyBPP();
-Coordinate End_Detect(int a, int b);
 
 
 // State define
@@ -59,7 +59,7 @@ int state;
 #define TURNR 3
 #define Astar 4
 #define Move 5
-#define GAGA 6 //做一个跳板state 看它是否又会被卡住不动
+
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
@@ -95,15 +95,7 @@ int main(int argc, char **argv)
   Field *rotate_field = robot_node->getField("rotation");
   
   // 测试a*
-  
-  // mat += easymap.markTrajectoryS(4,1);
-  // mat += easymap.markTrajectoryS(4,2);
-  // mat += easymap.markTrajectoryS(5,1);
-  // mat += easymap.markTrajectoryS(5,2);
-  // mat += easymap.markTrajectoryS(5,3);
-  // mat += easymap.markTrajectoryS(6,1);
-  // mat += easymap.markTrajectoryS(6,2);
-  // mat += easymap.markTrajectoryS(7,3);
+
   /************************************* Loop ********************************************/
   
   while (robot->step(TIME_STEP) != -1)
@@ -187,21 +179,56 @@ int main(int argc, char **argv)
     else if (state == Astar)
     {
       cout<<"我进来了"<<endl;
-      Route.clear();
-      INV_Route.clear();
-      Coordinate Get_Start_value(map_x,map_y);
-      Coordinate Get_End_value;
+      int length;
+      Coordinate Start_value(map_x,map_y);
+      Coordinate End_value;
       Coordinate Point_behind;
-      Get_End_value = End_Detect(map_x, map_y);
-      cout<<"找到的目标点为"<<Get_End_value.first<<""<<Get_End_value.second<<endl;
-      Route = Path.Findpath(Get_Start_value,Get_End_value,easymap.easyMapSS());
+      Coordinate Find_Point;
 
-      Point_behind = Get_End_value;
+      // cout<<"找到的目标点为"<<Get_End_value.first<<""<<Get_End_value.second<<endl;
+
+      cout<<"进来的点x和y:"<<map_x<<map_y<<endl;
+      for (int i=1; i<10; i++)
+      {
+        for (int j=1; j<10; j++)
+        {
+        // cout<<"hi"<<endl;
+          if(mat.Point(i,j) == 0)
+          {
+            Coordinate end(i,j);
+            length = abs(i - Start_value.first) + abs(j - Start_value.second);
+            Closet_Point.push(std::make_pair(-length,end));
+          }
+        }
+      }
+
+      if(!Closet_Point.empty())
+      {
+        Find_Point.first = Closet_Point.top().second.first;
+        Find_Point.second = Closet_Point.top().second.second;
+      }
+      else
+      {
+        Find_Point.first = 1;
+        Find_Point.second = 1;
+      }
+
+      End_value = Find_Point;
+      cout<<"找到的目标点为"<<End_value.first<<""<<End_value.second<<endl;
+      Route = Path.Findpath(Start_value,End_value,easymap.easyMapSS());
+
+      Point_behind = End_value;
       while(Route.count(Point_behind)>0)
       {
         INV_Route[Route[Point_behind]] = Point_behind;
         Point_behind = Route[Point_behind];
       }
+
+      while(!Closet_Point.empty())
+      {
+        Closet_Point.pop();
+      }
+
       state = Move;
     }
 
@@ -282,7 +309,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            SweepBot->delay_ms(3900);
+            SweepBot->delay_ms(1000);
             state = Move;
           }
         }
@@ -311,17 +338,11 @@ int main(int argc, char **argv)
       else
       {
         cout<<"到达目标点"<<endl;
-        mat += easymap.markTrajectoryS(map_x,map_y);
-        SweepBot->stop();
-        SweepBot->delay_ms(1000);
-        state = GAGA;
+        Route.clear();
+        INV_Route.clear();
+        // mat += easymap.markTrajectoryS(map_x,map_y);
+        state = BPP;
       }
-    }
-
-    else if(state == GAGA)
-    {
-      cout<<"进入GAGA"<<endl;
-      state = Astar;
     }
   }
 
@@ -444,42 +465,3 @@ int easyBPP()
   return BPP;
 }
 
-Coordinate End_Detect(int a, int b)
-{ 
-  int length;
-  std::pair<int, int>start(a,b);
-  std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
-  while(!Closet_Point.empty())
-  {
-    Closet_Point.pop();
-  }
-
-  cout<<"进来的点x和y:"<<a<<b<<endl;
-  for (int i=1; i<10; i++)
-  {
-    for (int j=1; j<10; j++)
-    {
-      // cout<<"hi"<<endl;
-      if(mat.Point(i,j) == 0)
-      {
-        Coordinate end(i,j);
-        length = abs(i - start.first) + abs(j - start.second);
-        Closet_Point.push(std::make_pair(-length,end));
-      }
-    }
-  }
-
-  Coordinate Find_Point;
-  if(!Closet_Point.empty())
-  {
-    Find_Point.first = Closet_Point.top().second.first;
-    Find_Point.second = Closet_Point.top().second.second;
-  }
-  else
-  {
-    Find_Point.first = 1;
-    Find_Point.second = 1;
-  }
-  
-  return Find_Point;
-}
