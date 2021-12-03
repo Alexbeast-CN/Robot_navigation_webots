@@ -30,6 +30,7 @@ Astar Path;
 std::map<Coordinate,Coordinate> Route;
 std::map<Coordinate,Coordinate> INV_Route;//inverse the order of the route
 std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
+Coordinate End_value;
 
 // Load the map
 Matrix mat = easymap.easyMapS();
@@ -95,7 +96,7 @@ int main(int argc, char **argv)
   Field *rotate_field = robot_node->getField("rotation");
   
   // 测试a*
-
+ //  mat += easymap.markTrajectoryS(9,9);
   /************************************* Loop ********************************************/
   
   while (robot->step(TIME_STEP) != -1)
@@ -181,7 +182,6 @@ int main(int argc, char **argv)
       cout<<"我进来了"<<endl;
       int length;
       Coordinate Start_value(map_x,map_y);
-      Coordinate End_value;
       Coordinate Point_behind;
       Coordinate Find_Point;
 
@@ -224,6 +224,9 @@ int main(int argc, char **argv)
         Point_behind = Route[Point_behind];
       }
 
+      // cout<<"你好"<<endl;
+      // mat += easymap.markTrajectoryS(End_value.first,End_value.second);    
+
       while(!Closet_Point.empty())
       {
         Closet_Point.pop();
@@ -239,8 +242,9 @@ int main(int argc, char **argv)
       Present_Cor.second = map_y;
       cout<<"X"<<Present_Cor.first<<"Y"<<Present_Cor.second<<endl;
       cout<<"下一个点为"<<INV_Route[Present_Cor].first<<INV_Route[Present_Cor].second<<endl;
+      cout<<"祈求你了"<<round(map_x + 0.5*sin(map_theta))<<" "<<round(map_y + 0.5*cos(map_theta))<<endl;
       // movement 
-      if(INV_Route[Present_Cor] != std::make_pair(0,0))
+      if(Present_Cor != End_value)
       {
         if(INV_Route[Present_Cor].second-Present_Cor.second == -1)
         {
@@ -294,7 +298,7 @@ int main(int argc, char **argv)
         }
         else if(INV_Route[Present_Cor].second-Present_Cor.second == 1)
         {
-          if(map_theta<1.6 && map_theta>1.5)
+          if(map_theta<1.7 && map_theta>1.5)
           {
             SweepBot->rotate_right(Regular_speed);
             SweepBot->delay_ms(1720);
@@ -309,7 +313,7 @@ int main(int argc, char **argv)
           else
           {
             SweepBot->forward(Regular_speed);
-            SweepBot->delay_ms(1000);
+            // SweepBot->delay_ms(1000);
             state = Move;
           }
         }
@@ -337,12 +341,14 @@ int main(int argc, char **argv)
       }
       else
       {
+        mat += easymap.markTrajectoryS(map_x,map_y);
+        // mat += easymap.markTrajectoryS(9,9);
         cout<<"到达目标点"<<endl;
         Route.clear();
         INV_Route.clear();
-        // mat += easymap.markTrajectoryS(map_x,map_y);
-        state = BPP;
-      }
+        state = Astar;
+      } 
+      // state = Astar;
     }
   }
 
@@ -380,6 +386,10 @@ int easyBPP()
     {
       if (mat.Point(left_x,left_y)>=1)
       {
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1000);
+        // mat += easymap.markTrajectoryS(9,8);
+        // mat += easymap.markTrajectoryS(9,9);
         mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }
@@ -393,6 +403,8 @@ int easyBPP()
     {
       if (mat.Point(right_x,right_y)>=1)
       {
+        SweepBot->forward(Regular_speed);
+        SweepBot->delay_ms(1000);
         mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }
