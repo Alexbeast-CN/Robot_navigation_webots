@@ -111,8 +111,8 @@ int main(int argc, char **argv)
     cor_y = -(trans_values[2] - 0.4)*10;
     z = rotate_values[2];
     y = rotate_values[1];
-    map_x = cor_x + 1.15;
-    map_y = cor_y + 1.15;
+    map_x = cor_x + 1.18;
+    map_y = cor_y + 1.18;
     map_theta = rotate_values[3];
     cout << "map_theta read from map is: " << map_theta << endl;
 
@@ -391,7 +391,7 @@ int easyBPP()
       if (mat.Point(left_x,left_y)>=1)
       {
         SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(500);
+        SweepBot->delay_ms(950);
         mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }
@@ -406,7 +406,7 @@ int easyBPP()
       if (mat.Point(right_x,right_y)>=1)
       {
         SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(500);
+        SweepBot->delay_ms(950);
         mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }

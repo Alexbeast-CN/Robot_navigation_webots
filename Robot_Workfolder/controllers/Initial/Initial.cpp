@@ -19,7 +19,8 @@
 typedef std::pair<int,int> Coordinate;
 
 // Environment variables
-#define PI4Turn 3.14
+#define TURNPI 3.14
+#define TURNPI2 1.57
 SweepRobot *SweepBot;
 Map easymap;
 Node *robot_node;
@@ -109,10 +110,18 @@ int main(int argc, char **argv)
     // Get the robot's position from supervisor
     cor_x = (trans_values[0] + 0.4)*10;
     cor_y = -(trans_values[2] - 0.4)*10;
-    y = rotate_values[2];
+    y = rotate_values[1];
     map_x = cor_x + 1.15;
     map_y = cor_y + 1.15;
     map_theta = rotate_values[3];
+
+    cout << "y is: " << y << endl;
+      if (y > -0.01)
+      {
+        map_theta = -map_theta;
+        cout << "map_theta after reverse is: " << map_theta << endl;    
+      }
+
 
     static int previous_x = 0;
     static int previous_y = 0;
@@ -120,8 +129,8 @@ int main(int argc, char **argv)
     int it = 0;
 
     // Broadcast the robot's position
-    cout << "x is: " << map_x << " y is: " << map_y << endl;
-    printf( "theta is: %.3f\n", map_theta);
+    // cout << "x is: " << map_x << " y is: " << map_y << endl;
+    // printf( "theta is: %.3f\n", map_theta);
 
     int mark_x = 0;
     int mark_y = 0;
@@ -146,9 +155,12 @@ int main(int argc, char **argv)
       }
     }
 
-    cout << "cor_x is: " << cor_x << " cor_y is: " << cor_y << endl;
+    if(Initial_theta < -3.13)
+      Initial_theta = 3.14;
+
+    // cout << "cor_x is: " << cor_x << " cor_y is: " << cor_y << endl;
     cout << "map_x is: " << map_x << " map_y is: " << map_y << endl;
-    cout << "mark_x is: " << mark_x << " mark_y is: " << mark_y << endl;
+    // cout << "mark_x is: " << mark_x << " mark_y is: " << mark_y << endl;
     // Show the map
     mat.Show();
 
@@ -157,28 +169,56 @@ int main(int argc, char **argv)
       state = easyBPP();
     else if (state == TURNL)
     {
-      SweepBot->turn_left(Regular_speed);
-      SweepBot->delay_ms(6000);
-      // robot->step(6000);
-      // turn_count++;
-      // if (Initial_theta == PI4Turn)
-      //   Initial_theta = Initial_theta - PI4Turn;
-      // else
-      //   Initial_theta = Initial_theta + PI4Turn;
-      state = BPP;
+      if (map_theta < -3.139)
+        map_theta = -map_theta;
+
+      cout << "Map theta is: " << map_theta << endl;
+
+      if (map_theta > Initial_theta - TURNPI + 0.05)
+      {
+        cout << "Initial theta is: " << Initial_theta << endl;
+        cout << "---------------------- Turn Left" << endl;
+        printf( "theta is: %.3f\n", map_theta);
+
+        SweepBot->turn_left(Regular_speed);
+      }
+      else
+      {
+        turn_count++;
+        state = BPP;
+        Initial_theta = Initial_theta - TURNPI;
+      }
     }
     else if (state == TURNR)
     {
-      SweepBot->turn_right(Regular_speed);
-      SweepBot->delay_ms(6000);
-      // robot->step(6000);
-      // turn_count++;
-      // if (Initial_theta == PI4Turn)
-      //   Initial_theta = Initial_theta + PI4Turn;
-      // else
-      //   Initial_theta = Initial_theta - PI4Turn;
-      state = BPP;
+      // if (Initial_theta + TURNPI2 > TURNPI + 0.05)
+      // {
+      //   Initial_theta = -Initial_theta;
+      //   map_theta = -abs(map_theta);
+      // }
+      if (Initial_theta > -0.1 && Initial_theta < 0.1)
+      {
+        Initial_theta = 0;
+        map_theta = abs(map_theta);
+      }
+
+
+      if (map_theta < Initial_theta + TURNPI - 0.05)
+      {
+        cout << "Initial theta is: " << Initial_theta << endl;
+        cout << "---------------------- Turn Right" << endl;
+        printf( "theta is: %.3f\n", map_theta);
+        SweepBot->turn_right(Regular_speed);
+      }
+      else
+      {
+        turn_count++;
+        state = BPP;
+        Initial_theta = Initial_theta + TURNPI;
+
+      }
     }
+    
     else if (state == Astar)
     {
       cout<<"我进来了"<<endl;
@@ -350,14 +390,14 @@ int main(int argc, char **argv)
           {
             SweepBot->rotate_left(Regular_speed);
             SweepBot->delay_ms(1720);
-            Initial_theta = PI4Turn;
+            Initial_theta = TURNPI;
             turn_count = 1;
             state = BPP;
           }
         }
         else if(map_theta<3.14 && map_theta>3)
         {
-          Initial_theta = PI4Turn;
+          Initial_theta = TURNPI;
           turn_count = 1;
           state = BPP;
         }
@@ -381,17 +421,19 @@ int main(int argc, char **argv)
 // CCP motion logic
 int easyBPP()
 {
-  int E = 30;
+  int E = 10;
 
   // The coordinate of 1 cells ahead
-  int front_x = round(cor_x + 0.9 + sin(map_theta));
-  int front_y = round(cor_y + 0.9 + cos(map_theta));
+  int front_x = round(cor_x + 1 + sin(map_theta));
+  int front_y = round(cor_y + 1 + cos(map_theta));
   // The coordinate of 1 cell left
-  int left_x = round(cor_x + 0.9 + cos(map_theta));
-  int left_y = round(cor_y + 0.9 - sin(map_theta));
+  int left_x = round(cor_x + 1 + cos(map_theta));
+  int left_y = round(cor_y + 1 - sin(map_theta));
   // The coordinate of 1 cell right
-  int right_x = round(cor_x + 0.9 - cos(map_theta));
-  int right_y = round(cor_y + 0.9 + sin(map_theta));
+  int right_x = round(cor_x + 1 - cos(map_theta));
+  int right_y = round(cor_y + 1 + sin(map_theta));
+
+  printf("front_x: %d, front_y: %d\n", front_x, front_y);
 
   // Motion logic
   if (mat.Point(front_x,front_y)>=1)
@@ -401,15 +443,13 @@ int easyBPP()
       if (mat.Point(left_x,left_y)>=1)
       {
         SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(1000);
-        mat += easymap.markTrajectoryS(9,8);
-        mat += easymap.markTrajectoryS(9,9);
-        // mat += easymap.markTrajectoryS(map_x,map_y);
+        SweepBot->delay_ms(950);
+        mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }
       else
       {
-        //cout<<"Wall turn left!" << endl;
+        cout<<"Wall turn right!" << endl;
         return TURNR;
       }
     }
@@ -418,14 +458,13 @@ int easyBPP()
       if (mat.Point(right_x,right_y)>=1)
       {
         SweepBot->forward(Regular_speed);
-        SweepBot->delay_ms(500);
-        mat += easymap.markTrajectoryS(9,8);
-        mat += easymap.markTrajectoryS(9,9);
+        SweepBot->delay_ms(950);
+        mat += easymap.markTrajectoryS(map_x,map_y);
         return Astar;
       }
       else
       {
-        //cout<<"Wall turn right!" << endl;
+        cout<<"Wall turn left!" << endl;
         return TURNL;
       }
     }
@@ -436,60 +475,86 @@ int easyBPP()
     }
     else 
     {
-      //cout<<"Wall in the front!" << endl;
+      cout<<"Wall in the front!" << endl;
       return TURNL;
     }
   }
   else
   {
-    // // Synchronize turnning state      
-    // if (!(turn_count/2))
-    // {
-    //   if (y<0)
-    //   {
-    //     map_theta = -map_theta;
-    //   }
-    // }
-    // else
-    // {
-    //   if (y>0)
-    //   {
-    //     map_theta = -map_theta;
-    //   }
-    // }
+    // Keep moving forward
 
-    // float turn_velocity;
-    // float e_thata;
+    float turn_velocity;
+    float e_thata;
+    cout << "Initial_theta: " << Initial_theta << endl;
 
-    // // Let robot follow a straight line after unperfect turnning.
-    // if (Initial_theta  < 3.141 && Initial_theta > 3.139)
-    // {
-    //   if (map_theta<0)
-    //   {
-    //     e_thata = Initial_theta + map_theta;
-    //     turn_velocity = E*e_thata; 
+    // Let robot follow a straight line after unperfect turnning.
+    if (Initial_theta > TURNPI - 0.05 && Initial_theta < TURNPI + 0.05)
+    {
+      if (map_theta<0)
+      {
+        e_thata = Initial_theta + map_theta;
+        turn_velocity = E*e_thata; 
 
-    //     SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
-    //   }
-    //   else
-    //   {
-    //     e_thata = Initial_theta - map_theta;
-    //     turn_velocity = E*e_thata; 
-    //     SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
-    //   }
-    //   cout << "When thate is 3.14 turning Speed is: " << turn_velocity << endl;
-    // }
-    // else
-    // {
-    //   e_thata = Initial_theta - map_theta;
-    //   turn_velocity = E*e_thata;
-    //   SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
-    //   cout << "When theta is 0 turning Speed is: " << turn_velocity << endl;
-    // }
-
-    SweepBot->forward(Regular_speed);
+        SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
+      }
+      else
+      {
+        e_thata = Initial_theta - map_theta;
+        turn_velocity = E*e_thata; 
+        SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+      }
+      cout << "When thate is 3.14 turning Speed is: " << turn_velocity << endl;
+    }
+    else
+    {
+      e_thata = Initial_theta -map_theta;
+      turn_velocity = E*e_thata;
+      SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+      cout << "When theta is 0 turning Speed is: " << turn_velocity << endl;
+    }
   }
+
+    cout << "map_theta been used for motion calculation is: " << map_theta << endl;  
 
   return BPP;
 }
 
+Coordinate End_Detect(int a, int b)
+{ 
+  int length;
+  std::pair<int, int>start(a,b);
+  std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
+  while(!Closet_Point.empty())
+  {
+    Closet_Point.pop();
+  }
+
+  cout<<"进来的点x和y:"<<a<<b<<endl;
+  for (int i=1; i<10; i++)
+  {
+    for (int j=1; j<10; j++)
+    {
+      // cout<<"hi"<<endl;
+      if(mat.Point(i,j) == 0)
+      {
+        Coordinate end(i,j);
+        length = abs(i - start.first) + abs(j - start.second);
+        Closet_Point.push(std::make_pair(-length,end));
+      }
+    }
+  }
+
+Coordinate Find_Point;
+  if(!Closet_Point.empty())
+  {
+    Find_Point.first = Closet_Point.top().second.first;
+    Find_Point.second = Closet_Point.top().second.second;
+  }
+  else
+  {
+    Find_Point.first = 1;
+    Find_Point.second = 1;
+  }
+  
+  return Find_Point;
+}
