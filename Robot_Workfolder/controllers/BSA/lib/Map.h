@@ -24,6 +24,7 @@ public:
     Matrix hardMap();
     Matrix markTrajectory(int x, int y);
     Matrix markTrajectoryS(int x, int y);
+    Matrix markTrajectoryB(int x, int y);
     Matrix markTrajectoryH(int x, int y);
 };
 
@@ -153,6 +154,13 @@ Matrix Map::markTrajectoryS(int x, int y)
 {
     Matrix map(11,11);
     map.p[x][y] = TRAJECTORY;
+    return map;
+}
+
+Matrix Map::markTrajectoryB(int x, int y)
+{
+    Matrix map(11,11);
+    map.p[x][y] = -2;
     return map;
 }
 
