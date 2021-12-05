@@ -55,6 +55,7 @@ using std::endl;
 // Function prototypes:
 int easyBPP();
 int AstarMove();
+void Balance();
 
 
 // State define
@@ -356,8 +357,7 @@ int main(int argc, char **argv)
 // CCP motion logic
 int easyBPP()
 {
-  cout<<"enter in BPP"<<endl;
-  int E = 10;
+  cout<<"------------------------ state BPP"<<endl;
 
   if (Initial_theta > 0 && Initial_theta < TURNPI-0.05)
     map_theta = abs(map_theta);
@@ -395,15 +395,19 @@ int easyBPP()
     }
     else if(mat.Point(front_x,front_y)>=1)
     {
-      cout<<"Wall turn Left!" << endl;
+      cout<<"Wall turn Right!" << endl;
       return TURNR;
+    }
+    else 
+    {
+      Balance();
     }
   }
   else if (mat.Point(left_x,left_y)>=1)
   {
     if (mat.Point(front_xx,front_yy)>=1)
     {
-      if (mat.Point(left_x,left_y)>=1)
+      if (mat.Point(right_x,right_y)>=1)
       {
         SweepBot->forward(Regular_speed);
         SweepBot->delay_ms(1000);
@@ -419,58 +423,16 @@ int easyBPP()
       cout<<"Wall turn right!" << endl;
       return TURNL;
     }
+    else
+    {
+      Balance();
+    }
   }
   else if(mat.Point(front_x,front_y)>=1) 
   {
     cout<<"Wall in the front!" << endl;
     return TURNL;
   }
-
-  else
-  {
-    // Keep moving forward
-
-    // // Synchronize turnning state      
-    // if (Initial_theta == 0)
-    // {
-    //   if (z<0)
-    //   {
-    //     map_theta = -map_theta;
-    //   }
-    // }
-
-
-    float turn_velocity;
-    float e_thata;
-    cout << "Initial_theta: " << Initial_theta << endl;
-
-    // Let robot follow a straight line after unperfect turnning.
-    if (Initial_theta > TURNPI - 0.05 && Initial_theta < TURNPI + 0.05)
-    {
-      if (map_theta<0)
-      {
-        e_thata = Initial_theta + map_theta;
-        turn_velocity = E*e_thata; 
-
-        SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
-      }
-      else
-      {
-        e_thata = Initial_theta - map_theta;
-        turn_velocity = E*e_thata; 
-        SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
-      }
-      cout << "When thate is 3.14 turning Speed is: " << turn_velocity << endl;
-    }
-    else
-    {
-      e_thata = Initial_theta -map_theta;
-      turn_velocity = E*e_thata;
-      SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
-      cout << "When theta is 0 turning Speed is: " << turn_velocity << endl;
-    }
-  }
-
     cout << "map_theta been used for motion calculation is: " << map_theta << endl;  
 
   return BPP;
@@ -592,4 +554,38 @@ int AstarMove()
     cout << "map_theta been used for motion calculation is: " << map_theta << endl;  
 
   return Move;
+}
+
+void Balance()
+{
+  int E = 10;
+  float turn_velocity;
+  float e_thata;
+  cout << "Initial_theta: " << Initial_theta << endl;
+
+  // Let robot follow a straight line after unperfect turnning.
+  if (Initial_theta > TURNPI - 0.05 && Initial_theta < TURNPI + 0.05)
+  {
+    if (map_theta<0)
+    {
+      e_thata = Initial_theta + map_theta;
+      turn_velocity = E*e_thata; 
+
+      SweepBot->setSpeed(Regular_speed - turn_velocity, Regular_speed + turn_velocity);
+    }
+    else
+    {
+      e_thata = Initial_theta - map_theta;
+      turn_velocity = E*e_thata; 
+      SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+    }
+    cout << "When thate is 3.14 turning Speed is: " << turn_velocity << endl;
+  }
+  else
+  {
+    e_thata = Initial_theta - map_theta;
+    turn_velocity = E*e_thata;
+    SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
+    cout << "When theta is 0 turning Speed is: " << turn_velocity << endl;
+  }
 }
