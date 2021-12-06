@@ -14,6 +14,7 @@
 
 // STL
 #include <iomanip>
+#include <list>
 
 // Type Define
 typedef std::pair<int,int> Coordinate;
@@ -30,7 +31,7 @@ double Regular_speed = 20;
 // Astar variables
 Astar Path;
 std::map<Coordinate,Coordinate> Route;
-std::map<Coordinate,Coordinate> INV_Route;
+std::list<Coordinate,Coordinate> INV_Route;
 std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
 Coordinate End_value;//inverse the order of the route
 
@@ -53,14 +54,15 @@ using std::cout;
 using std::endl;
 
 // Function prototypes:
-int BSA(Matrix &mat);
+int easyBSA(Matrix &mat);
 int AstarMove();
 void Balance();
-
+int Find0();
+void Face0 ();
 
 // State define
 int state;
-#define BPP   1
+#define BSA   1
 #define TURNL 2
 #define TURNR 3
 #define Astar 4
@@ -76,7 +78,7 @@ int main(int argc, char **argv)
   //mat.Show();
 
   // Initial state
-  state = BPP;
+  state = BSA;
 
   // Odometry Odo;
   // float t;
@@ -165,9 +167,9 @@ int main(int argc, char **argv)
     // cout << "mark_x is: " << mark_x << " mark_y is: " << mark_y << endl;
 
     // State machine
-    if (state == BPP)
+    if (state == BSA)
     {
-      state = BSA(mat);
+      state = easyBSA(mat);
     }
     else if (state == TURNL)
     {
@@ -188,7 +190,7 @@ int main(int argc, char **argv)
         turn_count++;
         Initial_theta = Initial_theta - TURNPI2;
         if (mat.Point(map_x,map_y) < 1)
-          state = BPP;
+          state = BSA;
         else
           state = Move;
       }
@@ -222,84 +224,18 @@ int main(int argc, char **argv)
         turn_count++;
         Initial_theta = Initial_theta + TURNPI2;
         if (mat.Point(map_x,map_y) < 1)
-          state = BPP;
+          state = BSA;
         else
           state = Move;
       }
     }
     else if (state == Astar)
     {
-      cout<<"---------------------------- state A*"<<endl;
-      int length;
-      Coordinate Start_value(map_x,map_y);
-      Coordinate Point_behind;
-      Coordinate Find_Point;
-
-      mat2 = easymap.easyMapS();//重新构造地图；
-      // cout<<"找到的目标点为"<<Get_End_value.first<<""<<Get_End_value.second<<endl;
-
-      cout<<"x begins at: "<<map_x << ", y begins at: "<<map_y<<endl;
-      for (int i=1; i<10; i++)
-      {
-        for (int j=1; j<10; j++)
-        {
-        // cout<<"hi"<<endl;
-          if(mat.Point(i,j) == 0)
-          {
-            Coordinate end(i,j);
-            length = abs(i - Start_value.first) + abs(j - Start_value.second);
-            Closet_Point.push(std::make_pair(-length,end));
-          }
-        }
-      }
-
-      if(!Closet_Point.empty())
-      {
-        Find_Point.first = Closet_Point.top().second.first;
-        Find_Point.second = Closet_Point.top().second.second;
-      }
-      else
-      {
-        Find_Point.first = 1;
-        Find_Point.second = 1;
-      }
-
-      End_value = Find_Point;
-      cout<<"The target point is:( "<<End_value.first<<", "<<End_value.second<<")"<<endl;
-      Route = Path.Findpath(Start_value,End_value,easymap.easyMapSS());
-
-      Point_behind = End_value;
-      while(Route.count(Point_behind)>0)
-      {
-        INV_Route[Route[Point_behind]] = Point_behind;
-        Point_behind = Route[Point_behind];
-      }  
-
-      while(!Closet_Point.empty())
-      {
-        Closet_Point.pop();
-      }
-
-      // build a map for Astar
-      for(int i=1; i<=10; i++)
-      {
-        for(int j=1; j<=10; j++)
-        {
-          if(INV_Route.count(std::make_pair(i,j))<=0)
-          {
-            mat2 += easymap.markTrajectoryS(i,j);
-          }
-        }
-      }
-      mat2 += easymap.markTrajectoryB(End_value.first,End_value.second);
-      Route.clear();
-      INV_Route.clear();
-      mat2.Show();
-      state = Move;
+      state = Find0();
     }
     else if (state == Move)
     {
-      state = BSA(mat2); 
+      state = easyBSA(mat2); 
     }
     else if(state == GAGA)
     {
@@ -321,7 +257,7 @@ int main(int argc, char **argv)
 /*********************************** Functions ***************************************/
 
 // CCP motion logic
-int BSA(Matrix &matx)
+int easyBSA(Matrix &matx)
 {
   cout<<"------------------------ state BSA"<<endl;
   // Show the map
@@ -334,8 +270,8 @@ int BSA(Matrix &matx)
   int front_x = round(cor_x + 1 + sin(map_theta));
   int front_y = round(cor_y + 1 + cos(map_theta));
 
-  int front_xx = round(cor_x + 1 + 0.4*sin(map_theta));
-  int front_yy = round(cor_y + 1 + 0.4*cos(map_theta));
+  int front_xx = round(cor_x + 1 + 0.5*sin(map_theta));
+  int front_yy = round(cor_y + 1 + 0.5*cos(map_theta));
   // The coordinate of 1 cell left
   int left_x = round(cor_x + 1 + cos(map_theta));
   int left_y = round(cor_y + 1 - sin(map_theta));
@@ -359,19 +295,18 @@ int BSA(Matrix &matx)
     {
       if (matx.Point(left_x,left_y)>=1)
       {
-        if (matx.Point(front_xx,front_yy)>=1)
-        {
-          // if (matx.Point(map_x,map_y) < 1)
-          // {
-          //   cout << "---------------- mark Here!" << endl;
-          //   matx += easymap.markTrajectoryS(map_x,map_y);
-          // }
+        if (matx.Point(front_xx,front_yy)>1)
+        {          
           return Astar;
         }
-        else
+        else if (matx.Point(front_xx,front_yy)==1)
         {
+          SweepBot->rotate_right(Regular_speed);
+          SweepBot->delay_ms(3480);
           SweepBot->forward(Regular_speed);
-        } 
+          SweepBot->delay_ms(3000);
+          return BSA;
+        }
       }
       else
       {
@@ -384,17 +319,8 @@ int BSA(Matrix &matx)
       if (matx.Point(right_x,right_y)>=1)
       {
         if (matx.Point(front_xx,front_yy)>=1)
-        {
-          // if (matx.Point(map_x,map_y) < 1)
-          // {
-          //   cout << "---------------- mark Here!" << endl;
-          //   matx += easymap.markTrajectoryS(map_x,map_y);
-          // }
+        {          
           return Astar;
-        }
-        else
-        {
-          SweepBot->forward(Regular_speed);
         } 
       }
       else
@@ -415,7 +341,7 @@ int BSA(Matrix &matx)
 
   cout << "map_theta been used for motion calculation is: " << map_theta << endl;  
 
-  return BPP;
+  return BSA;
 }
 
 void Balance()
@@ -450,4 +376,91 @@ void Balance()
     SweepBot->setSpeed(Regular_speed + turn_velocity, Regular_speed - turn_velocity);
     cout << "When theta is 0 turning Speed is: " << turn_velocity << endl;
   }
+}
+
+int Find0 ()
+{
+  cout<<"---------------------------- state A*"<<endl;
+      int length;
+      Coordinate Start_value(map_x,map_y);
+      Coordinate Point_behind;
+      Coordinate Find_Point;
+
+      mat2 = easymap.easyMapS();//重新构造地图；
+      
+      cout<<"x begins at: "<<map_x << ", y begins at: "<<map_y<<endl;
+      for (int i=1; i<10; i++)
+      {
+        for (int j=1; j<10; j++)
+        {
+        // cout<<"hi"<<endl;
+          if(mat.Point(i,j) == 0)
+          {
+            Coordinate end(i,j);
+            length = abs(i - Start_value.first) + abs(j - Start_value.second);
+            // if (length == 0)
+            // {
+            //   // Let robot rotate pi
+            //   SweepBot->rotate_right(Regular_speed);
+            //   SweepBot->delay_ms(3000);
+            //   Initial_theta = Initial_theta + TURNPI;
+            //   SweepBot->forward(Regular_speed);
+            //   return Astar;
+            // }
+            // else 
+              Closet_Point.push(std::make_pair(-length,end));
+          }
+        }
+      }
+
+      if(!Closet_Point.empty())
+      {
+        Find_Point.first = Closet_Point.top().second.first;
+        Find_Point.second = Closet_Point.top().second.second;
+      }
+      else
+      {
+        Find_Point.first = 1;
+        Find_Point.second = 1;
+      }
+
+      End_value = Find_Point;
+      cout<<"The target point is:("<<End_value.first<<", "<<End_value.second<<")"<<endl;
+      Route = Path.Findpath(Start_value,End_value,easymap.easyMapSS());
+
+      Point_behind = End_value;
+      while(Point_behind!=Start_value)
+      {
+        INV_Route.push_back(Point_behind);
+        Point_behind = Route[Point_behind];
+      }  
+
+      printf("It's here now ---------------\n");
+
+      while(!Closet_Point.empty())
+      {
+        Closet_Point.pop();
+      }
+
+      // build a map for Astar
+      for(int i=1; i<10; i++)
+      {
+        for(int j=1; j<10; j++)
+        {
+          if(Route.count(std::make_pair(i,j))<=0)
+          {
+            mat2 += easymap.markTrajectoryS(i,j);
+          }
+        }
+      }
+      mat2 += easymap.markTrajectoryB(Start_value.first,Start_value.second);
+      Route.clear();
+      INV_Route.clear();
+      mat2.Show();
+      return Move;
+}
+
+void Face0 ()
+{
+
 }

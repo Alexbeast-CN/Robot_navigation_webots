@@ -44,8 +44,8 @@ public:
         s.second = a.second;
         e.first = b.first;
         e.second = b.second;
-        cout<<"起始点"<<s.first<<s.second<<endl;
-        cout<<"终点"<<e.first<<e.second<<endl;
+        cout<<"The path start from: "<<s.first<<s.second<<endl;
+        cout<<"The path end at: "<<e.first<<e.second<<endl;
 
         // 将形参地图传给实参地图
         for (int i = 0; i < 11; i++)
