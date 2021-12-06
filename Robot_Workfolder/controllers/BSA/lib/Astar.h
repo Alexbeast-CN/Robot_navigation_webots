@@ -20,13 +20,10 @@ private:
     int dx[4] = {-1, 0, 1, 0};
     int dy[4] = {0, 1, 0, -1};
     std::pair<int, int> s, e; 
-    //起始点和终点坐标
     std::priority_queue<std::pair<int, std::pair<int, int>>> q;
-    // 生成记录前期位置的容器
     std::map<std::pair<int, int>, std::pair<int, int>> pre;
     
 public:
-    // 容器函数，似乎返回容器并不是一个很好的方法，见暂时拿这个尝试
     std::map<std::pair<int, int>, std::pair<int, int>> Findpath(std::pair<int,int>a,std::pair<int,int>b, Matrix &mat)
     { 
         pre.clear();
@@ -40,7 +37,7 @@ public:
             }
         }
         
-        // 将形参数组中的值传递给pair变量，其为起点和终点坐标
+        // set the coordinate of the start and end point
         s.first = a.first;
         s.second = a.second;
         e.first = b.first;
@@ -48,7 +45,7 @@ public:
         cout<<"The path start from: "<<s.first<<s.second<<endl;
         cout<<"The path end at: "<<e.first<<e.second<<endl;
 
-        // 将形参地图传给实参地图
+        // pass the map in
         for (int i = 0; i < 11; i++)
         {
             for (int j = 0; j < 11; j++)
@@ -57,7 +54,7 @@ public:
             }
         }
 
-        // 构造启发函数为该节点到终点的曼哈顿距离
+        // Heuristic functions
         for (int i = 1; i < 10; i++)
         {
             for (int j = 1; j < 10; j++)
@@ -65,8 +62,7 @@ public:
                 h[i][j] = abs(i - e.first) + abs(j - e.second);
             }
         }
-  
-        //优先队列优先的搜索方法
+
         if (!mp[s.first][s.second])
         {
             q.push(std::make_pair(-(h[s.first][s.second] + g[s.first][s.second]), s));
@@ -96,7 +92,7 @@ public:
                 }
             }
         }
-        //返回值
+        //return route of A*
 
         while(!q.empty())
       {

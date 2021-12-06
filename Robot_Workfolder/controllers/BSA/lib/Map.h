@@ -22,6 +22,7 @@ public:
     Matrix easyMapS();
     Matrix easyMapSS();
     Matrix hardMap();
+    Matrix midMapS();
     Matrix markTrajectory(int x, int y);
     Matrix markTrajectoryS(int x, int y);
     Matrix markTrajectoryB(int x, int y);
@@ -86,6 +87,26 @@ Matrix Map::easyMapS()
         easyMap.p[5][2+j] = BLANK;
     }
     return easyMap;
+}
+
+Matrix Map::midMapS()
+{
+    Matrix midMap(11,11);
+    for (int i=0; i<11; i++)
+    {
+        midMap.p[i][0] = WALL;
+        midMap.p[i][10] = WALL;
+        midMap.p[0][i] = WALL;
+        midMap.p[10][i] = WALL;
+    }
+
+    midMap.p[2][2] = WALL;
+    midMap.p[2][7] = WALL;
+    midMap.p[3][2] = WALL;
+    midMap.p[8][3] = WALL;
+    midMap.p[8][4] = WALL;
+    midMap.p[8][7] = WALL;
+    return midMap;
 }
 
     Matrix Map::easyMapSS()
