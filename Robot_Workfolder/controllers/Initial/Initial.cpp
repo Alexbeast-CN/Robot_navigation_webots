@@ -250,27 +250,49 @@ int main(int argc, char **argv)
       cout << "Initial theta is: " << Initial_theta << endl;
       printf( "theta is: %.3f\n", map_theta);
 
-      if (map_theta > Initial_theta - TURNPI + 0.05)
+      if (Initial_theta  >= 0)
       {
-        cout << "---------------------- Turn Left" << endl;
-        SweepBot->turn_left(Regular_speed);
+        if (map_theta > Initial_theta - TURNPI + 0.05)
+        {
+          cout << "---------------------- Turn Left" << endl;
+          SweepBot->turn_left(Regular_speed);
+        }
+        else
+        {
+          turn_count++;
+          Initial_theta = Initial_theta - TURNPI;
+          if (mat.Point(map_x,map_y) < 1)
+            state = BPP;
+          else
+            state = Move;
+        }
       }
       else
       {
-        turn_count++;
-        Initial_theta = Initial_theta - TURNPI;
-        if (mat.Point(map_x,map_y) < 1)
-          state = BPP;
+        if (map_theta < Initial_theta + TURNPI - 0.05)
+        {
+          cout << "---------------------- Turn Left" << endl;
+          SweepBot->turn_left(Regular_speed);
+        }
         else
-          state = Move;
+        {
+          turn_count++;
+          Initial_theta = Initial_theta + TURNPI;
+          if (mat.Point(map_x,map_y) < 1)
+            state = BPP;
+          else
+            state = Move;
+        }
       }
+      
+      
     }
     else if (state == TURNRPI)
     {
-      // Show the ma
+      // Show the map
       mat.Show();
 
-      if (Initial_theta + TURNPI2 > TURNPI + 0.05)
+      if (Initial_theta  > TURNPI2 + 0.1)
       {
         Initial_theta = -Initial_theta;
         map_theta = -abs(map_theta);
@@ -281,23 +303,70 @@ int main(int argc, char **argv)
         map_theta = abs(map_theta);
       }
 
-      cout << "Initial theta is: " << Initial_theta << endl;
-      printf( "theta is: %.3f\n", map_theta);
-
-      if (map_theta < Initial_theta + TURNPI - 0.05)
+      // When Initial theta is 1.57
+      if (Initial_theta > 1.56 && Initial_theta < 1.58)
       {
-        cout << "---------------------- Turn Right" << endl;
-        SweepBot->turn_right(Regular_speed);
+        cout << "Initial theta is: " << Initial_theta << endl;
+        printf( "theta is: %.3f\n", map_theta);
+
+        map_theta = -abs(map_theta);
+        if (map_theta > Initial_theta - TURNPI - 0.05)
+        {
+          cout << "---------------------- Turn Right" << endl;
+          SweepBot->turn_right(Regular_speed);
+        }
+        else
+        {
+          turn_count++;
+          Initial_theta = Initial_theta - TURNPI;
+          if (mat.Point(map_x,map_y) < 1)
+            state = BPP;
+          else
+            state = Move;
+        }
+      }
+      // When Initial theta is -1.57
+      else if (Initial_theta > -1.58 && Initial_theta < -1.56)
+      {
+        cout << "Initial theta is: " << Initial_theta << endl;
+        printf( "theta is: %.3f\n", map_theta);
+
+        if (map_theta > Initial_theta + TURNPI + 0.05)
+        {
+          cout << "---------------------- Turn Right" << endl;
+          SweepBot->turn_right(Regular_speed);
+        }
+        else
+        {
+          turn_count++;
+          Initial_theta = Initial_theta + TURNPI;
+          if (mat.Point(map_x,map_y) < 1)
+            state = BPP;
+          else
+            state = Move;
+        }
       }
       else
-      {
-        turn_count++;
-        Initial_theta = Initial_theta + TURNPI;
-        if (mat.Point(map_x,map_y) < 1)
-          state = BPP;
+      {        
+        cout << "Initial theta is: " << Initial_theta << endl;
+        printf( "theta is: %.3f\n", map_theta);
+
+        if (map_theta < Initial_theta + TURNPI - 0.05)
+        {
+          cout << "---------------------- Turn Right" << endl;
+          SweepBot->turn_right(Regular_speed);
+        }
         else
-          state = Move;
+        {
+          turn_count++;
+          Initial_theta = Initial_theta + TURNPI;
+          if (mat.Point(map_x,map_y) < 1)
+            state = BPP;
+          else
+            state = Move;
+        }
       }
+      
     }
     else if (state == As)
     {
@@ -316,7 +385,10 @@ int main(int argc, char **argv)
       SweepBot->stop();
       break;
     }
+  
   }
+
+/********************************* Out of the loop ************************************/
 
   // Read experment time
   t = robot->getTime();
@@ -329,6 +401,7 @@ int main(int argc, char **argv)
   {
 		file << ite->first << ", " << ite->second << endl;
 	}
+  file << t << endl;
 	file.close();
 
 

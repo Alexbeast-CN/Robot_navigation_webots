@@ -4,7 +4,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5759225361072187 0.5738233086760469 0.5822714511496364 2.098642406531677
-  position -0.02150651428865822 2.1253724384201584 -0.08796930274468229
+  position -0.013743158499963914 2.527773894695729 -0.0053076557444737965
 }
 TexturedBackground {
 }
@@ -24,6 +24,11 @@ WoodenBox {
 WoodenBox {
   translation 0.3 0.05 -0.2
   name "wooden box(2)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0.3 0.05 -0.1
+  name "wooden box(7)"
   size 0.1 0.1 0.1
 }
 WoodenBox {
@@ -49,6 +54,6 @@ WoodenBox {
 DEF SWEEP E-puck {
   translation -0.4 -6.39633e-05 0.4
   rotation -5.290368237634393e-06 0.9999999999828437 2.5148999910190556e-06 0
-  controller "Initial"
+  controller "BSA"
   supervisor TRUE
 }

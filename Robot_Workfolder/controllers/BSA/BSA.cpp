@@ -37,8 +37,8 @@ std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
 Coordinate End_value;//inverse the order of the route
 
 // Load the map
-Matrix mat = easymap.easyMapS();
-Matrix mat2 = easymap.easyMapS();//为astar路径显示地图
+Matrix mat = easymap.midMapS();
+Matrix mat2 = easymap.midMapS();//为astar路径显示地图
 int map_x;
 int map_y;
 double map_theta;
@@ -172,6 +172,9 @@ int main(int argc, char **argv)
     // cout << "map_x is: " << map_x << " map_y is: " << map_y << endl;
     // cout << "mark_x is: " << mark_x << " mark_y is: " << mark_y << endl;
 
+    if(Initial_theta < -3.13)
+      Initial_theta = 3.14;
+
     // State machine
     if (state == BSA)
     {
@@ -253,6 +256,8 @@ int main(int argc, char **argv)
       break;
     }
   }
+  
+/********************************* Out of the loop ************************************/
 
   // Read experment time
   t = robot->getTime();
@@ -260,7 +265,7 @@ int main(int argc, char **argv)
   
   // Export the route to a file
   ofstream file;
-  file.open("/home/tim/Webots_lab/Robot_navigation_webots/Results/BSA_rounte_easyMap.csv");
+  file.open("/home/tim/Webots_lab/Robot_navigation_webots/Results/BSA_route_midMap.csv");
 	for (std::vector<Coordinate>::iterator ite = CCP_Path.begin(); ite != CCP_Path.end(); ite++)
   {
 		file << ite->first << ", " << ite->second << endl;
@@ -418,7 +423,7 @@ int Astar_path ()
       }
 
 
-      mat2 = easymap.easyMapS();//重新构造地图；
+      mat2 = easymap.midMapS();//重新构造地图；
       
       cout<<"x begins at: "<<map_x << ", y begins at: "<<map_y<<endl;
       for (int i=1; i<10; i++)
@@ -430,17 +435,7 @@ int Astar_path ()
           {
             Coordinate end(i,j);
             length = abs(i - Start_value.first) + abs(j - Start_value.second);
-            // if (length == 0)
-            // {
-            //   // Let robot rotate pi
-            //   SweepBot->rotate_right(Regular_speed);
-            //   SweepBot->delay_ms(3000);
-            //   Initial_theta = Initial_theta + TURNPI;
-            //   SweepBot->forward(Regular_speed);
-            //   return Astar;
-            // }
-            // else 
-              Closet_Point.push(std::make_pair(-length,end));
+            Closet_Point.push(std::make_pair(-length,end));
           }
         }
       }
@@ -459,7 +454,7 @@ int Astar_path ()
       cout<<"The target point is:("<<End_value.first<<", "<<End_value.second<<")"<<endl;
       Route = Path.Findpath(Start_value,End_value,mat2);
 
-      mat2 = easymap.easyMapS();
+      mat2 = easymap.midMapS();
 
       // build a map for Astar
       for(int i=1; i<10; i++)
