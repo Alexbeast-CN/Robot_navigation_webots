@@ -27,7 +27,7 @@ private:
     
 public:
     // 容器函数，似乎返回容器并不是一个很好的方法，见暂时拿这个尝试
-    std::map<std::pair<int, int>, std::pair<int, int>> Findpath(std::pair<int,int>a,std::pair<int,int>b, Matrix mat)
+    std::map<std::pair<int, int>, std::pair<int, int>> Findpath(std::pair<int,int>a,std::pair<int,int>b, Matrix &mat)
     { 
         pre.clear();
         for (int i = 0; i < 11; i++)
@@ -36,6 +36,7 @@ public:
             {
                 g[i][j] = 0;
                 v[i][j] = 0;
+                // mp[i][j] = 0;
             }
         }
         
@@ -96,6 +97,12 @@ public:
             }
         }
         //返回值
+
+        while(!q.empty())
+      {
+        q.pop();
+      }
+
         return pre;
     }
 

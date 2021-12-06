@@ -12,6 +12,7 @@
 #include "lib/Matrix.h"
 #include "lib/Astar.h"
 
+
 // STL
 #include <iomanip>
 #include <list>
@@ -31,7 +32,6 @@ double Regular_speed = 20;
 // Astar variables
 Astar Path;
 std::map<Coordinate,Coordinate> Route;
-std::list<Coordinate,Coordinate> INV_Route;
 std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
 Coordinate End_value;//inverse the order of the route
 
@@ -74,6 +74,7 @@ int state;
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
 {
+
   // Display the map
   //mat.Show();
 
@@ -304,7 +305,7 @@ int easyBSA(Matrix &matx)
           SweepBot->rotate_right(Regular_speed);
           SweepBot->delay_ms(3480);
           SweepBot->forward(Regular_speed);
-          SweepBot->delay_ms(3000);
+          SweepBot->delay_ms(2000);
           return BSA;
         }
       }
@@ -385,6 +386,14 @@ int Find0 ()
       Coordinate Start_value(map_x,map_y);
       Coordinate Point_behind;
       Coordinate Find_Point;
+      Route.clear();
+      // INV_Route.clear();
+
+      while(!Closet_Point.empty())
+      {
+        Closet_Point.pop();
+      }
+
 
       mat2 = easymap.easyMapS();//重新构造地图；
       
@@ -426,36 +435,35 @@ int Find0 ()
 
       End_value = Find_Point;
       cout<<"The target point is:("<<End_value.first<<", "<<End_value.second<<")"<<endl;
-      Route = Path.Findpath(Start_value,End_value,easymap.easyMapSS());
+      Route = Path.Findpath(Start_value,End_value,mat2);
 
-      Point_behind = End_value;
-      while(Point_behind!=Start_value)
-      {
-        INV_Route.push_back(Point_behind);
-        Point_behind = Route[Point_behind];
-      }  
-
-      printf("It's here now ---------------\n");
-
-      while(!Closet_Point.empty())
-      {
-        Closet_Point.pop();
-      }
+      mat2 = easymap.easyMapS();
 
       // build a map for Astar
       for(int i=1; i<10; i++)
       {
         for(int j=1; j<10; j++)
         {
-          if(Route.count(std::make_pair(i,j))<=0)
-          {
-            mat2 += easymap.markTrajectoryS(i,j);
-          }
+          mat2 += easymap.markTrajectoryS(i,j);
         }
       }
+
+      Point_behind = End_value;
+      for(int i=1; i<=20; i++)
+      {
+        if(Route.count(Point_behind)>0)
+        {
+          mat2 += easymap.markTrajectoryB(Point_behind.first,Point_behind.second); 
+          Point_behind = Route[Point_behind];
+          cout<<"point_behine"<<Point_behind.first<<Point_behind.second;
+        }
+        else
+          break;
+      }
+      printf("It's here now ---------------\n");
+
+
       mat2 += easymap.markTrajectoryB(Start_value.first,Start_value.second);
-      Route.clear();
-      INV_Route.clear();
       mat2.Show();
       return Move;
 }
