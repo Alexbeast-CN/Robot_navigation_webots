@@ -56,7 +56,7 @@ using std::endl;
 int easyBSA(Matrix &mat);
 int AstarMove();
 void Balance();
-int Find0();
+int Astar_path();
 void Face0 ();
 
 // State define
@@ -64,11 +64,9 @@ int state;
 #define BSA   1
 #define TURNL 2
 #define TURNR 3
-#define Astar 4
+#define As 4
 #define Move 5
-#define GAGA 6 //做一个跳板state 看它是否又会被卡住不动
-#define ASTARTURNL 7
-#define ASTARTURNR 8
+#define END 6 
 
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
@@ -81,9 +79,9 @@ int main(int argc, char **argv)
   state = BSA;
 
   // Odometry Odo;
-  float t1;
-  float t2;
-  float t;
+
+  // Initial time
+  float t = 0.0;
   
 
   // create a link to store the robot's position in sequence
@@ -107,8 +105,6 @@ int main(int argc, char **argv)
   Field *trans_field = robot_node->getField("translation");
   Field *rotate_field = robot_node->getField("rotation");
 
-  // Read start time:
-  t1 = robot->getTime();
 
   
   /************************************* Loop ********************************************/
@@ -236,15 +232,15 @@ int main(int argc, char **argv)
           state = Move;
       }
     }
-    else if (state == Astar)
+    else if (state == As)
     {
-      state = Find0();
+      state = Astar_path();
     }
     else if (state == Move)
     {
       state = easyBSA(mat2); 
     }
-    else if(state == GAGA)
+    else if(state == END)
     {
       SweepBot->stop();
       break;
@@ -252,8 +248,7 @@ int main(int argc, char **argv)
   }
 
   // Read experment time
-  t2 = robot->getTime();
-  t = t2 - t1;
+  t = robot->getTime();
   cout << "The robot end at:" << t << endl;
   
   // Enter exit cleanup code here.
@@ -298,7 +293,7 @@ int easyBSA(Matrix &matx)
   if (matx.Point(map_x,map_y)>0)
   {
     //cout<<"Step on trajectory" << endl;
-    return Astar;
+    return As;
   }
 
   if (matx.Point(front_x,front_y)>=1)
@@ -309,7 +304,7 @@ int easyBSA(Matrix &matx)
       {
         if (matx.Point(front_xx,front_yy)>1)
         {          
-          return Astar;
+          return As;
         }
         else if (matx.Point(front_xx,front_yy)==1)
         {
@@ -333,7 +328,7 @@ int easyBSA(Matrix &matx)
       {
         if (matx.Point(front_xx,front_yy)>=1)
         {          
-          return Astar;
+          return As;
         } 
       }
       else
@@ -391,7 +386,7 @@ void Balance()
   }
 }
 
-int Find0 ()
+int Astar_path ()
 {
   cout<<"---------------------------- state A*"<<endl;
       int length;
@@ -441,7 +436,7 @@ int Find0 ()
       }
       else
       {
-        return GAGA;
+        return END;
       }
 
       End_value = Find_Point;

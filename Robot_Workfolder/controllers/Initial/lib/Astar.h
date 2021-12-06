@@ -27,7 +27,7 @@ private:
     
 public:
     // 容器函数，似乎返回容器并不是一个很好的方法，见暂时拿这个尝试
-    std::map<std::pair<int, int>, std::pair<int, int>> Findpath(std::pair<int,int>a,std::pair<int,int>b, Matrix mat)
+    std::map<std::pair<int, int>, std::pair<int, int>> Findpath(std::pair<int,int>a,std::pair<int,int>b, Matrix &mat)
     { 
         pre.clear();
         for (int i = 0; i < 11; i++)
@@ -36,6 +36,7 @@ public:
             {
                 g[i][j] = 0;
                 v[i][j] = 0;
+                // mp[i][j] = 0;
             }
         }
         
@@ -44,8 +45,8 @@ public:
         s.second = a.second;
         e.first = b.first;
         e.second = b.second;
-        cout<<"起始点"<<s.first<<s.second<<endl;
-        cout<<"终点"<<e.first<<e.second<<endl;
+        cout<<"The path start from: "<<s.first<<s.second<<endl;
+        cout<<"The path end at: "<<e.first<<e.second<<endl;
 
         // 将形参地图传给实参地图
         for (int i = 0; i < 11; i++)
@@ -96,6 +97,12 @@ public:
             }
         }
         //返回值
+
+        while(!q.empty())
+      {
+        q.pop();
+      }
+
         return pre;
     }
 
