@@ -15,6 +15,8 @@
 
 // STL
 #include <iomanip>
+#include <iostream>
+#include <fstream>
 
 // Type Define
 typedef std::pair<int,int> Coordinate;
@@ -320,12 +322,20 @@ int main(int argc, char **argv)
   t = robot->getTime();
   cout << "The robot end at:" << t << endl;
   
+  // Export the route to a file
+  ofstream file;
+  file.open("/home/tim/Webots_lab/Robot_navigation_webots/Results/BCP_rounte_easyMap.csv");
+	for (std::vector<Coordinate>::iterator ite = CCP_Path.begin(); ite != CCP_Path.end(); ite++)
+  {
+		file << ite->first << ", " << ite->second << endl;
+	}
+	file.close();
+
+
   // Enter exit cleanup code here.
   delete robot;
   delete SweepBot;
   delete supervisor;
-
-
   return 0;
 }
 
@@ -534,7 +544,7 @@ int Astar_path ()
 
 int Face0 ()
 {
-    // The coordinate of 1 cells ahead
+  // The coordinate of 1 cells ahead
   int front_x = round(cor_x + 1 + sin(map_theta));
   int front_y = round(cor_y + 1 + cos(map_theta));
   // The coordinate of 1 cell left

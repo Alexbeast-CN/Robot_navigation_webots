@@ -6,7 +6,7 @@ maximizedDockId: -1
 centralWidgetVisible: 1
 renderingMode: PLAIN
 orthographicViewHeight: 1
-textFiles: 0 "controllers/Initial/Initial.cpp"
+textFiles: 0 "controllers/BSA/BSA.cpp"
 globalOptionalRendering: AllBoundingObjects::ContactPoints
 consoles: Console:All:All
 renderingDevicePerspectives: e-puck:camera;1;1;0;0

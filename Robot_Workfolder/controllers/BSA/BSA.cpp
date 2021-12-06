@@ -15,6 +15,8 @@
 
 // STL
 #include <iomanip>
+#include <iostream>
+#include <fstream>
 
 // Type Define
 typedef std::pair<int,int> Coordinate;
@@ -57,7 +59,8 @@ int easyBSA(Matrix &mat);
 int AstarMove();
 void Balance();
 int Astar_path();
-void Face0 ();
+int Face0 ();
+
 
 // State define
 int state;
@@ -67,7 +70,7 @@ int state;
 #define As 4
 #define Move 5
 #define END 6 
-
+#define FACE0 7
 /************************************* Main ********************************************/
 int main(int argc, char **argv)
 {
@@ -240,6 +243,10 @@ int main(int argc, char **argv)
     {
       state = easyBSA(mat2); 
     }
+    else if (state == FACE0)
+    {
+      state = Face0();
+    }
     else if(state == END)
     {
       SweepBot->stop();
@@ -251,6 +258,15 @@ int main(int argc, char **argv)
   t = robot->getTime();
   cout << "The robot end at:" << t << endl;
   
+  // Export the route to a file
+  ofstream file;
+  file.open("/home/tim/Webots_lab/Robot_navigation_webots/Results/BSA_rounte_easyMap.csv");
+	for (std::vector<Coordinate>::iterator ite = CCP_Path.begin(); ite != CCP_Path.end(); ite++)
+  {
+		file << ite->first << ", " << ite->second << endl;
+	}
+	file.close();
+
   // Enter exit cleanup code here.
   delete robot;
   delete SweepBot;
@@ -304,7 +320,7 @@ int easyBSA(Matrix &matx)
       {
         if (matx.Point(front_xx,front_yy)>1)
         {          
-          return As;
+          return FACE0;
         }
         else if (matx.Point(front_xx,front_yy)==1)
         {
@@ -328,7 +344,7 @@ int easyBSA(Matrix &matx)
       {
         if (matx.Point(front_xx,front_yy)>=1)
         {          
-          return As;
+          return FACE0;
         } 
       }
       else
@@ -474,7 +490,38 @@ int Astar_path ()
       return Move;
 }
 
-void Face0 ()
+int Face0 ()
 {
+  // The coordinate of 1 cells ahead
+  int front_x = round(cor_x + 1 + sin(map_theta));
+  int front_y = round(cor_y + 1 + cos(map_theta));
+  // The coordinate of 1 cell left
+  int left_x = round(cor_x + 1 + cos(map_theta));
+  int left_y = round(cor_y + 1 - sin(map_theta));
+  // The coordinate of 1 cell right
+  int right_x = round(cor_x + 1 - cos(map_theta));
+  int right_y = round(cor_y + 1 + sin(map_theta));
 
+  if (mat.Point(front_x,front_y) == 0)
+    return BSA;
+  else if (mat.Point(left_x,left_y) == 0)
+  {
+    SweepBot->rotate_right(Regular_speed);
+    SweepBot->delay_ms(1720);
+    Initial_theta = Initial_theta + TURNPI2;
+    cout << "Initial_theta: " << Initial_theta << endl;
+    return BSA;
+  }
+  else if (mat.Point(right_x,right_y) == 0)
+  {
+    SweepBot->rotate_left(Regular_speed);
+    SweepBot->delay_ms(1720);
+    Initial_theta = Initial_theta - TURNPI2;
+    cout << "Initial_theta: " << Initial_theta << endl;
+    return BSA;
+  }
+  else
+  {
+    return As;
+  }
 }

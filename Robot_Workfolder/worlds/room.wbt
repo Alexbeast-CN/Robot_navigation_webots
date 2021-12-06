@@ -57,6 +57,6 @@ DEF SWEEP E-puck {
   hidden rotation_2 1 0 0 2.9802322387695313e-08
   translation -0.4 -6.39633e-05 0.4
   rotation -5.290368237634393e-06 0.9999999999828437 2.5148999910190556e-06 0
-  controller "Initial"
+  controller "BSA"
   supervisor TRUE
 }
