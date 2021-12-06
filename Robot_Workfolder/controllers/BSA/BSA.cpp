@@ -15,7 +15,6 @@
 
 // STL
 #include <iomanip>
-#include <list>
 
 // Type Define
 typedef std::pair<int,int> Coordinate;
@@ -82,7 +81,10 @@ int main(int argc, char **argv)
   state = BSA;
 
   // Odometry Odo;
-  // float t;
+  float t1;
+  float t2;
+  float t;
+  
 
   // create a link to store the robot's position in sequence
   std::vector<Coordinate> CCP_Path{Coordinate(1,1)};
@@ -104,6 +106,10 @@ int main(int argc, char **argv)
   // Get translation and rotation data from supervior node
   Field *trans_field = robot_node->getField("translation");
   Field *rotate_field = robot_node->getField("rotation");
+
+  // Read start time:
+  t1 = robot->getTime();
+
   
   /************************************* Loop ********************************************/
   
@@ -240,16 +246,21 @@ int main(int argc, char **argv)
     }
     else if(state == GAGA)
     {
-      cout<<"进入GAGA"<<endl;
-      state = Astar;
+      SweepBot->stop();
+      break;
     }
   }
 
+  // Read experment time
+  t2 = robot->getTime();
+  t = t2 - t1;
+  cout << "The robot end at:" << t << endl;
   
   // Enter exit cleanup code here.
   delete robot;
   delete SweepBot;
   delete supervisor;
+
 
   return 0;
 }
@@ -306,6 +317,7 @@ int easyBSA(Matrix &matx)
           SweepBot->delay_ms(3480);
           SweepBot->forward(Regular_speed);
           SweepBot->delay_ms(2000);
+          Initial_theta = Initial_theta + TURNPI;
           return BSA;
         }
       }
@@ -429,8 +441,7 @@ int Find0 ()
       }
       else
       {
-        Find_Point.first = 1;
-        Find_Point.second = 1;
+        return GAGA;
       }
 
       End_value = Find_Point;
