@@ -101,7 +101,6 @@ Matrix Map::midMapS()
     }
 
     midMap.p[2][2] = WALL;
-    midMap.p[2][6] = WALL;
     midMap.p[2][7] = WALL;
     midMap.p[3][2] = WALL;
     midMap.p[8][3] = WALL;
