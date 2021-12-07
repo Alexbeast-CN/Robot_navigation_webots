@@ -270,6 +270,7 @@ int main(int argc, char **argv)
   {
 		file << ite->first << ", " << ite->second << endl;
 	}
+  file << t << endl;
 	file.close();
 
   // Enter exit cleanup code here.
