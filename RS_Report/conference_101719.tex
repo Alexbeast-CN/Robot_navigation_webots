@@ -96,6 +96,14 @@ In the CPP algorithm used for this experiment, the E-punk robot must know its po
 
 \subsection{A* algorithm}
 The sweeper robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
+
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.45]{RS_Report/astar.png}}
+\caption{A* algorithm demonstration(the value in the cell is the value of $f(n)$).}
+\label{fig3}
+\end{figure}
+
+
 As E-punk traverses the map, there will always be places that it has not traversed in a single loop. In this case, the experiment uses the A* algorithm to move the cart to the nearest untraversed region until the entire map is traversed.\\
 The core of the a* algorithm is
 \begin{equation}
@@ -104,16 +112,13 @@ The core of the a* algorithm is
 where $f(n)$ is the combined priority of node n. When the next node to be traversed needs to be selected, the algorithm always picks the node with the highest combined priority (smallest value). $g(n)$ is the cost of node n from the starting point. $h(n)$ is the expected cost of node n from the end point, which is the heuristic function of the A* algorithm.\\
 The traversal direction is simplified in this experiment to match the raster map and speed up the calculation. The mobile robot can only move in four directions, up, down, left and right, in which case the heuristic function is calculated using the Manhattan distance method(see Fig.\ref{fig3}).
 
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.45]{RS_Report/astar.png}}
-\caption{A* algorithm demonstration(the value in the cell is the value of $f(n)$).}
-\label{fig3}
-\end{figure}
+
 
 \subsection{CPP algorithm}
- Fig.\ref{fig4} shows the overall form of the algorithm architecture combining the map, odometer, a* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the different CPP algorithms.
-\subsubsection{Boustrophedon decomposition}
-\subsubsection{Spanning tree covering}
+ Fig.\ref{fig4} shows the overall form of the algorithm architecture combining the map, odometry, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms.
+\subsubsection{BCD algorithm}
+\subsubsection{BSA algprithm}
+
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.35]{RS_Report/RS_Report (1).png}}
 \caption{Overall architecture of the CPP algorithm.}
@@ -124,28 +129,30 @@ The traversal direction is simplified in this experiment to match the raster map
 \section{Experiment Methodology}
 
 \subsection{Overview of Method}
-This experiment compares the completion times of two path planning algorithms, BCD and BSA, on the same map. Because the maps selected for the experiment were raster maps, all maps used for this experiment defined a cell size of 10mm$\times$10mm, and this area was scattered across the raster map. The experiment first verified whether the number of turns would directly affect the completion time. In this validation experiment, a60mm$\times$100mm map was created. This map was blank and was obstacle-free. By changing the orientation of the E-punk in the initial state, its turn position and number of turns during the map traversal became different. Compare the processing times of the two algorithms in these two different cases and complete this verification.\\
-After concluding the validation experiment, the task completion times of the two path planning algorithms mentioned above were compared in different environments. The overall layout of the room on the floor for the robot vacuum cleaner does not usually change significantly except for the movement of people, so in this experiment, all maps are static maps, and obstacles do not move. This section is the central part of the experiment. A 90mm$\times$90mm map is defined, and 10mm$\times$10mm square obstacles are placed at random locations on the map. After the map is constructed, the performance of the two path planning algorithms is compared. After the comparison was completed on one map, the position of the obstacles was changed, and the same comparison experiment continued. This approach aims to reduce the impact of random errors in path planning caused by the particular location of some map obstacles. The experiments all started at the global coordinate system $(x, y, \theta) = (0, 0, 0)$, which in the simulated map is located in the top left corner of the map (see Fig.\ref{fig1}). Because the Webots simulation software comes with a time counter, the completion time is output when the simulation of both path algorithms ends. Webots is a simulator, and the experiment does not need to reduce random errors by recording times over multiple experiments. During the E-punk's movement, the coordinates of the locations it travels are recorded in real-time, and the set of path coordinates, which is used to visualise the route, is exported when the task is completed.
-
+This experiment compared the completion times of two path planning algorithms, BCD and BSA, on the same map. Because the maps selected for the experiment were raster maps, all maps used for this experiment defined a cell size of 10mm$\times$10mm, and this area was scattered across the raster map. The experiment first verified whether the number of turns would directly affect the completion time. In this validation experiment, a 60mm$\times$100mm map was created. This map was blank and was obstacle-free. By changing the orientation of the E-punk in the initial state, its turn position and number of turns during the map traversal became different. Compare the processing times of the two algorithms in these two different cases and complete this verification.\\
+After concluding the validation experiment, the task completion times of the two path planning algorithms mentioned above were compared in different environments. The overall layout of the room on the floor for the robot vacuum cleaner does not usually change significantly except for the movement of people, so in this experiment, all maps are static maps, and obstacles do not move. This section is the central part of the experiment. A 90mm$\times$90mm map was defined, and 10mm$\times$10mm square obstacles were placed at random locations on the map. After the map was constructed, the performance of the two path planning algorithms was compared. After comparing on this map environment, the experiment was carried out in two other, different map environments. This approach aims to reduce the impact of random errors in path planning caused by the particular location of some map obstacles. Because the Webots simulation software came with a time counter, the completion time was output when the simulation of both path algorithms ended. Webots is a simulator where the experiment does not require multiple experiments in a single environment to reduce random errors. During the E-punk's movement, the coordinates of the locations it travelled were recorded in real-time, and the set of path coordinates, which was used to visualise the route, was exported when the task was completed.
 \subsection{Discussion of Variables}
-
+In this experiment, it is necessary to control that the initial conditions are the same for both algorithms when comparing on the different maps. The starting position of the E-punk is the same for both algorithms. The experiments all started at the global coordinate system $(x, y, \theta) = (0, 0, 0)$, which in the simulated map was located in the top left corner of the map (see Fig.\ref{fig1}). The E-punk's straight ahead speed and turning speed are constant for both path planning algorithms, and these two values do not change from one map to another. The heuristic function used in the A* algorithm is based on the Manhattan distance, which does not change during the comparison. The motion parameters in this algorithm are also unchanged.
 
 \subsection{Discussion of Metric(s)}
+In this experiment, the metrics obtained were collected to evaluate the two path planning algorithms' efficiency and compare them. As proposed in the hypothesis, these metrics were chosen to get the efficiency of the two algorithms and the main effects that lead to their difference. Table 1 details the metrics chosen for this experiment.
 
- In this section you should discuss the rationale (why) you have selected your metric(s) - e.g. how do these metrics help us to interpret your results?  Your metric(s) will need to be applied consistently throughout your experiment for them to provide a comparison of performance.  
- 
- You should discuss the advantages and disadvantages of your metric(s).  Often, we need more than one metric to compensate for the information which is confused or hidden in another metric.  By using more than one metric, we can get closer to the truth of the outcome of your experiment.  
+\begin{table}[htbp]
+\centering
+\caption{Definition of metrics and their sources}
+\label{Table1}
+\begin{tabular}{c|l|c}
+\hline
+Metric                               & \multicolumn{1}{c|}{Source of Metric} & Justification          \\ \hline
+Time(s)                              & Internal timer                        & Length of mapping time \\ \hline
+\multicolumn{1}{l|}{Number of turns} & Internal counters                     & To check efficiency    \\ \hline
+\end{tabular}
+\end{table}
+
+Both metrics in this experiment can be obtained directly from the timer within Webots and the counter. In this experiment, as a measure of efficiency, it is better to measure time rather than distance travelled, as distance travelled does not consider the time taken to make a turn very well. Also, this experiment compares efficiency with the number of turns made during the path planning process, so this experiment is better suited to using completion time as a measure.
+
 
 \section{Results}
-
-In this section you should present your results.  In general, it is best to aim for both \emph{quantitative} results (e.g., data) and \emph{qualitative} results (e.g., a written observation or graphic which is representative).  
-
-You should use subsections where they aid in clarity.  For instance, it may be useful to present results for a "baseline" system, then a results for an "improved" system, and then finally results which consider both "baseline" and "improved" systems together.  However, this will depend entirely on your project and how you have designed your experiment.
-
-When presenting results, aim for a presentation which clearly communicates an insight. For example, a large table of all the individual data requires the reader to do a lot of work to find out what is important.  In contrast, a table which appropriately presents the mean and standard deviation has summarised the results for the reader (and would be more useful).  Similarly, aim to combine data onto a chart when possible so that a direct comparison can be made - and when possible, include error bars.  
-
-
-Remember to label all axis, caption all graphs, figures and tables, and to reference these elements in the report text (e.g. see figure \ref{fig1}) - never require a reader to have to come to their own conclusion or understanding, explain what they are looking at.  Remember to attempt to give an explanation for any anomalies in your results.  
 
 
 \section{Discussion and Conclusion}
@@ -156,10 +163,6 @@ Because the VL1680X has been identified as an active sensor with ... limitations
 \begin{quote}
     by applying ... filtering to the sensor, we predict a measurable improvement of the sensor under ... conditions.  
 \end{quote}
-
-Make a discussion of what your results showed - whether this supported or refuted your hypothesis.  It may be that the results were mixed (supporting and refuting) and you should discuss that here. In your discussion, use this as another opportunity to demonstrate/evidence your understanding. Try to avoid stating the obvious - instead, use analysis/evaluation/synthesis to show that you understand \emph{how} and \emph{why} you saw the results you did.  What are the implications of your findings?  
-
-This is also a good opportunity to evaluate your experiment and project as a whole.  You may wish to further discuss the limitations of the study (e.g. the difficulty of controlled/dependent variables, or any problems you faced in your project).  You may wish to make a recommendation for future work - but ensure that this is a clear advancement from the understanding you have gained and not wild speculation.
 
 
 \bibliographystyle{ieeetr} 
