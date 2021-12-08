@@ -19,22 +19,28 @@
 \usepackage{subfigure}
 \usepackage{parskip}
 \usepackage{stfloats}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}} % Use Input in the format of Algorithm
+\renewcommand{\algorithmicensure}{\textbf{Output:}} % Use Output in the format of Algorithm
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+  T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
 \title{Comparing Two Different Complete Coverage Path Planning Algorithms Using The E-puck In Webots}
 
 \author{
-    \IEEEauthorblockN{Daoming Chen}
-    \textit{Department of Mechanical Engineering}\\
-    \textit{University of Bristol,UK}
-    \IEEEauthorblockN{ta21463@bristol.ac.uk}
-    \and
-    \IEEEauthorblockN{Yifan Wang}
-    \textit{Department of Mechanical Engineering}\\
-    \textit{University of Bristol,UK}
-    \IEEEauthorblockN{rj21561@bristol.ac.uk}
+  \IEEEauthorblockN{Daoming Chen}
+  \textit{Department of Mechanical Engineering}\\
+  \textit{University of Bristol,UK}
+  \IEEEauthorblockN{ta21463@bristol.ac.uk}
+  \and
+  \IEEEauthorblockN{Yifan Wang}
+  \textit{Department of Mechanical Engineering}\\
+  \textit{University of Bristol,UK}
+  \IEEEauthorblockN{rj21561@bristol.ac.uk}
 }
 
 \maketitle
@@ -50,10 +56,10 @@ The boustrophedon cell decomposition (BCD)\cite{lavalle2006planning} and the Bac
 
 \section{Hypothesis Statement}
 In the BCD algorithm, boustrophedon\cite{choset1998coverage} means the way ox walks which is the parallel line-covered areas. So the method traverses the entire map environment in parallel lines(see Fig.\ref{bcd}). While the BSA algorithm\cite{Gonzlez2003BSAAC} is filling rectangular regions using a spiral pattern(see Fig.\ref{bsa}).\\
-There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm，  because of its 90° turns after encountering an obstacle, which is not close together after the turn.BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
+There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm， because of its 90° turns after encountering an obstacle, which is not close together after the turn.BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
 Based on these observations, a hypothesis has been developed stating:
 \begin{quote}
-     In a blank map environment, the two algorithms are equally efficient because they have travelled the same route length. However, in a complex map environment (containing random obstacles), BCD with compact paths is more efficient than BSA.
+   In a blank map environment, the two algorithms are equally efficient because they have travelled the same route length. However, in a complex map environment (containing random obstacles), BCD with compact paths is more efficient than BSA.
 \end{quote}
 
 \begin{figure}[htbp]
@@ -73,10 +79,16 @@ Based on these observations, a hypothesis has been developed stating:
 \end{figure}
 
 \section{Implementation}
-The individual functions and algorithms required during the experiments were tested separately and a map environment (with obstacles) was developed for the experiments.
-\subsection{Map}
-In this experiment, the path planning for the E-punk mobile robot starts with obtaining environmental information and establishing an environmental map. A reasonable representation of the environment facilitates the selection of a suitable search algorithm and ultimately achieves a good path with less time overhead. There are various methods to build the environment map, and this experiment mainly uses the raster method\cite{moravec1985high} to build the environment map in a static environment.This method is used because it decomposes the environmental space into local cells and describes the state of the environment in terms of whether obstacles occupy them or not. The maps produced by this method provide accurate metric information and are easier to understand and process than other methods.\\
-A 90mm$\times$90mm map(see Fig.\ref{fig1}) was designed in Webots, which contained the obstacles. Since the CPP algorithm for the final comparison was built on a known map environment, in order to be able to tell the E-punk robot about this map, the built map was converted into a static  11$\times$11 raster map(see Fig.\ref{fig2}), where the value of the area within the array corresponding to the area where the map boundary and the obstacle are located was set to 1 and the value of the remaining freely movable area was set to 0.
+The individual functions and algorithms required during the experiments were tested separately and a map environment (with obstacles) was built for the experiments.
+
+
+\subsection{Map and track tracking system}
+
+The premise of the complete coverage path plan algorithm is a map and locate system. Only when the robot knows the surrounding environment and its position can it make a reasonable path plan.
+
+\subsubsection{Map}
+
+There are various methods to build the environment map, and this experiment mainly uses the raster method\cite{hart1968formal} to build the environment map in a static environment.This method is used because it decomposes the environmental space in to local cells and describes the state of the environment in terms of whether obstacles occupy them or not. The maps produced by this method provide accurate metric information and are easier to understand and process than other methods. Algorithms are compared in 90cm×90cm rectangular maps(see Fig.\ref{fig1}) with obstacles. The robot will receive a static 11×11 raster map (see Fig.\ref{fig2}) at the beginning of the experiment. On the map, cells that contains obstacles or wall are set to 1, and cells that the robot can step on are set to 0.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.22]{RS_Report/Webots_map.png}}
@@ -90,68 +102,51 @@ A 90mm$\times$90mm map(see Fig.\ref{fig1}) was designed in Webots, which contain
 \label{fig2}
 \end{figure}
 
-\subsection{E-punk position}
+\subsubsection{E-punk pose}
 
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1
+In order to obtain the pose of the robot, the supervisor system is enabled in this experiment. 
 
 \subsection{CPP algorithm}
- Fig.\ref{fig4} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms.
+
+ Fig.\ref{fig3} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms. 
+ 
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.35]{RS_Report/RS_Report.png}}
+\caption{The Overall architecture of the CPP algorithm.}
+\label{fig3}
+\end{figure}
  
 \subsubsection{A* algorithm}
-The sweeper robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
+The sweeping robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.45]{RS_Report/astar.png}}
 \caption{A* algorithm demonstration(the value in the cell is the value of $f(n)$).}
-\label{fig3}
+\label{fig4}
 \end{figure}
 
 As E-punk traverses the map, there will always be places that it has not traversed in a single loop. In this case, the experiment uses the A* algorithm to move the cart to the nearest untraversed region until the entire map is traversed.\\
 The core of the a* algorithm is
 \begin{equation}
-    f(n) = g(n) + h(n)
+  f(n) = g(n) + h(n)
 \end{equation}
 where $f(n)$ is the combined priority of node n. When the next node to be traversed needs to be selected, the algorithm always picks the node with the highest combined priority (smallest value). $g(n)$ is the cost of node n from the starting point. $h(n)$ is the expected cost of node n from the end point, which is the heuristic function of the A* algorithm.\\
-The traversal direction is simplified in this experiment to match the raster map and speed up the calculation. The mobile robot can only move in four directions, up, down, left and right, in which case the heuristic function is calculated using the Manhattan distance method(see Fig.\ref{fig3}).
+The traversal direction is simplified in this experiment to match the raster map and speed up the calculation. The mobile robot can only move in four directions, up, down, left and right, in which case the heuristic function is calculated using the Manhattan distance method(see Fig.\ref{fig4}).
 
-\subsubsection{BCD algorithm}
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
+\subsubsection{Area coverage algorithm}
 
-\subsubsection{BSA algprithm}
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1\\
-1
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.35]{RS_Report/RS_Report.png}}
-\caption{Overall architecture of the CPP algorithm.}
-\label{fig4}
-\end{figure}
+The BCD and BSA area coverage algorithms are design with the same finite state machine, but with different motion rules. The robot will behave as the algorithm instructs in different scenarios. The scenarios updates at a rate of 31.25Hz based on the map and track tracking system. 
+
+\begin{algorithm}[h]
+ \caption{Area coverage algorithm}
+ \begin{algorithmic}[1]
+  \IF{}
+  \ENDIF
+  \label{code:recentEnd}
+ \end{algorithmic}
+\end{algorithm}
+
+
 
 
 
@@ -171,8 +166,8 @@ In this experiment, the metrics obtained were collected to evaluate the two path
 \label{Table1}
 \begin{tabular}{c|l|c}
 \hline
-Metric                               & \multicolumn{1}{c|}{Source of Metric} & Justification          \\ \hline
-Time(s)                              & Internal timer                        & Length of mapping time \\ \hline
+Metric                & \multicolumn{1}{c|}{Source of Metric} & Justification     \\ \hline
+Time(s)               & Internal timer            & Length of mapping time \\ \hline
 \end{tabular}
 \end{table}
 
@@ -209,9 +204,9 @@ Both metrics in this experiment can be obtained directly from the timer within W
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{ccccccc}
 \hline
-Map       & \multicolumn{2}{c}{Blank Map}                             & \multicolumn{2}{c}{First Complex Map}                     & \multicolumn{2}{c}{Second Complex Map} \\ \hline
-Algorithm & \multicolumn{1}{c|}{BCD}    & \multicolumn{1}{c|}{BSA}    & \multicolumn{1}{c|}{BCD}    & \multicolumn{1}{c|}{BSA}    & \multicolumn{1}{c|}{BCD}     & BSA     \\
-Time(s)   & \multicolumn{1}{c|}{225.57} & \multicolumn{1}{c|}{225.34} & \multicolumn{1}{c|}{315.90} & \multicolumn{1}{c|}{326.88} & \multicolumn{1}{c|}{401.76}  & 412.70  \\ \hline
+Map    & \multicolumn{2}{c}{Blank Map}               & \multicolumn{2}{c}{First Complex Map}           & \multicolumn{2}{c}{Second Complex Map} \\ \hline
+Algorithm & \multicolumn{1}{c|}{BCD}  & \multicolumn{1}{c|}{BSA}  & \multicolumn{1}{c|}{BCD}  & \multicolumn{1}{c|}{BSA}  & \multicolumn{1}{c|}{BCD}   & BSA   \\
+Time(s)  & \multicolumn{1}{c|}{225.57} & \multicolumn{1}{c|}{225.34} & \multicolumn{1}{c|}{315.90} & \multicolumn{1}{c|}{326.88} & \multicolumn{1}{c|}{401.76} & 412.70 \\ \hline
 \end{tabular}%
 }
 \end{table*}
@@ -228,11 +223,11 @@ In summary, BCD will be more efficient than BSA in complex environments. This is
 
 \section{Discussion and Conclusion}
 
-Begin your discussion and conclusion by re-stating your hypothesis.  You can literally copy-and-paste your hypothesis here.  
+Begin your discussion and conclusion by re-stating your hypothesis. You can literally copy-and-paste your hypothesis here. 
 
 Because the VL1680X has been identified as an active sensor with ... limitations, we hypothesised that:
 \begin{quote}
-    by applying ... filtering to the sensor, we predict a measurable improvement of the sensor under ... conditions.  
+  by applying ... filtering to the sensor, we predict a measurable improvement of the sensor under ... conditions. 
 \end{quote}
 
 
