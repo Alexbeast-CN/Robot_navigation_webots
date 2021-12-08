@@ -49,10 +49,10 @@ The boustrophedon cell decomposition (BCD)\cite{lavalle2006planning} and the Bac
 
 \section{Hypothesis Statement}
 In the BCD algorithm, boustrophedon\cite{choset1998coverage} means the way ox walks which is the parallel line-covered areas. So the method traverses the entire map environment in parallel lines(see Fig.\ref{bcd}). While the BSA algorithm\cite{Gonzlez2003BSAAC} is filling rectangular regions using a spiral pattern(see Fig.\ref{bsa}).\\
-Both methods can traverse the entire map, but they also have disadvantage in common. The disadvantage\cite{choi2009online} is that the efficiency of the algorithm for completion time is significantly affected by the initial orientation of the robot, as the number of turns increases sharply relative to the wall depending on the initial orientation of the robot. If the initial direction of control is the same, the efficiency of the two methods will also differ depending on the number of turns made during the movement.
+There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm，  because of its 90° turns after encountering an obstacle, which is not close together after the turn.BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
 Based on these observations, a hypothesis has been developed stating:
 \begin{quote}
-     Both BCD and BSA methods have similar turns during movement for austere map environments and complete the task with similar efficiency. However, BSA has a significantly higher number of turns for complex maps (with random obstacle locations) when BCD should be more efficient in its task.
+     In the simple map environment, the efficiency of traversing the entire map is similar for both algorithms because the overall path continuity is similar. However, in complex maps (containing random obstacles), compared to BCD, the dispersion of the BSA path area causes BCD to be more efficient than BSA.
 \end{quote}
 
 \begin{figure}[htbp]
@@ -60,13 +60,13 @@ Based on these observations, a hypothesis has been developed stating:
 \begin{minipage}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=6cm,height=4cm]{RS_Report/bcd.png}
-\caption{BCD}
+\caption{Diagram of the BCD algorithm\cite{choset1998coverage}. }
 \label{bcd}
 \end{minipage}
 \begin{minipage}[t]{0.48\textwidth}
 \centering
 \includegraphics[width=6cm,height=4cm]{RS_Report/BSA.png}
-\caption{BSA}
+\caption{Diagram of the BSA algorithm\cite{Gonzlez2003BSAAC}.}
 \label{bsa}
 \end{minipage}
 \end{figure}
@@ -89,12 +89,25 @@ A 90mm$\times$90mm map(see Fig.\ref{fig1}) was designed in Webots, which contain
 \label{fig2}
 \end{figure}
 
-\subsection{Odometry}
+\subsection{E-punk position}
 
-The odometry measures the initial to the final position of a mobile robot and is used in this experiment to localise and navigate the E-punk robot. The real E-punk robot uses stepper motors, which have been simulated in Webots. The angular increments of the left and right wheels during the robot's movement can be obtained using the simulated position sensors. Therefore, a global coordinate system is defined(see Fig.\ref{fig1}), and the kinematic calculation\cite{dudek2010computational} is used to obtain the position of the E-punk on this global coordinate system, where the position rotation angle theta is defined as the clockwise angle to the x-axis.\\
-In the CPP algorithm used for this experiment, the E-punk robot must know its position and run the appropriate trigger conditions. By matching the coordinates calculated from the odometry with the position subscripts of the raster map matrix, the constructed raster map can be combined with the generated global coordinate system, thus mapping the robot's motion poses onto the constructed map and enabling the robot's motion.
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1
 
-\subsection{A* algorithm}
+\subsection{CPP algorithm}
+ Fig.\ref{fig4} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms.
+ 
+\subsubsection{A* algorithm}
 The sweeper robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
 
 \begin{figure}[htbp]
@@ -102,7 +115,6 @@ The sweeper robot returns to the initial point to recharge after completing the 
 \caption{A* algorithm demonstration(the value in the cell is the value of $f(n)$).}
 \label{fig3}
 \end{figure}
-
 
 As E-punk traverses the map, there will always be places that it has not traversed in a single loop. In this case, the experiment uses the A* algorithm to move the cart to the nearest untraversed region until the entire map is traversed.\\
 The core of the a* algorithm is
@@ -112,15 +124,30 @@ The core of the a* algorithm is
 where $f(n)$ is the combined priority of node n. When the next node to be traversed needs to be selected, the algorithm always picks the node with the highest combined priority (smallest value). $g(n)$ is the cost of node n from the starting point. $h(n)$ is the expected cost of node n from the end point, which is the heuristic function of the A* algorithm.\\
 The traversal direction is simplified in this experiment to match the raster map and speed up the calculation. The mobile robot can only move in four directions, up, down, left and right, in which case the heuristic function is calculated using the Manhattan distance method(see Fig.\ref{fig3}).
 
-
-
-\subsection{CPP algorithm}
- Fig.\ref{fig4} shows the overall form of the algorithm architecture combining the map, odometry, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms.
 \subsubsection{BCD algorithm}
-\subsubsection{BSA algprithm}
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
 
+\subsubsection{BSA algprithm}
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1\\
+1
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.35]{RS_Report/RS_Report (1).png}}
+\centerline{\includegraphics[scale=0.35]{RS_Report/RS_Report.png}}
 \caption{Overall architecture of the CPP algorithm.}
 \label{fig4}
 \end{figure}
@@ -145,7 +172,6 @@ In this experiment, the metrics obtained were collected to evaluate the two path
 \hline
 Metric                               & \multicolumn{1}{c|}{Source of Metric} & Justification          \\ \hline
 Time(s)                              & Internal timer                        & Length of mapping time \\ \hline
-\multicolumn{1}{l|}{Number of turns} & Internal counters                     & To check efficiency    \\ \hline
 \end{tabular}
 \end{table}
 
