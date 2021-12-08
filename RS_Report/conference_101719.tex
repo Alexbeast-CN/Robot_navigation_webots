@@ -18,6 +18,7 @@
 \usepackage{xcolor}
 \usepackage{subfigure}
 \usepackage{parskip}
+\usepackage{stfloats}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -52,7 +53,7 @@ In the BCD algorithm, boustrophedon\cite{choset1998coverage} means the way ox wa
 There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm，  because of its 90° turns after encountering an obstacle, which is not close together after the turn.BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
 Based on these observations, a hypothesis has been developed stating:
 \begin{quote}
-     In the simple map environment, the efficiency of traversing the entire map is similar for both algorithms because the overall path continuity is similar. However, in complex maps (containing random obstacles), compared to BCD, the dispersion of the BSA path area causes BCD to be more efficient than BSA.
+     In a blank map environment, the two algorithms are equally efficient because they have travelled the same route length. However, in a complex map environment (containing random obstacles), BCD with compact paths is more efficient than BSA.
 \end{quote}
 
 \begin{figure}[htbp]
@@ -153,16 +154,16 @@ The traversal direction is simplified in this experiment to match the raster map
 \end{figure}
 
 
+
 \section{Experiment Methodology}
 
 \subsection{Overview of Method}
-This experiment compared the completion times of two path planning algorithms, BCD and BSA, on the same map. Because the maps selected for the experiment were raster maps, all maps used for this experiment defined a cell size of 10mm$\times$10mm, and this area was scattered across the raster map. The experiment first verified whether the number of turns would directly affect the completion time. In this validation experiment, a 60mm$\times$100mm map was created. This map was blank and was obstacle-free. By changing the orientation of the E-punk in the initial state, its turn position and number of turns during the map traversal became different. Compare the processing times of the two algorithms in these two different cases and complete this verification.\\
 After concluding the validation experiment, the task completion times of the two path planning algorithms mentioned above were compared in different environments. The overall layout of the room on the floor for the robot vacuum cleaner does not usually change significantly except for the movement of people, so in this experiment, all maps are static maps, and obstacles do not move. This section is the central part of the experiment. A 90mm$\times$90mm map was defined, and 10mm$\times$10mm square obstacles were placed at random locations on the map. After the map was constructed, the performance of the two path planning algorithms was compared. After comparing on this map environment, the experiment was carried out in two other, different map environments. This approach aims to reduce the impact of random errors in path planning caused by the particular location of some map obstacles. Because the Webots simulation software came with a time counter, the completion time was output when the simulation of both path algorithms ended. Webots is a simulator where the experiment does not require multiple experiments in a single environment to reduce random errors. During the E-punk's movement, the coordinates of the locations it travelled were recorded in real-time, and the set of path coordinates, which was used to visualise the route, was exported when the task was completed.
 \subsection{Discussion of Variables}
 In this experiment, it is necessary to control that the initial conditions are the same for both algorithms when comparing on the different maps. The starting position of the E-punk is the same for both algorithms. The experiments all started at the global coordinate system $(x, y, \theta) = (0, 0, 0)$, which in the simulated map was located in the top left corner of the map (see Fig.\ref{fig1}). The E-punk's straight ahead speed and turning speed are constant for both path planning algorithms, and these two values do not change from one map to another. The heuristic function used in the A* algorithm is based on the Manhattan distance, which does not change during the comparison. The motion parameters in this algorithm are also unchanged.
 
 \subsection{Discussion of Metric(s)}
-In this experiment, the metrics obtained were collected to evaluate the two path planning algorithms' efficiency and compare them. As proposed in the hypothesis, these metrics were chosen to get the efficiency of the two algorithms and the main effects that lead to their difference. Table 1 details the metrics chosen for this experiment.
+In this experiment, the metrics obtained were collected to evaluate the two path planning algorithms' efficiency and compare them. As proposed in the hypothesis, these metrics were chosen to get the efficiency of the two algorithms and the main effects that lead to their difference. Table \uppercase\expandafter{\romannumeral1} details the metrics chosen for this experiment.
 
 \begin{table}[htbp]
 \centering
@@ -177,8 +178,52 @@ Time(s)                              & Internal timer                        & L
 
 Both metrics in this experiment can be obtained directly from the timer within Webots and the counter. In this experiment, as a measure of efficiency, it is better to measure time rather than distance travelled, as distance travelled does not consider the time taken to make a turn very well. Also, this experiment compares efficiency with the number of turns made during the path planning process, so this experiment is better suited to using completion time as a measure.
 
+\begin{figure*}[ht]
+\centering
+\setlength{\abovecaptionskip}{0.cm}
+\subfigure[BCD route in the first complex map.]{
+\includegraphics[width=8cm]{RS_Report/BCD_easy.png}
+%\caption{fig1}
+}
+\quad
+\subfigure[BSA route in the first complex map.]{
+\includegraphics[width=8cm]{RS_Report/BSA_easy.png}
+}
+\quad
+\subfigure[BCD route in the second complex map.]{
+\includegraphics[width=8cm]{RS_Report/BCD_mid.png}
+}
+\quad
+\subfigure[BSA route in the second complex map.]{
+\includegraphics[width=8cm]{RS_Report/BSA_mid.png}
+}
+\caption{Path visualisation diagram for CPP algorithm}
+\label{fig7}
+\end{figure*}
 
-\section{Results}
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table*}[bp]
+\caption{Presentation of experimental results}
+\label{Table2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{ccccccc}
+\hline
+Map       & \multicolumn{2}{c}{Blank Map}                             & \multicolumn{2}{c}{First Complex Map}                     & \multicolumn{2}{c}{Second Complex Map} \\ \hline
+Algorithm & \multicolumn{1}{c|}{BCD}    & \multicolumn{1}{c|}{BSA}    & \multicolumn{1}{c|}{BCD}    & \multicolumn{1}{c|}{BSA}    & \multicolumn{1}{c|}{BCD}     & BSA     \\
+Time(s)   & \multicolumn{1}{c|}{225.57} & \multicolumn{1}{c|}{225.34} & \multicolumn{1}{c|}{315.90} & \multicolumn{1}{c|}{326.88} & \multicolumn{1}{c|}{401.76}  & 412.70  \\ \hline
+\end{tabular}%
+}
+\end{table*}
+
+
+\section{Results and Analysis}
+This experiment compares the BCD and BSA path planning algorithms in a blank map and two complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in two complex maps away.\\
+In the blank map, BCD and BSA have similar completion times. The main reason for this result is that there is no significant difference between the lengths travelled by the two algorithms in this map. Furthermore, both algorithms have completed the map traversal without the help of the A* algorithm, and there is also no increase in distance travelled by the A* algorithm. So the efficiency of the two algorithms is similar in this case, which also verifies part of the experimental hypothesis.\\
+Considering that a single map or particular obstacle placement may be advantageous for a specific algorithm, two different environments were compared in this experiment. In the first complex map environment, obstacles were concentrated in the middle of the map, while in the second complex map environment, obstacles were scattered around the map.\\
+The experimental results show that BCD is more efficient in the first complex map. Both algorithms use the A* algorithm twice to help complete the map traversal, but it is clear that BSA is not as efficient as BCD because there is a longer A* path in the final path of BSA to complete the traversal.The map partitioning formed by BCD and BSA is different when path planning is completed. Because the route after a BCD turn is adjacent to the one before the turn, the area it passes through is also adjacent and does not result in a repeat of finding points in adjacent areas that have not been traversed. However, BSA does not achieve this effect, resulting in different partitions being far apart, and the efficiency is compromised if there are still obstacles in between.\\
+In the second complex map, the BCD is still more efficient than the BSA compared to the results in the first complex map above, and the BCD is completed faster and more efficiently in this map.In the second complex map, the BSA algorithm still suffers from long partition distances and not close enough paths. It was also found that when the BSA algorithm encountered an obstacle, the BSA algorithm would miss the points around the obstacle, resulting in a less tight route. Moreover, during the whole map traversal process, the BSA needs to return to the previously traversed area and find the unreachable point several times with the A* algorithm, which will affect its efficiency.Compared to BSA, BCD is much more efficient at traversing the points around an obstacle, which is one reason why BCD is more efficient.From the path diagram of the second complex map, the experiments also revealed that because the BSA is a spiral inwards movement pattern, this tends to increase the distance of the spiral centroid from the next point found by the A* algorithm, thus increasing the time it takes to get to the next location.\\
+In summary, BCD will be more efficient than BSA in complex environments. This is also in line with the experimental hypothesis. With this experiment, the accuracy of the experimental hypothesis was verified.
 
 
 \section{Discussion and Conclusion}
