@@ -33,12 +33,12 @@
 
 \author{
   \IEEEauthorblockN{Daoming Chen}
-  \textit{Department of Mechanical Engineering}\\
+  \textit{Department of Engineering Mathematics}\\
   \textit{University of Bristol,UK}
   \IEEEauthorblockN{ta21463@bristol.ac.uk}
   \and
   \IEEEauthorblockN{Yifan Wang}
-  \textit{Department of Mechanical Engineering}\\
+  \textit{Department of Engineering Mathematics}\\
   \textit{University of Bristol,UK}
   \IEEEauthorblockN{rj21561@bristol.ac.uk}
 }
@@ -104,17 +104,15 @@ There are various methods to build the environment map, and this experiment main
 
 \subsubsection{E-punk pose}
 
-In order to obtain the pose of the robot, the supervisor system is enabled in this experiment. 
+In order to obtain the pose of the robot, the supervisor system of webots is enabled in this experiment. The supervisor system can obtain the absolute position and orientation of the robot in the simulator. The position is information is a three by one translation vector from the simulator's origin to the robot. In this experiment, only x and y are used. The orientation information is returned as Euler angle from the simulator's origin to the robot. Since the robot only walk on the plane perpendicular to the y axis in this experiment, the only useful parameters are the direction of y axis and its angle. The pose of the robot on the map can be obtained by converting the pose obtained from the supervisor. 
+
+\subsubsection{Track tracking}
+
+By storing the pose data of the robot in a list in order, we can get the robot's motion trajectory. In order to more intuitively understand which areas on the map are covered, this trajectory needs to be marked on the map. The 11×11 raster map can only display the position of the robot in integer. Therefore, each punctuation is made when the robot is at the center of the grid. On the raster map, when a cell is covered, the value will change from 0 to 2.
 
 \subsection{CPP algorithm}
 
- Fig.\ref{fig3} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms. 
- 
-\begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.35]{RS_Report/RS_Report.png}}
-\caption{The Overall architecture of the CPP algorithm.}
-\label{fig3}
-\end{figure}
+Fig.\ref{fig3} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms. 
  
 \subsubsection{A* algorithm}
 The sweeping robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
@@ -133,22 +131,47 @@ The core of the a* algorithm is
 where $f(n)$ is the combined priority of node n. When the next node to be traversed needs to be selected, the algorithm always picks the node with the highest combined priority (smallest value). $g(n)$ is the cost of node n from the starting point. $h(n)$ is the expected cost of node n from the end point, which is the heuristic function of the A* algorithm.\\
 The traversal direction is simplified in this experiment to match the raster map and speed up the calculation. The mobile robot can only move in four directions, up, down, left and right, in which case the heuristic function is calculated using the Manhattan distance method(see Fig.\ref{fig4}).
 
-\subsubsection{Area coverage algorithm}
+\subsubsection{Area coverage path plan algorithm}
 
-The BCD and BSA area coverage algorithms are design with the same finite state machine, but with different motion rules. The robot will behave as the algorithm instructs in different scenarios. The scenarios updates at a rate of 31.25Hz based on the map and track tracking system. 
+The BCD and BSA area coverage algorithms(see Algorithm\ref{alg.l1}) are design with the same finite state machine, but with different motion rules. The robot will behave as the algorithm instructs in different scenarios. The scenarios based on the map and track tracking system updates at a rate of 31.25Hz. The main difference between BCD and BSA lies in the way they turn. The BCD will turn the robot 180 degree in U-shape. The BSA will let the robot implement a 90-degree round turn. 
+
 
 \begin{algorithm}[h]
- \caption{Area coverage algorithm}
+ \caption{Area coverage path plan algorithm}
+ \label{alg.l1}
  \begin{algorithmic}[1]
-  \IF{}
-  \ENDIF
+ \Require
+ Map; Robot's position on the map;
+ \Ensure
+ Robot's behavior;
+ 
+    \STATE Wall = 1;
+    \STATE Trajectory = 2;
+    \STATE Blank = 0;
+    \STATE $\textit{Position} \gets \text{Robot's current position on the map}$
+    \STATE $\textit{Front} \gets \text{One cell in front of } \textit{Position}$
+    \STATE $\textit{Left} \gets \text{The cell to the left of } \textit{Position}$
+    \STATE $\textit{Right} \gets \text{The cell to the right of } \textit{Position}$
+    {\IF{Front \textgreater 0}
+        \IF{Left \textgreater 0}
+            {\IF{Right \textgreater 0}
+                {The area is fully covered}
+            {\ELSE}
+                {Turn right}
+            \ENDIF
+        {\ELSIF{Right \textgreater 0}
+            {Turn right}}
+        \ENDIF}
+  \ENDIF}
   \label{code:recentEnd}
  \end{algorithmic}
 \end{algorithm}
 
-
-
-
+\begin{figure}[htbp]
+\centerline{\includegraphics[scale=0.8]{RS_Report/The Overall architecture of the CPP algorithm.png}}
+\caption{The Overall architecture of the CPP algorithm.}
+\label{fig3}
+\end{figure}
 
 \section{Experiment Methodology}
 
