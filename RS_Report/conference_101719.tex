@@ -46,8 +46,15 @@
 \maketitle
 
 \begin{abstract}
-1
+The path planning algorithm is the basis for selecting the optimal route between two points in a map environment for a mobile robot. Among path planning algorithms, the complete coverage path planning algorithm is a method that allows a mobile robot to traverse every point in a map, given a known map environment. This method determines how efficiently the robot vacuum cleaner can complete its tasks. The two main complete path planning algorithms on the market for robot vacuum cleaners are the Boustrophedon Cell Decomposition and the Backtracking Spiral Algorithm. This paper simulates and tests the E-punk autonomous mobile robot in different map environments using two algorithms on the Webots simulation platform. This paper also conducts experiments comparing the completion efficiency of the two algorithms in different map environments. The experimental results positively reference to the robot vacuum cleaner development team.
 \end{abstract}
+
+\def\IEEEkeywordsname{Keywords} 
+\begin{IEEEkeywords} Coverage  Path  Planning, Webots simulation, Efficiency comparison experiments 
+\end{IEEEkeywords} 
+
+
+
 
 
 \section{Introduction}
@@ -56,10 +63,10 @@ The Boustrophedon Cell Decomposition (BCD)\cite{lavalle2006planning} and the Bac
 
 \section{Hypothesis Statement}
 In the BCD algorithm, boustrophedon\cite{choset1998coverage} means the way ox walks which is the parallel line-covered areas. So the method traverses the entire map environment in parallel lines(see Fig.\ref{bcd}). While the BSA algorithm\cite{Gonzlez2003BSAAC} is filling rectangular regions using a spiral pattern(see Fig.\ref{bsa}).\\
-There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm， because of its 90° turns after encountering an obstacle, which is not close together after the turn.BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
+There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm， because of its 90° turns after encountering an obstacle, which is not close together after the turn. BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
 Based on these observations, a hypothesis has been developed stating:
 \begin{quote}
-   In a blank map environment, BCD is similarly efficient to BSA because there are no extra routes in the path due to the A* algorithm. However, in the complex map environment (containing random obstacles), BCD with compact paths is more efficient than BSA.
+   In a blank map environment, BCD is similarly efficient to BSA because there are no extra routes in the path due to the A* algorithm. However, in the complex map environment (containing random obstacles), with the addition of the A* routes, BCD with compact paths is more efficient than BSA.
 \end{quote}
 
 \begin{figure}[htbp]
@@ -115,14 +122,12 @@ By storing the pose data of the robot in a list in order, we can get the robot's
 Fig.\ref{fig3} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms. 
  
 \subsubsection{A* algorithm}
-The sweeping robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
-
 \begin{figure}[htbp]
 \centerline{\includegraphics[scale=0.45]{RS_Report/astar.png}}
 \caption{A* algorithm demonstration(the value in the cell is the value of $f(n)$).}
 \label{fig4}
 \end{figure}
-
+The sweeping robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
 As E-punk traverses the map, there will always be places that it has not traversed in a single loop. In this case, the experiment uses the A* algorithm to move the cart to the nearest untraversed region until the entire map is traversed.\\
 The core of the a* algorithm is
 \begin{equation}
@@ -238,13 +243,12 @@ Time(s)  & \multicolumn{1}{c|}{225.57} & \multicolumn{1}{c|}{225.34} & \multicol
 
 
 \section{Results and Analysis}
-This experiment compares the BCD and BSA path planning algorithms in a blank map and two complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in two complex maps away.\\
+This experiment compares the BCD and BSA path planning algorithms in a blank map and two complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in two complex maps.\\
 In the blank map, BCD and BSA have similar completion times. The main reason for this result is that there is no significant difference between the lengths travelled by the two algorithms in this map. Furthermore, both algorithms have completed the map traversal without the help of the A* algorithm, and there is also no increase in distance travelled by the A* algorithm. So the efficiency of the two algorithms is similar in this case, which also verifies part of the experimental hypothesis.\\
 Considering that a single map or particular obstacle placement may be advantageous for a specific algorithm, two different environments were compared in this experiment. In the first complex map environment, obstacles were concentrated in the middle of the map, while in the second complex map environment, obstacles were scattered around the map.\\
-The experimental results show that BCD is more efficient in the first complex map. Both algorithms use the A* algorithm twice to help complete the map traversal, but it is clear that BSA is not as efficient as BCD because there is a longer A* path in the final path of BSA to complete the traversal.The map partitioning formed by BCD and BSA is different when path planning is completed. Because the route after a BCD turn is adjacent to the one before the turn, the area it passes through is also adjacent and does not result in a repeat of finding points in adjacent areas that have not been traversed. However, BSA does not achieve this effect, resulting in different partitions being far apart, and the efficiency is compromised if there are still obstacles in between.\\
+The experimental results show that BCD is more efficient in the first complex map. Both algorithms use the A* algorithm twice to help complete the map traversal, but it is clear that BSA is not as efficient as BCD because there is a longer A* path in the final path of BSA to complete the traversal. The map partitioning formed by BCD and BSA is different when path planning is completed. Because the route after a BCD turn is adjacent to the one before the turn, the area it passes through is also adjacent and does not result in a repeat of finding points in adjacent areas that have not been traversed. However, BSA does not achieve this effect, resulting in different partitions being far apart, and the efficiency is compromised if there are still obstacles in between.\\
 In the second complex map, the BCD is still more efficient than the BSA compared to the results in the first complex map above, and the BCD is completed faster and more efficiently in this map.In the second complex map, the BSA algorithm still suffers from long partition distances and not close enough paths. It was also found that when the BSA algorithm encountered an obstacle, the BSA algorithm would miss the points around the obstacle, resulting in a less tight route. Moreover, during the whole map traversal process, the BSA needs to return to the previously traversed area and find the unreachable point several times with the A* algorithm, which will affect its efficiency.Compared to BSA, BCD is much more efficient at traversing the points around an obstacle, which is one reason why BCD is more efficient.From the path diagram of the second complex map, the experiments also revealed that because the BSA is a spiral inwards movement pattern, this tends to increase the distance of the spiral centroid from the next point found by the A* algorithm, thus increasing the time it takes to get to the next location.\\
 In summary, BCD will be more efficient than BSA in complex environments. This is also in line with the experimental hypothesis. With this experiment, the accuracy of the experimental hypothesis was verified.
-
 
 \section{Discussion and Conclusion}
 
