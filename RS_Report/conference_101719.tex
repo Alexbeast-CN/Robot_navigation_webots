@@ -95,13 +95,14 @@ The premise of the complete coverage path plan algorithm is a map and locate sys
 There are various methods to build the environment map, and this experiment mainly uses the raster method\cite{hart1968formal} to build the environment map in a static environment.This method is used because it decomposes the environmental space in to local cells and describes the state of the environment in terms of whether obstacles occupy them or not. The maps produced by this method provide accurate metric information and are easier to understand and process than other methods. Algorithms are compared in 90cm×90cm rectangular maps(see Fig.\ref{fig1}) with obstacles. The robot will receive a static 11×11 raster map (see Fig.\ref{fig2}) at the beginning of the experiment. On the map, cells that contains obstacles or wall are set to 1, and cells that the robot can step on are set to 0.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.22]{RS_Report/Webots_map.png}}
+\centerline{\includegraphics[width=5cm,height=5cm]{RS_Report/Webots_map.png}}
 \caption{E-punk campaign map built in Webots.}
 \label{fig1}
 \end{figure}
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.7]{map.png}}
+\setlength{\belowcaptionskip}{-1cm}
+\centerline{\includegraphics[width=5cm,height=5cm]{map.png}}
 \caption{Raster environment map built for E-punk.}
 \label{fig2}
 \end{figure}
@@ -137,7 +138,7 @@ The traversal direction is simplified in this experiment to match the raster map
 
 \setlength{\belowcaptionskip}{-1cm}
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.45]{RS_Report/astar.png}}
+\centerline{\includegraphics[width=5cm,height=5cm]{RS_Report/astar.png}}
 \caption{A* algorithm demonstration(the value in the cell is the value of $f(n)$).}
 \label{fig4}
 \end{figure}
