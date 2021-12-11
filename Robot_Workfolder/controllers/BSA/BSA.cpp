@@ -37,8 +37,8 @@ std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
 Coordinate End_value;//inverse the order of the route
 
 // Load the map
-Matrix mat = easymap.midMapSS();
-Matrix mat2 = easymap.midMapSS();//为astar路径显示地图
+Matrix mat = easymap.easyMapSS();
+Matrix mat2 = easymap.easyMapSS();//为astar路径显示地图
 int map_x;
 int map_y;
 double map_theta;
@@ -265,7 +265,7 @@ int main(int argc, char **argv)
   
   // Export the route to a file
   ofstream file;
-  file.open("/home/tim/Webots_lab/Robot_navigation_webots/Results/BSA_route_midMapSS.csv");
+  file.open("/home/tim/Webots_lab/Robot_navigation_webots/Results/BSA_route_easyMapSS.csv");
 	for (std::vector<Coordinate>::iterator ite = CCP_Path.begin(); ite != CCP_Path.end(); ite++)
   {
 		file << ite->first << ", " << ite->second << endl;
@@ -424,7 +424,7 @@ int Astar_path ()
       }
 
 
-      mat2 = easymap.midMapSS();//重新构造地图；
+      mat2 = easymap.easyMapSS();//重新构造地图；
       
       cout<<"x begins at: "<<map_x << ", y begins at: "<<map_y<<endl;
       for (int i=1; i<10; i++)
@@ -455,7 +455,7 @@ int Astar_path ()
       cout<<"The target point is:("<<End_value.first<<", "<<End_value.second<<")"<<endl;
       Route = Path.Findpath(Start_value,End_value,mat2);
 
-      mat2 = easymap.midMapSS();
+      mat2 = easymap.easyMapSS();
 
       // build a map for Astar
       for(int i=1; i<10; i++)
