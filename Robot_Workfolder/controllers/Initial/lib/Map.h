@@ -22,6 +22,7 @@ public:
     Matrix easyMapS();
     Matrix easyMapSS();
     Matrix hardMap();
+    Matrix midMapSS();
     Matrix midMapS();
     Matrix markTrajectory(int x, int y);
     Matrix markTrajectoryS(int x, int y);
@@ -98,20 +99,36 @@ Matrix Map::easyMapS()
         easyMap.p[i][10] = WALL;
         easyMap.p[0][i] = WALL;
         easyMap.p[10][i] = WALL;
-    }
+    }   
 
     for (int i=1; i<=3; i++)
-        for (int j=1; j<=3; j++)
-        {
-            easyMap.p[3+i][2+j] = WALL;
-        }
-
-    for (int j=1; j<=2; j++)
     {
-        easyMap.p[5][2+j] = BLANK;
+        easyMap.p[3+i][4] = WALL;
+        easyMap.p[3+i][6] = WALL;
     }
-        return easyMap;
+    return easyMap;
+}
+// The disper_room map
+Matrix Map::midMapSS()
+{
+    Matrix midMapSS(11,11);
+    for (int i=0; i<11; i++)
+    {
+        midMapSS.p[i][0] = WALL;
+        midMapSS.p[i][10] = WALL;
+        midMapSS.p[0][i] = WALL;
+        midMapSS.p[10][i] = WALL;
+    }   
+
+    for (int i=1; i<=2; i++)
+    {
+        midMapSS.p[2][i] = WALL;
+        midMapSS.p[6+i][3] = WALL;
+        midMapSS.p[4][5+i] = WALL;
+
     }
+    return midMapSS;
+}
 
 Matrix Map::hardMap()
 {

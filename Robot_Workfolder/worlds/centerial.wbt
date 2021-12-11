@@ -1,0 +1,57 @@
+#VRML_SIM R2021b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation -0.5797831472146708 0.5718869756163755 0.5803419589571364 2.0929138390996926
+  position -0.11916794815763826 2.4805139736395434 0.0075708398017595435
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+  texture "stadium"
+}
+RectangleArena {
+  floorSize 0.9 0.9
+  floorTileSize 0.2 0.2
+  wallHeight 0.01
+}
+WoodenBox {
+  translation 0 0.05 -0.1
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -0.1 0.05 0.1
+  name "wooden box(2)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation -0.1 0.05 -0.1
+  name "wooden box(3)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0.1 0.05 -0.1
+  name "wooden box2"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0.1 0.05 0.1
+  name "wooden box2(1)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0 0.05 0.1
+  name "wooden box2(2)"
+  size 0.1 0.1 0.1
+}
+DEF SWEEP E-puck {
+  hidden position_0_0 -3.099906642489714e-08
+  hidden position_0_1 -3.0999116852025236e-08
+  hidden rotation_1 1 0 0 2.9802322387695313e-08
+  hidden rotation_2 1 0 0 2.9802322387695313e-08
+  translation -0.4 -6.39633e-05 0.4
+  rotation -5.290368237634393e-06 0.9999999999828437 2.5148999910190556e-06 0
+  controller "Initial"
+  supervisor TRUE
+}
