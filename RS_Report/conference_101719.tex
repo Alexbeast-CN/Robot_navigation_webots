@@ -50,7 +50,7 @@ The path planning algorithm is the basis for selecting the optimal route between
 \end{abstract}
 
 \def\IEEEkeywordsname{Keywords} 
-\begin{IEEEkeywords} Coverage  Path  Planning, Webots simulation, Efficiency comparison experiments 
+\begin{IEEEkeywords} Coverage  Path  Planning Algorithms, Webots simulation, Efficiency comparison experiments 
 \end{IEEEkeywords} 
 
 \section{Introduction}
@@ -92,7 +92,7 @@ The premise of the complete coverage path plan algorithm is a map and locate sys
 
 \subsubsection{Map}
 
-There are various methods to build the environment map, and this experiment mainly uses the raster method\cite{hart1968formal} to build the environment map in a static environment.This method is used because it decomposes the environmental space in to local cells and describes the state of the environment in terms of whether obstacles occupy them or not. The maps produced by this method provide accurate metric information and are easier to understand and process than other methods. Algorithms are compared in 90cm×90cm rectangular maps(see Fig.\ref{fig1}) with obstacles. The robot will receive a static 11×11 raster map (see Fig.\ref{fig2}) at the beginning of the experiment. On the map, cells that contains obstacles or wall are set to 1, and cells that the robot can step on are set to 0.
+There are various methods to build the environment map, and this experiment mainly uses the raster method\cite{hart1968formal} to build the environment map in a static environment.This method is used because it decomposes the environmental space in to local cells and describes the state of the environment in terms of whether obstacles occupy them or not. The maps produced by this method provide accurate metric information and are easier to understand and process than other methods. Algorithms are compared in 90mm×90mm rectangular maps(see Fig.\ref{fig1}) with obstacles. The robot will receive a static 11×11 raster map (see Fig.\ref{fig2}) at the beginning of the experiment. On the map, cells that contains obstacles or wall are set to 1, and cells that the robot can step on are set to 0.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=5cm,height=5cm]{RS_Report/Webots_map.png}}
@@ -117,19 +117,18 @@ By storing the pose data of the robot in a list in order, we can get the robot's
 
 \subsection{CPP algorithm}
 
-Fig.\ref{fig3} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms. 
-
 \begin{figure}[htbp]
 \setlength{\belowcaptionskip}{-1cm}
-\centerline{\includegraphics[scale=0.8]{RS_Report/The Overall architecture of the CPP algorithm.png}}
+\centerline{\includegraphics[scale=0.6]{RS_Report/The Overall architecture of the CPP algorithm.png}}
 \caption{The Overall architecture of the CPP algorithm.}
 \label{fig3}
 \end{figure}
- 
+
+Fig.\ref{fig3} shows the overall form of the algorithm architecture combining the map, A* algorithm and CPP algorithm. The architecture allows E-punk to complete the map traversal and compare the completion times of the two different CPP algorithms. 
+
 \subsubsection{A* algorithm}
-The sweeping robot returns to the initial point to recharge after completing the cleaning task in the real world. In this experiment, the robot is set to return to its initial position after completing the CPP task, which is designed to simulate the realistic motion of the robot better. The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path.\\
 As E-punk traverses the map, there will always be places that it has not traversed in a single loop. In this case, the experiment uses the A* algorithm to move the cart to the nearest untraversed region until the entire map is traversed.\\
-The core of the a* algorithm is
+The A* algorithm\cite{hart1968formal} is used to return to the initial position more quickly and with the shortest path. The core of the a* algorithm is
 \begin{equation}
   f(n) = g(n) + h(n)
 \end{equation}
@@ -205,7 +204,7 @@ Time(s)               & Internal timer            & Length of mapping time \\ \h
 
 The metric in this experiment can be obtained directly from the timer within Webots. In this experiment, as a measure of efficiency, it is better to measure time rather than distance travelled, as distance travelled does not consider the time taken to make a turn very well. 
 
-\begin{figure*}[ht]
+\begin{figure*}[bp]
 \centering
 \setlength{\abovecaptionskip}{0.cm}
 \subfigure[BCD route in the first complex map.]{
@@ -230,7 +229,7 @@ The metric in this experiment can be obtained directly from the timer within Web
 
 % Please add the following required packages to your document preamble:
 % \usepackage{graphicx}
-\begin{table*}[bp]
+\begin{table*}[ht]
 \caption{Presentation of experimental results}
 \label{Table2}
 \resizebox{\textwidth}{!}{%
@@ -252,14 +251,33 @@ The experimental results show that BCD is more efficient in the first complex ma
 In the second complex map, the BCD is still more efficient than the BSA compared to the results in the first complex map above, and the BCD is completed faster and more efficiently in this map.In the second complex map, the BSA algorithm still suffers from long partition distances and not close enough paths. It was also found that when the BSA algorithm encountered an obstacle, the BSA algorithm would miss the points around the obstacle, resulting in a less tight route. Moreover, during the whole map traversal process, the BSA needs to return to the previously traversed area and find the unreachable point several times with the A* algorithm, which will affect its efficiency.Compared to BSA, BCD is much more efficient at traversing the points around an obstacle, which is one reason why BCD is more efficient.From the path diagram of the second complex map, the experiments also revealed that because the BSA is a spiral inwards movement pattern, this tends to increase the distance of the spiral centroid from the next point found by the A* algorithm, thus increasing the time it takes to get to the next location.\\
 In summary, BCD will be more efficient than BSA in complex environments. This is also in line with the experimental hypothesis. With this experiment, the accuracy of the experimental hypothesis was verified.
 
-\section{Discussion and Conclusion}
+\section{Conclusion and Recommendations for Further Work}
 
-Begin your discussion and conclusion by re-stating your hypothesis. You can literally copy-and-paste your hypothesis here. 
+This paper aims to compare the efficiency performance of two different CPP algorithms in different map environments to obtain a more efficient algorithm. The paper assumes that both algorithms, BCD and BSA, have similar efficiency performance in maps without obstacles and that BCD is more efficient than BSA in complex maps containing random obstacles. The collected results show that this hypothesis is correct and that BCD does have better efficiency in complex environments.\\
+It should be noted that the CPP algorithm contains the A* algorithm. BCD is more efficient than BSA in the experiments because the A* algorithm paths between different regions in BCD are shorter and the A* algorithm paths are tighter to the paths traversed by the map, especially around obstacles compared to the paths in BSA.\\
+Further work could include:
+\begin{itemize}
+  \item [1)] 
+    Coordinate acquisition issues in webots need improvement
+    1\\
+    1\\
+    1\\
+    1\\
+    1\\
+    1\\
+    1\\
+    1\\
+    1\\
+    1\\
+    1
+  \item [2)]
+    The heuristic function used in the experimental A* algorithm is the Manhattan distance, which is a method that allows movement in only four directions in the raster map: up, down, left and right. This A* algorithm does not provide an optimal solution for the shortest path between two points, and this method is not the most efficient one. Further work could improve the heuristic function by using the diagonal distance as the heuristic function if the E-punk is allowed to move diagonally towards the neighbouring node. If the E-punk can move in any direction within the map, the Euclidean distance can be used as a heuristic function.
+  \item [3)]
+    The map used in this experiment is a static map in which the positions of the obstacles do not change. Although the map is applicable in most cases, when the positions of the obstacles are changed, this will impact the whole algorithm. If the obstacles move dynamically, then the obstacle avoidance algorithm should also be considered. The whole algorithm becomes complex, which needs to be further experimented with in the Webots simulator.
+  \item [4)]
+    In this experiment, the designed map environments are single confined spaces. However, in the natural working environment of the sweeper robot, it needs to move around and complete tasks in different spaces. This also requires the autonomous mobile robot to exit from a single space and enter the next space through the entrance. Whether the BCD can still be more efficient than the BSA under these operating conditions requires further experimentation.
+\end{itemize}
 
-Because the VL1680X has been identified as an active sensor with ... limitations, we hypothesised that:
-\begin{quote}
-  by applying ... filtering to the sensor, we predict a measurable improvement of the sensor under ... conditions. 
-\end{quote}
 
 
 \bibliographystyle{ieeetr} 
