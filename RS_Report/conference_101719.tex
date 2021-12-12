@@ -81,7 +81,7 @@ In the BCD algorithm, boustrophedon\cite{choset1998coverage} means the way ox wa
 There is a clear difference between the two algorithms. The BCD algorithm has a tighter overall path because of its 180° turns, which are closer together after each turn, In the BSA algorithm， because of its 90° turns after encountering an obstacle, which is not close together after the turn. BSA algorithm is an outward-to-inward spiral path planning method, and its external route will create a certain distance from the internal route. Its route continuity caused by turning when random obstacles appear in the environment will be relatively poor compared to the BCD algorithm.
 Based on these observations, a hypothesis has been developed stating:
 \begin{quote}
-   In a blank map environment, BCD is similarly efficient to BSA because there are no extra routes in the path due to the A* algorithm. However, in the complex map environment (containing random obstacles), with the addition of the A* routes, BCD with compact paths is more efficient than BSA.
+    In a blank map, the efficiency of BCD and BSA are similar, because both can complete area coverage through a single path planning. However, in a complex map environment (including random obstacles), BCD will be more efficient than BSA. Because BCD has a more compact path than BSA, it reduces the length of the path that the A* algorithm needs to plan between connecting sub-regions.
 \end{quote}
 
 \section{Implementation}
@@ -187,104 +187,179 @@ The traversal direction is simplified in this experiment to match the raster map
 \section{Experiment Methodology}
 
 \subsection{Overview of Method}
-As mentioned in section\ref{Sec1}, the experiments aims to compare the efficiency performance of the two algorithms, BCD and BSA. The simulator used in this experiment is Webots R2021b in Linux. The robot used in the experiment is e-puck robot\cite{Cyberboticswebsite}.\\
+As mentioned in section\ref{Sec1}, the experiments aims to compare the efficiency performance of the two algorithms, BCD and BSA. The simulator used in this experiment is Webots R2021b in Linux. The robot used in the experiment is e-puck robot\cite{Cyberboticswebsite}.
 
-The first experiment is carried out in a 60cm$\times$100cm rectangular map without obstacles. Then, the other two experiments are carried out in a 90cm$\times$90cm rectangular map. The size of the obstacle is equal to the size of one cell of the grid map, which is 10cm$\times$10cm. Considering of the difference of these two 
+The first experiment is carried out in a 60cm$\times$100cm rectangular map without obstacles. Then, the other four experiments are carried out in a 90cm$\times$90cm rectangular map. The size of the obstacle is equal to the size of one cell of the grid map, which is 10cm$\times$10cm. These four maps are designed according to the motion characteristics of the two algorithms. The first map(see in fig.\ref{fig8.a}) shows the situation where the obstacles are near the center point and symmetrical about the center point. The second map(see in fig.\ref{fig8.b}) shows the situation where the obstacles is 1-cell offset from the center point. The last two maps(see in fig.\ref{fig8.c} and fig\ref{fig8.d}) shows the situation where obstacles are scattered on the map. The figure of the blank map is not shown because the scene is too simple. The purpose of designing these maps is to compare the efficiency differences of the two algorithms in BSA preferred map and some random map.
+
+The author uses two the complete path planning algorithms, BCD and BSA, to experiment on the above-mentioned map. Since we did not set random errors in the Webots simulator, there is no need to perform multiple experiments in a single map. In order to ensure that there will be no odometry error during the experiment, the author uses the supervisor system to obtain the robot's pose. 
+
+% Four experimental maps with obstacles
+\begin{figure*}[ht]
+\centering
+\subfigure[ ]{
+\includegraphics[width=4.3cm,height=4.3cm]{RS_Report/centerial.png}
+\label{fig8.a}
+%\caption{fig1}
+}\hspace{-7mm}
+\quad
+\subfigure[ ]{
+\includegraphics[width=4.3cm,height=4.3cm]{RS_Report/room.png}
+\label{fig8.b}
+}\hspace{-7mm}
+\quad
+\subfigure[]{
+\includegraphics[width=4.3cm,height=4.3cm]{RS_Report/changed_room.png}
+\label{fig8.c}
+}\hspace{-7mm}
+\quad
+\subfigure[ ]{
+\includegraphics[width=4.3cm,height=4.3cm]{RS_Report/disper_room.png}
+\label{fig8.d}
+}
+
+\caption{Four experimental maps with obstacles.}
+\label{fig8}
+\end{figure*}
 
 
-After completing the experiment in the blank map, two complex maps (containing obstacles) were created and the performance of BCD and BSA was compared in the two complex maps. The overall layout of the room on the floor for the robot vacuum cleaner does not usually change significantly except for the movement of people, so in this experiment, all maps are static maps, and obstacles do not move. This section is the central part of the experiment. A 90cm$\times$90cm map was defined, and 10cm$\times$10cm square obstacles were placed at random locations on the map. After the map was constructed, the performance of the two path planning algorithms was compared. After comparing on this map environment, the experiment was carried out in another different map environment. This approach aims to reduce the impact of random errors in path planning caused by the particular location of some map obstacles. Because the Webots simulation software came with a time counter, the completion time was output when the simulation of both path algorithms ended. Webots is a simulator where the experiment does not require multiple experiments in a single environment to reduce random errors. During the robot's movement, the coordinates of the locations it travelled were recorded in real-time, and the set of path coordinates, which was used to visualise the route, was exported when the task was completed.
 \subsection{Discussion of Variables}
-In this experiment, it is necessary to control that the initial conditions are the same for both algorithms when comparing on the different complex maps. The starting position of the e-puck is the same for both algorithms. The experiments all started at the global coordinate system $(x, y, \theta) = (0, 0, 0)$, which in the simulated map was located in the top left corner of the map (see Fig.\ref{fig1}). The e-puck's straight ahead speed and turning speed are constant for both path planning algorithms, and these two values do not change from one map to another. The heuristic function used in the A* algorithm is based on the Manhattan distance, which does not change during the comparison. The motion parameters in this algorithm are also unchanged.
+
+\subsubsection{Staring point}
+In this experiment, it is necessary to control that the initial conditions are the same for both algorithms when comparing on the different complex maps. For the CPP algorithm, it is more efficient to let the robot start from the corner of the map. Therefore, in each experiment, the robot will start from the upper left corner of the view(see in fig.\ref{fig8} and move to the right. The starting position of the robot is set to the point (1, 1) of the map. The orientation of the robot is set to theta equals to zero.
+
+\subsubsection{Velocity}
+
+The maximum forward speed of the e-puck is 0.25 m/s. In the experiments, the The speed used by the robot in the experiment is 20$\%$ of the maximum speed, which is 0.05m/s. Both forward and average speed of two wheels when turning are set to be 0.05m/s. The speed is constant for both path planning algorithms, and does not change from one map to another. 
+
+\subsubsection{Turning radius}
+
+For BCD, the radius of the U-shaped bend is set to half the length of the cell, which is 5cm, and the turning angle is 180 degrees. Therefore, the turning path of the robot will cover two cells. For BSA, the radius of the round turn is also 5cm, but the turning angle is 90 degrees. Therefore, the turning path of the robot only covers one cell. 
+
 
 \subsection{Discussion of Metric(s)}
-As proposed in the hypothesis, the metric obtained was collected to evaluate the two path planning algorithms' efficiency and compare them. \\
-Table \uppercase\expandafter{\romannumeral1} details the metric chosen for this experiment.
 
+As proposed in the hypothesis, the metric is for evaluating the two path planning algorithms' efficiency. For the path planning algorithm, the most direct measurement method should be to compare the path length. However, because the two algorithms use the same speed of motion, the length of their path can be indirectly compared by the time for them to complete the task. The time can be obtained by the robot from reading the operation time of the simulator.
+
+Table \uppercase\expandafter{\romannumeral1} Variable summary table.
+% The variable summary table
 \begin{table}[htbp]
 \centering
 \setlength{\abovecaptionskip}{0.cm}
-\caption{Definition of metrics and their sources}
+\caption{Definition of variable}
 \label{Table1}
-\begin{tabular}{c|l|c}
+\begin{tabular}{lll}
 \hline
-Metric                & \multicolumn{1}{c|}{Source of Metric} & Justification     \\ \hline
-Time(s)               & Internal timer            & Length of mapping time \\ \hline
+Variables      & BCD               & BSA               \\\hline
+Staring point  & upper left corner & upper left corner \\
+Forward speed  & 0.05m/s           & 0.05m/s           \\
+Turning speed  & 0.05m/s           & 0.05m/s           \\
+Turning radius & 5cm               & 5cm               \\
+Turning anagle & 180°              & 90°               \\
+Metric         & Complete time(s)  & Complete time(s)  \\\hline
 \end{tabular}
 \end{table}
 
-The metric in this experiment can be obtained directly from the timer within Webots. In this experiment, as a measure of efficiency, it is better to measure time rather than distance travelled, as distance travelled does not consider the time taken to make a turn very well. 
 
-\begin{figure*}[bp]
+\section{Results and Analysis}
+
+
+
+This experiment compared the BCD and BSA path planning algorithms in a blank map and four complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in four complex maps. 
+
+Table \uppercase\expandafter{\romannumeral2} Experimental results table.
+% The result table
+\begin{table}[htbp]
+\centering
+\setlength{\abovecaptionskip}{0.cm}
+\caption{Presentation of experimental results}
+\label{Table1}
+\begin{tabular}{lll}
+\hline
+Maps  & Complete time(s) of BCD & Complete time(s) of BSA \\\hline
+Blank & 225.57                  & 225.34                  \\
+(a)   & 334.97                  & 299.30                  \\
+(b)   & 315.90                  & 326.88                  \\
+(c)   & 401.76                  & 412.70                  \\
+(d)   & 308.26                  & 370.18                  \\\hline
+\end{tabular}
+\end{table}
+
+
+% The Path visualisation diagram for CPP algorith
+\begin{figure*}[ht]
 \centering
 \subfigure[ ]{
-\includegraphics[width=5cm]{RS_Report/BCD_easy.png}
-%\caption{fig1}
-}\hspace{-15mm}
+\includegraphics[width=5cm]{RS_Report/BCD_easyMapSS.png}
+\label{fig7a}
+}\hspace{-16mm}
 \quad
 \subfigure[ ]{
-\includegraphics[width=5cm]{RS_Report/BSA_easy.png}
-}\hspace{-15mm}
+\includegraphics[width=5cm]{RS_Report/BCD_easy.png}
+\label{fig7b}
+}\hspace{-16mm}
 \quad
 \subfigure[]{
 \includegraphics[width=5cm]{RS_Report/BCD_mid.png}
-}\hspace{-15mm}
+\label{fig7}
+}\hspace{-16mm}
 \quad
 \subfigure[ ]{
+\includegraphics[width=5cm]{RS_Report/BCD_midMapSS.png}}
+\label{fig7d}
+\quad
+\subfigure[ ]{
+\includegraphics[width=5cm]{RS_Report/BSA_easyMapSS.png}
+\label{fig7e}
+%\caption{fig1}
+}\hspace{-16mm}
+\quad
+\subfigure[ ]{
+\includegraphics[width=5cm]{RS_Report/BSA_easy.png}
+\label{fig7f}
+}\hspace{-16mm}
+\quad
+\subfigure[]{
 \includegraphics[width=5cm]{RS_Report/BSA_mid.png}
+\label{fig7g}
+}\hspace{-16mm}
+\quad
+\subfigure[ ]{
+\includegraphics[width=5cm]{RS_Report/BSA_midMapSS.png}
 }
-\caption{Path visualisation diagram for CPP algorithm. The figures are  (a) BCD route in the first complex map. (b) BSA route in the first complex map. (c) BCD route in the second complex map. (d) BSA route in the second complex map.}
+\caption{Path visualisation diagram for CPP algorithm.}
+\label{fig7h}
 \label{fig7}
 \end{figure*}
 
-% Please add the following required packages to your document preamble:
-% \usepackage{graphicx}
-\begin{table*}[ht]
-\caption{Presentation of experimental results}
-\label{Table2}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{ccccccc}
-\hline
-Map    & \multicolumn{2}{c}{Blank Map}               & \multicolumn{2}{c}{First Complex Map}           & \multicolumn{2}{c}{Second Complex Map} \\ \hline
-Algorithm & \multicolumn{1}{c|}{BCD}  & \multicolumn{1}{c|}{BSA}  & \multicolumn{1}{c|}{BCD}  & \multicolumn{1}{c|}{BSA}  & \multicolumn{1}{c|}{BCD}   & BSA   \\
-Time(s)  & \multicolumn{1}{c|}{225.57} & \multicolumn{1}{c|}{225.34} & \multicolumn{1}{c|}{315.90} & \multicolumn{1}{c|}{326.88} & \multicolumn{1}{c|}{401.76} & 412.70 \\ \hline
-\end{tabular}%
-}
-\end{table*}
 
+In the blank map, BCD and BSA have similar completion times. The main reason for this result is that there is no significant difference between the lengths travelled by the two algorithms in this map. Furthermore, both algorithms have completed the map traversal without the help of the A* algorithm, therefore there is no o repeat path caused by the A* algorithm. Hence, the efficiency of the two algorithms is similar, which also verifies part of the experimental hypothesis.
 
-\section{Results and Analysis}
-This experiment compares the BCD and BSA path planning algorithms in a blank map and two complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in two complex maps.\\
-In the blank map, BCD and BSA have similar completion times. The main reason for this result is that there is no significant difference between the lengths travelled by the two algorithms in this map. Furthermore, both algorithms have completed the map traversal without the help of the A* algorithm, and there is also no increase in distance travelled by the A* algorithm. So the efficiency of the two algorithms is similar in this case, which also verifies part of the experimental hypothesis.\\
-Considering that a single map or particular obstacle placement may be advantageous for a specific algorithm, two different environments were compared in this experiment. In the first complex map environment, obstacles were concentrated in the middle of the map, while in the second complex map environment, obstacles were scattered around the map.\\
-The experimental results show that BCD is more efficient in the first complex map. Both algorithms use the A* algorithm twice to help complete the map traversal, but it is clear that BSA is not as efficient as BCD because there is a longer A* path in the final path of BSA to complete the traversal. The map partitioning formed by BCD and BSA is different when path planning is completed. Because the route after a BCD turn is adjacent to the one before the turn, the area it passes through is also adjacent and does not result in a repeat of finding points in adjacent areas that have not been traversed. However, BSA does not achieve this effect, resulting in different partitions being far apart, and the efficiency is compromised if there are still obstacles in between.\\
-In the second complex map, the BCD is still more efficient than the BSA compared to the results in the first complex map above, and the BCD is completed faster and more efficiently in this map.In the second complex map, the BSA algorithm still suffers from long partition distances and not close enough paths. It was also found that when the BSA algorithm encountered an obstacle, the BSA algorithm would miss the points around the obstacle, resulting in a less tight route. Moreover, during the whole map traversal process, the BSA needs to return to the previously traversed area and find the unreachable point several times with the A* algorithm, which will affect its efficiency.Compared to BSA, BCD is much more efficient at traversing the points around an obstacle, which is one reason why BCD is more efficient.From the path diagram of the second complex map, the experiments also revealed that because the BSA is a spiral inwards movement pattern, this tends to increase the distance of the spiral centroid from the next point found by the A* algorithm, thus increasing the time it takes to get to the next location.\\
-In summary, BCD will be more efficient than BSA in complex environments. This is also in line with the experimental hypothesis. With this experiment, the accuracy of the experimental hypothesis was verified.
+In order to further verify the hypothesis, the author conducted experiments on these two algorithms in four other maps with obstacles.
+
+The experimental results show that BSA is more efficient in map\ref{fig8.a}. Because the obstacles in map 8 are near the center point and are symmetrical about the center point. In this case, most of the BSA path is not affected by obstacles. However, the BCD path will be greatly disturbed by the obstacles, which requires A* algorithm to find the next sub-region for many times. The A* algorithm will guide the robot to take a repetitive path to reached the next sub-region. Therefore, for environments where obstacles near the center point, BSA is a more efficient path planning algorithm.
+
+However, in the other three experimental maps, BCD showed higher efficiency.In map\ref{fig8.b} where the  obstacles is 1-cell offset from the center point. Both algorithms use the A* algorithm twice to help complete the map traversal, but it is clear that BSA is not as efficient as BCD because there is a longer A* path in the final path of BSA to complete the traversal. The map partitioning formed by BCD and BSA is different when path planning is completed. Because the route after a BCD turn is adjacent to the one before the turn, the area it passes through is also adjacent and does not result in a repeat of finding points in adjacent areas that have not been traversed. However, BSA does not achieve this effect, resulting in different partitions being far apart, and the efficiency is compromised if there are still obstacles in between.
+
+In a map with scattered obstacles like map\ref{fig8.c} and map\ref{fig8.d}, the BCD is still more efficient than the BSA. Especially the results of Map \ref{fig8.d}, BCD showed an overwhelming efficiency advantage. The reason for this result is the BSA algorithm suffers from long partition distances. It was also found that when the BSA algorithm encountered an obstacle, the BSA algorithm would miss the points around the obstacle. Therefore, in the area coverage process, the BSA algorithm needs to use the A* algorithm multiple times to reach the points around the obstacle. This process requires repeated traversal of the path, thus affecting efficiency. Compared with BSA, BCD can better cover the cells around obstacles, so it is less dependent on A* algorithm. This is one of the reasons why BCD is more efficient. Fig\ref{fig7g} and fig\ref{fig7h} show that because BSA is a spiral inward motion mode, this tends to increase the distance of the spiral center from the next point found by the A* algorithm, thereby increasing the amount of time to reach the next position. 
+
+In summary, as long as the obstacles deviate from the center point, BSA loses its efficiency advantage. BCD will be more efficient than BSA in complex environments. This is also in line with the experimental hypothesis. 
+
 
 \section{Conclusion and Recommendations for Further Work}
 
-This paper aims to compare the efficiency performance of two different CPP algorithms in different map environments to obtain a more efficient algorithm. The paper assumes that both algorithms, BCD and BSA, have similar efficiency performance in maps without obstacles. However, BCD is more efficient than BSA in complex maps containing random obstacles. The results show that this hypothesis is correct and that BCD does have better efficiency in complex environments.\\
-It should be noted that the CPP algorithm contains the A* algorithm. BCD is more efficient than BSA in the experiments because the A* algorithm paths between different regions in BCD are shorter and the A* algorithm paths are tighter to the paths traversed by the map, especially around obstacles compared to the paths in BSA.\\
+This paper aims to compare the efficiency performance of two different CPP algorithms in different map environments. The experimental result has verified the hypothesis that both algorithms, BCD and BSA, have similar efficiency performance in maps without obstacles. However, in a map containing obstacles, when the obstacles are located near the center point, BSA has higher efficiency. Except for this situation, the results of BCD experiments are better than BSA. Therefore, the hypothesis of the thesis is partially correct.
+
+It should be noted that the CPP algorithm contains the A* algorithm. BCD is more efficient than BSA in the experiments because the A* algorithm paths between different regions in BCD are shorter and the A* algorithm paths are tighter to the paths traversed by the map, especially around obstacles compared to the paths in BSA.
+
 Further work could include:
 \begin{itemize}
-  \item [1)] 
-    Coordinate acquisition issues in webots need improvement
-    1\\
-    1\\
-    1\\
-    1\\
-    1\\
-    1\\
-    1\\
-    1\\
-    1\\
-    1\\
-    1
-  \item [2)]
+  \item [1)]
     The heuristic function used in the experimental A* algorithm is the Manhattan distance, which is a method that allows movement in only four directions in the raster map: up, down, left and right. This A* algorithm does not provide an optimal solution for the shortest path between two points, and this method is not the most efficient one. Further work could improve the heuristic function by using the diagonal distance as the heuristic function if the e-puck is allowed to move diagonally towards the neighbouring node. If the e-puck can move in any direction within the map, the Euclidean distance can be used as a heuristic function.
+  \item [2)]
+    The CPP algorithm used in the experiment did not calculate the optimal path. Because the calculation of the optimal path requires geometric division of the map, which requires the use of more complex image processing algorithms. Optimal partitioning of the map can greatly reduce the length of paths that need to be traversed repeatedly, thereby improving efficiency.
   \item [3)]
-    The map used in this experiment is a static map in which the positions of the obstacles do not change. Although the map is applicable in most cases, when the positions of the obstacles are changed, this will impact the whole algorithm. If the obstacles move dynamically, then the obstacle avoidance algorithm should also be considered. The whole algorithm becomes complex, which needs to be further experimented with in the Webots simulator.
-  \item [4)]
-    In this experiment, the designed map environments are single confined spaces. However, in the natural working environment of the sweeper robot, it needs to move around and complete tasks in different spaces. This also requires the autonomous mobile robot to exit from a single space and enter the next space through the entrance. Whether the BCD can still be more efficient than the BSA under these operating conditions requires further experimentation.
+    In this experiment, the maps used in the experiment are all 9$\times$9 raster maps. The efficiency of the two algorithms in larger scenarios needs further testing. In addition, only the case where the obstacle is rectangular was tested in the experiment. For more complex shapes, such as circular or irregular obstacles, requires future tests. Compared with the complex and dynamic real-world working environment of vacuum robots, the test environment of this experiment needs to be improved.
+    
 \end{itemize}
 
 
