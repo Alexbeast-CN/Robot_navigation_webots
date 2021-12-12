@@ -48,7 +48,7 @@
 
 \begin{abstract}
 
-The complete coverage path planning algorithm is a method that allows mobile robots to traverse each point in a known map environment.A classic application of this algorithm is a scene where a vacuum robot autonomously cleans an area. This article compared the efficiency of the Boustrophedon  Cell  Decomposition(BCD) algorithm and the Backtracking Spiral Algorithm (BSA) algorithm on the Webots simulation platform using e-puck autonomous mobile robot. The experiments are carried out in 5 kinds of grid map simulation environments. Experimental results show that it is more efficient to use Boustrophedon Cell Decomposition algorithm in most environments.
+The complete coverage path planning algorithm is a method that allows mobile robots to traverse each point in a known map environment. A classic application of this algorithm is a scene where a vacuum robot autonomously cleans an area. This article compared the efficiency of the Boustrophedon  Cell  Decomposition(BCD) algorithm and the Backtracking Spiral Algorithm (BSA) algorithm on the Webots simulation platform using E-puck autonomous mobile robot. The experiments are carried out in 5 kinds of grid map simulation environments. Experimental results show that it is more efficient to use Boustrophedon Cell Decomposition algorithm in most environments.
 
 \end{abstract}
 
@@ -191,7 +191,7 @@ The traversal direction is simplified in this experiment to match the raster map
 \section{Experiment Methodology}
 
 \subsection{Overview of Method}
-As mentioned in section\ref{Sec1}, the experiments aims to compare the efficiency performance of the two algorithms, BCD and BSA. The simulator used in this experiment is Webots R2021b in Linux. The robot used in the experiment is e-puck robot\cite{Cyberboticswebsite}.\\
+As mentioned in section \ref{Sec1}, the experiments aims to compare the efficiency performance of the two algorithms, BCD and BSA. The simulator used in this experiment is Webots R2021b in Linux. The robot used in the experiment is E-puck robot\cite{Cyberboticswebsite}.\\
 The first experiment is carried out in a 60cm$\times$100cm rectangular map without obstacles. Then, the other four experiments are carried out in a 90cm$\times$90cm rectangular map. The size of the obstacle is equal to the size of one cell of the grid map, which is 10cm$\times$10cm. These four maps are designed according to the motion characteristics of the two algorithms. The first map(see in Fig.\ref{fig8.a}) shows the situation where the obstacles are near the center point and symmetrical about the center point. The second map(see in Fig.\ref{fig8.b}) shows the situation where the obstacles is 1-cell offset from the center point. The last two maps(see in Fig.\ref{fig8.c} and Fig.\ref{fig8.d}) shows the situation where obstacles are scattered on the map. The figure of the blank map is not shown because the scene is too simple. The purpose of designing these maps is to compare the efficiency differences of the two algorithms in BSA preferred map and some random map.\\
 This paper uses two complete path planning algorithms, BCD and BSA, to experiment on the above-mentioned map. As there is no random error set in the Webots simulator, there is no need to perform multiple experiments in a single map. In order to ensure that there will be no odometry error during the experiment, this paper uses the supervisor system to obtain the robot's pose. 
 
