@@ -33,15 +33,15 @@
 \title{Comparing Two Different Complete Coverage Path Planning Algorithms Using The E-puck In Webots}
 
 \author{
-  \IEEEauthorblockN{Daoming Chen}
+  \IEEEauthorblockN{Student no: 2132643}
   \textit{Department of Engineering Mathematics}\\
   \textit{University of Bristol,UK}
-  \IEEEauthorblockN{ta21463@bristol.ac.uk}
+
   \and
-  \IEEEauthorblockN{Yifan Wang}
+  \IEEEauthorblockN{Student no: 2134065}
   \textit{Department of Engineering Mathematics}\\
   \textit{University of Bristol,UK}
-  \IEEEauthorblockN{rj21561@bristol.ac.uk}
+  
 }
 
 \maketitle
@@ -193,7 +193,7 @@ The traversal direction is simplified in this experiment to match the raster map
 \subsection{Overview of Method}
 As mentioned in section \ref{Sec1}, the experiments aims to compare the efficiency performance of the two algorithms, BCD and BSA. The simulator used in this experiment is Webots R2021b in Linux. The robot used in the experiment is E-puck robot\cite{Cyberboticswebsite}.\\
 The first experiment is carried out in a 60cm$\times$100cm rectangular map without obstacles. Then, the other four experiments are carried out in a 90cm$\times$90cm rectangular map. The size of the obstacle is equal to the size of one cell of the grid map, which is 10cm$\times$10cm. These four maps are designed according to the motion characteristics of the two algorithms. The first map(see in Fig.\ref{fig8.a}) shows the situation where the obstacles are near the center point and symmetrical about the center point. The second map(see in Fig.\ref{fig8.b}) shows the situation where the obstacles is 1-cell offset from the center point. The last two maps(see in Fig.\ref{fig8.c} and Fig.\ref{fig8.d}) shows the situation where obstacles are scattered on the map. The figure of the blank map is not shown because the scene is too simple. The purpose of designing these maps is to compare the efficiency differences of the two algorithms in BSA preferred map and some random map.\\
-This paper uses two complete path planning algorithms, BCD and BSA, to experiment on the above-mentioned map. As there is no random error set in the Webots simulator, there is no need to perform multiple experiments in a single map. In order to ensure that there will be no odometry error during the experiment, this paper uses the supervisor system to obtain the robot's pose. 
+This paper uses two complete path planning algorithms, BCD and BSA, to experiment on the above-mentioned map. As the simulations in Webots are deterministic, there is no need to perform multiple experiments in a single map. In order to ensure that there will be no odometry error during the experiment, this paper uses the supervisor system to obtain the robot's pose. 
 
 % Four experimental maps with obstacles
 \begin{figure*}[ht]
@@ -276,11 +276,11 @@ Table \uppercase\expandafter{\romannumeral2} Experimental results table.
 \begin{tabular}{lll}
 \hline
 Maps  & Complete time(s) of BCD & Complete time(s) of BSA \\\hline
-Blank & 225.57                  & 225.34                  \\
-(a)   & 334.97                  & 299.30                  \\
-(b)   & 315.90                  & 326.88                  \\
-(c)   & 401.76                  & 412.70                  \\
-(d)   & 308.26                  & 370.18                  \\\hline
+Blank & 225.57                  & \textbf{225.34}                  \\
+(a)   & 334.97                  & \textbf{299.30}                  \\
+(b)   & \textbf{315.90}                  & 326.88                  \\
+(c)   & \textbf{401.76}                  & 412.70                  \\
+(d)   & \textbf{308.26}                  & 370.18                  \\\hline
 \end{tabular}
 \end{table}
 
@@ -314,12 +314,12 @@ Blank & 225.57                  & 225.34                  \\
 }\hspace{-16mm}
 \quad
 \subfigure[ ]{
-\includegraphics[width=5cm]{RS_Report/BSA_easy.png}
+\includegraphics[width=5cm]{RS_Report/BSA_easyMapS.png}
 \label{fig7f}
 }\hspace{-16mm}
 \quad
 \subfigure[]{
-\includegraphics[width=5cm]{RS_Report/BSA_mid.png}
+\includegraphics[width=5cm]{RS_Report/BSA_midMapS.png}
 \label{fig7g}
 }\hspace{-16mm}
 \quad
