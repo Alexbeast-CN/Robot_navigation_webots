@@ -90,7 +90,7 @@ Based on these observations, a hypothesis has been developed stating:
 
 \subsection{Overview}
 
-As Fig.\ref{fig3} instructed, The system will obtain the map and the pose of the robot after the program is executed. The map and the pose will be updated at a frequency of 31.25 Hz until the end of the program. Then CCP algorithm will plan the path of a sub-region. The robot will continuously check whether the coverage of the sub-region is completed during the process of tracing. If it is not completed, the robot will continue with the current movement. If completed, the A* algorithm will be used to plan the robot's path to the nearest sub-region. Before executing the A* algorithm, the system will also check whether all sub-regions are covered. If not, execute A*. If yes, the 
+As Fig.\ref{fig3} instructed, The system will obtain the map and the pose of the robot after the program is executed. The map and the pose will be updated at a frequency of 31.25 Hz until the end of the program. Because single path planning usually cannot achieve full area coverage. Therefore, the area covered by a single path planning is called a sub-region. The CCP algorithm will plan the path of a sub-region. Then robot will continuously check whether the coverage of the sub-region is completed during the process of tracing. If it is not completed, the robot will continue with the current movement. If completed, the A* algorithm will be used to plan the robot's path to the nearest sub-region. Before executing the A* algorithm, the system will also check whether all sub-regions are covered. If not, execute A*. If yes, the 
 program ends.
 
 \begin{figure}[htbp]
@@ -111,14 +111,14 @@ The premise of the complete coverage path plan algorithm is a map and locate sys
 There are various methods to build the environment map, and this experiment mainly uses the raster method\cite{hart1968formal} to build the environment map in a static environment.This method is used because it decomposes the environmental space in to local cells and describes the state of the environment in terms of whether obstacles occupy them or not. The maps produced by this method provide accurate metric information and are easier to understand and process than other methods. Algorithms are compared in 90cm×90cm rectangular maps(see Fig.\ref{fig1}) with obstacles. The robot will receive a static 11×11 raster map (see Fig.\ref{fig2}) at the beginning of the experiment. On the map, cells that contains obstacles or wall are set to 1, and cells that the robot can step on are set to 0.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[width=5cm,height=5cm]{RS_Report/Webots_map.png}}
+\centerline{\includegraphics[width=5cm,height=5cm]{RS_Report/room_1.png}}
 \caption{The experimental map with robot.}
 \label{fig1}
 \end{figure}
 
 \begin{figure}[htbp]
 \setlength{\belowcaptionskip}{-1cm}
-\centerline{\includegraphics[width=5cm,height=5cm]{map.png}}
+\centerline{\includegraphics[width=5cm,height=5cm]{RS_Report/map_demenstration.png}}
 \caption{11$\times$11 Raster environment map.}
 \label{fig2}
 \end{figure}
@@ -129,7 +129,7 @@ In order to obtain the pose of the robot, the supervisor system of Webots is ena
 
 \subsubsection{Track tracking}
 
-By storing the pose data of the robot in a list in order, we can get the robot's motion trajectory. In order to more intuitively understand which areas on the map are covered, this trajectory needs to be marked on the map. The 11×11 raster map can only display the position of the robot in integer. Therefore, each punctuation is made when the robot is at the center of the grid. On the raster map, when a cell is covered, the value will change from 0 to 2.
+By storing the pose data of the robot in a list in order, we can get the robot's motion trajectory. In order to more intuitively understand which areas on the map are covered, this trajectory needs to be marked on the map. The 11×11 raster map can only display the position of the robot in integer. Therefore, each punctuation is made when the robot is at the center of the grid. On the raster map, when a cell is covered, the value will change from 0 to 2 as Fig.\ref{fig2} illustrated.
 
 \subsection{CPP algorithm}
 
@@ -264,9 +264,11 @@ Metric         & Complete time(s)  & Complete time(s)  \\\hline
 
 \section{Results and Analysis}
 
-This experiment compared the BCD and BSA path planning algorithms in a blank map and four complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in four complex maps. 
+This experiment compared the BCD and BSA path planning algorithms in a blank map and four complex maps. The time at task completion was obtained using Webots internal timer, which was used to compare the efficiency of the two algorithms. The experimental results are shown in Table \uppercase\expandafter{\romannumeral2}. Fig.\ref{fig7} shows the trajectories of the different path planning algorithms in four complex maps that was display in fig\ref{fig7}. 
 
 Table \uppercase\expandafter{\romannumeral2} Experimental results table.
+\\
+Note: \textit{The bold text is the shortest time.}
 % The result table
 \begin{table}[htbp]
 \centering
@@ -276,14 +278,13 @@ Table \uppercase\expandafter{\romannumeral2} Experimental results table.
 \begin{tabular}{lll}
 \hline
 Maps  & Complete time(s) of BCD & Complete time(s) of BSA \\\hline
-Blank & 225.57                  & \textbf{225.34}                  \\
+Blank & \textbf{225.57}         & \textbf{225.34}                  \\
 (a)   & 334.97                  & \textbf{299.30}                  \\
 (b)   & \textbf{315.90}                  & 326.88                  \\
 (c)   & \textbf{401.76}                  & 412.70                  \\
 (d)   & \textbf{308.26}                  & 370.18                  \\\hline
-\end{tabular}
+\end{tabular}\\
 \end{table}
-
 
 % The Path visualisation diagram for CPP algorith
 \begin{figure*}[ht]
@@ -327,7 +328,7 @@ Blank & 225.57                  & \textbf{225.34}                  \\
 \includegraphics[width=5cm]{RS_Report/BSA_midMapSS.png}
 }
 \label{fig7h}
-\caption{Path visualisation diagram for CPP algorithm.}
+\caption{Path visualisation diagram for CPP algorithm. The blue line shows the trajectory of BCD algorithm, and the red line shows the trajectory of BSA algorithm. (a)(e) are the map.\ref{fig8.a}, (b)(f) are the map.\ref{fig8.b}, (c)(g) are the map.\ref{fig8.c},(d)(h) are the map.\ref{fig8.d}.}
 \label{fig7}
 \end{figure*}
 
