@@ -19,11 +19,11 @@ public:
     Map(/* args */);
     ~Map();
     Matrix easyMap();
-    Matrix easyMapS();
-    Matrix easyMapSS();
     Matrix hardMap();
-    Matrix midMapSS();
-    Matrix midMapS();
+    Matrix easyMapSS();// 11*11 Map(a)
+    Matrix easyMapS(); // 11*11 Map(b)
+    Matrix midMapS(); // 11*11 Map(c)
+    Matrix midMapSS(); // 11*11 Map(d)
     Matrix markTrajectory(int x, int y);
     Matrix markTrajectoryS(int x, int y);
     Matrix markTrajectoryB(int x, int y);

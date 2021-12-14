@@ -7,7 +7,6 @@
 
 // Costumer Lib
 #include "lib/SweepRobot.hpp"
-#include "lib/Odometry.h"
 #include "lib/Map.h"
 #include "lib/Matrix.h"
 #include "lib/Astar.h"
@@ -37,8 +36,8 @@ std::priority_queue<std::pair<int, std::pair<int, int>>> Closet_Point;
 Coordinate End_value;//inverse the order of the route
 
 // Load the map
-Matrix mat = easymap.easyMapSS();
-Matrix mat2 = easymap.easyMapSS();//为astar路径显示地图
+Matrix mat = easymap.easyMapSS(); // The map used for CCP
+Matrix mat2 = easymap.easyMapSS();// The map used for A*
 int map_x;
 int map_y;
 double map_theta;
@@ -424,7 +423,7 @@ int Astar_path ()
       }
 
 
-      mat2 = easymap.easyMapSS();//重新构造地图；
+      mat2 = easymap.easyMapSS();//Rebuild the map for A*；
       
       cout<<"x begins at: "<<map_x << ", y begins at: "<<map_y<<endl;
       for (int i=1; i<10; i++)
